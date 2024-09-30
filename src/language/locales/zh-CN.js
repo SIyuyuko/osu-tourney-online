@@ -3,6 +3,7 @@ export default {
     home: '主页',
     tournament: '比赛',
     mappool: '图池',
+    songlist: "歌单",
     command: '指令',
   },
   home: {

@@ -2,8 +2,8 @@
  * @Author: SIyuyuko
  * @Date: 2024-04-28 16:43:45
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-08-28 10:34:03
- * @FilePath: /tourney-site/src/views/dashBoard.vue
+ * @LastEditTime: 2024-09-30 10:49:33
+ * @FilePath: /osu-tourney-online/src/views/dashBoard.vue
  * @Description: 项目主页面
 -->
 <template>
@@ -23,6 +23,7 @@
   <a-drawer v-model:open="showSetting" :title="$t('setting.title')" :width="450">
     <Setting></Setting>
   </a-drawer>
+  <Floatbuttons :player="musicplayer"/>
 </template>
 <script setup name="Dashboard">
 import Header from '@/components/nav/header.vue';
@@ -30,21 +31,26 @@ import Sider from '@/components/nav/sider.vue';
 import Home from './home/index.vue';
 import Tournament from './tournament/index.vue';
 import Mappool from './mappool/index.vue';
+import Songlist from './songlist/index.vue';
 import Setting from './setting.vue';
 import Command from './command/index.vue';
 import { inject, ref, shallowRef, watch, onBeforeMount, provide } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import i18n from '@/language';
 import { login } from '@/api/data_api.js';
+import Floatbuttons from '@/components/util/floatbuttons.vue';
 const route = useRoute();
 const router = useRouter();
 let theme = inject('themeMode');
 let selectMenu = inject('current');
 let current = shallowRef();
+let musicplayer = ref();
+provide("musicplayer", musicplayer);
 let menu = ref([
   { name: 'home', component: shallowRef(Home) },
   { name: 'tournament', component: shallowRef(Tournament) },
   { name: 'mappool', component: shallowRef(Mappool) },
+  { name: 'songlist', component: shallowRef(Songlist) },
   { name: 'command', component: shallowRef(Command) },
 ]);
 let showSetting = ref(false);

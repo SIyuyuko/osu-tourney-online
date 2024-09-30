@@ -2,8 +2,8 @@
  * @Author: SIyuyuko
  * @Date: 2024-05-06 15:55:22
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-08-27 12:42:23
- * @FilePath: /tourney-site/src/components/nav/header.vue
+ * @LastEditTime: 2024-09-25 14:39:14
+ * @FilePath: /osu-tourney-online/src/components/nav/header.vue
  * @Description: 页头导航栏
 -->
 <template>
@@ -35,16 +35,18 @@
           </div>
           <template #overlay>
             <a-menu class="operate-button-menu">
-              <a-menu-item :style="$i18n.locale === 'zh' ? langStyle : ''" @click="$i18n.locale = 'zh'">简体中文</a-menu-item>
-              <a-menu-item :style="$i18n.locale === 'en' ? langStyle : ''" @click="$i18n.locale = 'en'">English</a-menu-item>
+              <a-menu-item :style="$i18n.locale === 'zh' ? langStyle : ''"
+                @click="$i18n.locale = 'zh'">简体中文</a-menu-item>
+              <a-menu-item :style="$i18n.locale === 'en' ? langStyle : ''"
+                @click="$i18n.locale = 'en'">English</a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
       </a-button>
     </div>
     <div class="user-header">
-      <a-button type="link" @click="openUrl(wikiUrl)">
-        <font-awesome-icon icon="fa-brands fa-wikipedia-w" />
+      <a-button type="link">
+        <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
       </a-button>
       <a-button type="link" @click="openUrl(repoUrl)">
         <font-awesome-icon icon="fa-brands fa-github" />
@@ -63,8 +65,8 @@ let collapsed = inject('collapsed');
 let mobileCollapsed = ref(false);
 let isLogin = ref(false);
 const loadView = inject('loadView');
-const repoUrl = 'https://github.com/SIyuyuko/osu-tourney-web';
-const wikiUrl = 'https://github.com/SIyuyuko/osu-tourney-web/wiki';
+const repoUrl = 'https://github.com/SIyuyuko/osu-tourney-online';
+// const wikiUrl = 'https://github.com/SIyuyuko/osu-tourney-online/wiki';
 const langStyle = {
   'text-decoration': 'underline',
   'background-color': theme.value === 'light' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)',

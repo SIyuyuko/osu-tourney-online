@@ -2,8 +2,8 @@
  * @Author: SIyuyuko
  * @Date: 2024-05-07 00:27:32
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-09-02 15:46:10
- * @FilePath: /tourney-site/src/views/home/index.vue
+ * @LastEditTime: 2024-09-30 11:31:31
+ * @FilePath: /osu-tourney-online/src/views/home/index.vue
  * @Description: 主页页面组件
 -->
 <template>
@@ -36,7 +36,7 @@
       <header>{{ $t('home.tourTitle') }}</header>
       <div class="tournament-panel">
         <TournamentInfo />
-        <PoolSelector />
+        <!-- <PoolSelector /> -->
       </div>
     </div>
   </div>

@@ -1,4 +1,5 @@
 import axios from '../http/axios.js';
+import { model } from './environment.js';
 /** 登录获取授权链接 */
 export const getOauthUrl = () => {
   return axios({
@@ -79,5 +80,13 @@ export const getBeatmapBg = params => {
   return axios({
     method: "get",
     url: `/api/background/${params}`,
+  });
+};
+// 获取谱面文件
+export const getBeatmapFile = params => {
+  return axios({
+    method: "get",
+    url: `/sp/file/map/fileName/song/${params}`,
+    baseURL: model.sp,
   });
 };

@@ -22,10 +22,10 @@ export default defineConfig({
     port: 5173,
     open: true,
     proxy: {
-      '/api': {
-        target: 'https://sp.365246692.xyz',
+      "/sp": {
+        target: "https://sp.365246692.xyz/api/",
         changeOrigin: true,
-        // rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/sp/, '')
       },
     },
   },

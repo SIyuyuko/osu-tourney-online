@@ -1,4 +1,5 @@
 @import './base.css';
 @import './light.css';
 @import './dark.css';
-@import './plate.css'
+@import './plate.css';
+@import './vue-plyr.css';

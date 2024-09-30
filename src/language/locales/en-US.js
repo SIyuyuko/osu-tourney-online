@@ -3,6 +3,7 @@ export default {
     home: 'Home',
     tournament: 'Tournament',
     mappool: 'Mappool',
+    songlist:"Song List",
     command: 'Command',
   },
   home: {

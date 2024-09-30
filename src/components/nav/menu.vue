@@ -2,8 +2,8 @@
  * @Author: SIyuyuko
  * @Date: 2024-05-07 11:07:54
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-08-23 16:57:09
- * @FilePath: /tourney-site/src/components/nav/menu.vue
+ * @LastEditTime: 2024-09-30 10:06:31
+ * @FilePath: /osu-tourney-online/src/components/nav/menu.vue
  * @Description: 目录菜单组件
 -->
 <template>
@@ -20,6 +20,10 @@
     <a-menu-item key="mappool">
       <span class="anticon"><font-awesome-icon icon="fa-solid fa-map" /></span>
       <span>{{ $t('menu.mappool') }}</span>
+    </a-menu-item>
+    <a-menu-item key="songlist">
+      <span class="anticon"><font-awesome-icon icon="fa-solid fa-compact-disc" /></span>
+      <span>{{ $t('menu.songlist') }}</span>
     </a-menu-item>
     <a-menu-item key="command">
       <span class="anticon"><font-awesome-icon icon="fa-solid fa-terminal" /></span>

@@ -2,8 +2,8 @@
  * @Author: SIyuyuko
  * @Date: 2024-05-21 11:15:24
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-05-21 11:54:26
- * @FilePath: /tourney-site/src/views/bind.vue
+ * @LastEditTime: 2024-09-25 10:55:14
+ * @FilePath: /osu-tourney-online/src/views/bind.vue
  * @Description: 用户绑定页
 -->
 <template>bind page</template>
@@ -25,6 +25,6 @@ function log() {
   });
 }
 onMounted(() => {
-  // log();
+  log();
 });
 </script>

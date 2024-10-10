@@ -17,7 +17,8 @@ axios.interceptors.request.use(
     config.headers = {
       //'Content-Type':'application/x-www-form-urlencoded',   // 传参方式表单
       'Content-Type': 'application/json;charset=UTF-8', // 传参方式json
-      //   'token':'80c483d59ca86ad0393cf8a98416e2a1'              // token
+      //'token':'80c483d59ca86ad0393cf8a98416e2a1', // token
+      'Cache-Control': 'max-age=604800000'
     };
     // 判断是否存在token，如果存在的话，则每个http header都加上token
     if (localStorage.getItem('userKey')) {
@@ -37,6 +38,9 @@ axios.interceptors.request.use(
 //http response 拦截器
 axios.interceptors.response.use(
   (response) => {
+    response.headers = {
+      'Cache-Control':'public'
+    }
     return response;
   },
   (error) => {

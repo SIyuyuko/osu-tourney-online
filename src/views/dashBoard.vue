@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-04-28 16:43:45
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-09-30 10:49:33
+ * @LastEditTime: 2024-10-10 16:40:01
  * @FilePath: /osu-tourney-online/src/views/dashBoard.vue
  * @Description: 项目主页面
 -->
@@ -23,7 +23,7 @@
   <a-drawer v-model:open="showSetting" :title="$t('setting.title')" :width="450">
     <Setting></Setting>
   </a-drawer>
-  <Floatbuttons :player="musicplayer"/>
+  <Floatbuttons/>
 </template>
 <script setup name="Dashboard">
 import Header from '@/components/nav/header.vue';
@@ -44,8 +44,6 @@ const router = useRouter();
 let theme = inject('themeMode');
 let selectMenu = inject('current');
 let current = shallowRef();
-let musicplayer = ref();
-provide("musicplayer", musicplayer);
 let menu = ref([
   { name: 'home', component: shallowRef(Home) },
   { name: 'tournament', component: shallowRef(Tournament) },

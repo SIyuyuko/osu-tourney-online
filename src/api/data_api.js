@@ -80,6 +80,10 @@ export const getBeatmapBg = params => {
   return axios({
     method: "get",
     url: `/api/background/${params}`,
+    headers: {
+      'Cache-Control': 'max-age=604800000'
+    },
+    responseType: 'blob',
   });
 };
 // 获取谱面文件

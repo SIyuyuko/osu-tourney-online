@@ -49,6 +49,13 @@ export default {
     emptyActive: 'no pinned mappool',
     empty: 'no mappool',
   },
+  songlist: {
+    header: "Beatmap Song List",
+    floatButton: "Music Player"
+  },
+  element: {
+    mapInput: "input beatmap ID here"
+  },
   command: {
     list: 'Commands List',
     seeWiki: 'click to see official wiki',

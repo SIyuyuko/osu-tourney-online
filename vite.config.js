@@ -27,6 +27,11 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/sp/, '')
       },
+      "/bot": {
+        target: "https://bot.365246692.xyz/",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/bot/, ''),
+      },
     },
   },
   esbuild: {

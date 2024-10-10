@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-25 15:12:59
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-09-30 17:42:15
+ * @LastEditTime: 2024-10-10 16:37:20
  * @FilePath: /osu-tourney-online/src/components/util/FloatButtons.vue
  * @Description: 浮动播放器组件
 -->
@@ -10,20 +10,22 @@
 	<!-- 谱面播放器 -->
 	<div class="beatmap-player" :style="playerStyle">
 		<div class="beatmap-info" :style="bgStyle">
-			<div v-if="info && !spinning" class="beatmap-title">
-				<!-- <span class="title">{{ info.beatmapset?.title }}</span> -->
-				<!-- <span class="artist">{{ info.beatmapset?.artist }}</span> -->
-				<font-awesome-icon icon="fa-solid fa-backward-step" />
+			<div class="beatmap-title">
+				<font-awesome-icon icon="fa-solid fa-backward-step" @click="skipMusic('backward')" />
 				<font-awesome-icon v-if="isPlaying" icon="fa-solid fa-pause" @click="plyr.player.pause()" />
 				<font-awesome-icon v-else icon="fa-solid fa-play" @click="plyr.player.play()" />
-				<font-awesome-icon icon="fa-solid fa-forward-step" />
-				<font-awesome-icon icon="fa-solid fa-repeat" />
-				<!-- <font-awesome-icon icon="fa-solid fa-shuffle" /> -->
+				<font-awesome-icon icon="fa-solid fa-forward-step" @click="skipMusic('forward')" />
+				<font-awesome-icon v-if="playMode === 'orderby'" icon="fa-solid fa-repeat"
+					@click="toggleMode('random')" />
+				<font-awesome-icon v-if="playMode === 'random'" icon="fa-solid fa-shuffle"
+					@click="toggleMode('single')" />
+				<font-awesome-icon v-if="playMode === 'single'" icon="fa-solid fa-repeat" fade
+					@click="toggleMode('orderby')" />
 				<font-awesome-icon icon="fa-solid fa-share-nodes" @click="jumpBeatmap(info)" />
 			</div>
-			<div v-else class="beatmap-title">
+			<!-- <div v-else class="beatmap-title">
 				<a-spin :spinning="spinning" tip="Loading..." size="small" style="color: inherit;"></a-spin>
-			</div>
+			</div> -->
 		</div>
 		<vue-plyr ref="plyr">
 			<audio controls crossorigin playsinline autoplay source=songUrl>
@@ -33,7 +35,7 @@
 	</div>
 	<!-- 浮动按钮组 -->
 	<a-float-button-group>
-		<a-float-button class="backtop-btn" :tooltip="$t('tool.musics')" @click="togglePlayer()">
+		<a-float-button class="backtop-btn" :tooltip="$t('songlist.floatButton')" @click="togglePlayer()">
 			<template #icon>
 				<font-awesome-icon v-if="isPlaying" icon="fa-solid fa-compact-disc" spin />
 				<font-awesome-icon v-else icon="fa-solid fa-compact-disc" />
@@ -46,13 +48,17 @@ import { onMounted, ref, watch } from 'vue';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
 const usePlyr = usePlyrStore();
-const { plyr, bgUrl, info, spinning, songUrl } = storeToRefs(usePlyr); //播放器实例
+const { plyr, bgUrl, info, spinning, songUrl, songlist } = storeToRefs(usePlyr); //播放器实例
+const { loadMusic } = usePlyr;
+import { debounce, shuffle } from "lodash";
 let playerStyle = ref({}); //播放器样式
 let bgStyle = ref({
-	"visibility": "hidden",
+	// "visibility": "hidden",
 }); //封面样式
 let isPlaying = ref(false); //是否正在播放
 let isShow = ref(false); //是否显示播放器
+let isEnd = ref(0); //当前歌曲是否结束播放
+let playMode = ref("orderby"); //播放模式
 // 是否显示播放器
 function togglePlayer() {
 	playerStyle.value = isShow.value ? {
@@ -87,9 +93,36 @@ function initPlyr(songUrl) {
 	plyr.value.player.on('pause', (playing) => {
 		isPlaying.value = playing.detail.plyr.playing;
 	});
-	console.log(plyr.value);
-
+	// 监听是否播放结束
+	plyr.value.player.on('ended', () => {
+		isEnd.value++;
+	});
+	// console.log(plyr.value);
 };
+// 切换歌曲（前进/后退）
+function skipMusic(param) {
+	let currentIndex = songlist.value.findIndex((item) => item.id === info.value.id);
+	switch (param) {
+		case "backward":
+			info.value = songlist.value[currentIndex - 1 < 0 ? songlist.value.length - 1 : currentIndex - 1];
+			break;
+		case "forward":
+			info.value = songlist.value[currentIndex + 1 > songlist.value.length - 1 ? 0 : currentIndex + 1];
+			break;
+	}
+};
+// 切换播放模式
+function toggleMode(mode) {
+	playMode.value = mode;
+	switch (mode) {
+		case "random":
+			songlist.value = shuffle(songlist.value);
+			break;
+		default:
+			break;
+	}
+};
+
 // 谱面信息官网跳转
 function jumpBeatmap(info) {
 	if (info) {
@@ -111,8 +144,8 @@ watch(bgUrl, (val) => {
 		"background-position": "center",
 		"background-size": "cover",
 		"margin-bottom": "-10px",
-		"transition": "margin-bottom 0.5s ease",
-		"visibility": "visible",
+		// "transition": "margin-bottom 0.5s ease",
+		// "visibility": "visible",
 	}
 }, {
 	deep: true
@@ -123,14 +156,24 @@ watch(isPlaying, (val) => {
 	};
 }, {
 	once: true
-})
+});
+watch(isEnd, debounce(() => {
+	if (playMode.value === 'single') {
+		plyr.value.player.play();
+	} else {
+		skipMusic("forward");
+	};
+}, 2000))
+// watch(info, debounce((val) => {
+// 	loadMusic(val.id, val);
+// }, 2000))
 </script>
 <style lang="scss" scoped>
 .beatmap-player {
 	height: auto;
 	width: 400px;
 	position: fixed;
-	z-index: 3;
+	z-index: 999;
 	right: -400px;
 	bottom: 15%;
 	color: #ffffff;
@@ -141,7 +184,7 @@ watch(isPlaying, (val) => {
 		display: flex;
 		height: 60px;
 		z-index: -1;
-		margin-bottom: -60px;
+		margin-bottom: -10px;
 		position: relative;
 		border-radius: 10px 10px 0 0;
 		overflow: hidden;

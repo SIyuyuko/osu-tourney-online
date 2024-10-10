@@ -49,6 +49,13 @@ export default {
     emptyActive: '暂无置顶图池',
     empty: '暂无图池',
   },
+  songlist: {
+    header: "谱面歌单",
+    floatButton:"听音乐"
+  },
+  element: {
+    mapInput:"请输入谱面ID"
+  },
   command: {
     list: '指令列表',
     seeWiki: '点击查看官网wiki',

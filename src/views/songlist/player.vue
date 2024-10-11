@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-29 14:21:51
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-10-10 16:41:39
+ * @LastEditTime: 2024-10-11 12:32:53
  * @FilePath: /osu-tourney-online/src/views/songlist/player.vue
  * @Description: 音乐播放器面板
 -->
@@ -26,7 +26,7 @@
 			<a-input-search class="ant-input-search" v-model:value="bid" :placeholder="$t('element.mapInput')"
 				@search="onSearch" :bordered="true" allow-clear enter-button @keyup.enter="onSearch" />
 		</div>
-		<a-list size="small" bordered :data-source="songlist" style="overflow: auto;height: 100%;">
+		<a-list ref="listRef" size="small" bordered :data-source="songlist" style="overflow: auto;height: 100%;">
 			<template #renderItem="{ item }">
 				<a-list-item>
 					<template #actions>
@@ -50,21 +50,21 @@
 	</div>
 </template>
 <script setup name="Player">
-import { onMounted, ref, watch, onBeforeUnmount } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { getBeatmapInfo } from '@/api/data_api.js';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
-import Musicbar from '@/components/element/musicbar.vue'
+import Musicbar from '@/components/element/musicbar.vue';
+import { useScroll } from '@vueuse/core';
 const usePlyr = usePlyrStore();
-const { bgUrl, info, spinning, songUrl, songlist } = storeToRefs(usePlyr); //播放器实例
-const { loadMusic } = usePlyr;
+const { bgUrl, info, spinning, songlist } = storeToRefs(usePlyr); //播放器实例
 let bid = ref(""); //谱面ID
 let playerStyle = ref({}); //播放器样式
 let bgStyle = ref({}); //封面样式
 const onSearch = ref((val) => {
 	getBeatMap(val);
 }); //搜索事件钩子
-let list = ref([]);
+const listRef = ref(null);
 // 获取谱面信息
 async function getBeatMap(bid) {
 	let data;
@@ -102,10 +102,10 @@ function deleteMusic(value) {
 	songlist.value = songlist.value.filter((item) => item?.id !== value?.id);
 }
 // 谱面信息官网跳转
-function jumpBeatmap(bid) {
-	let url = "http://osu.ppy.sh/b/" + bid;
-	window.open(url, "_blank");
-};
+// function jumpBeatmap(bid) {
+// 	let url = "http://osu.ppy.sh/b/" + bid;
+// 	window.open(url, "_blank");
+// };
 // 初始化播放列表
 async function initList() {
 	for (let item of songlist.value) {
@@ -116,23 +116,7 @@ onMounted(() => {
 	bgUrl.value = "/config/image/banner/cover.jpeg";
 	let localList = JSON.parse(localStorage.getItem('songlist'));
 	if (!localList) {
-		songlist.value = [
-			// 3628770
-			// , 4465678
-			// , 4593330
-			// , 4473195
-			// , 4200548
-			// , 4528039
-			// , 4459927
-			// , 3947249
-			// , 4521159
-			// , 4463627
-			// , 4572600
-			// , 4327655
-			// , 4568443
-			// , 3313173
-			// 4569171
-		];
+		songlist.value = [];
 		initList();
 	} else {
 		songlist.value = localList;
@@ -154,6 +138,11 @@ watch(bgUrl, (val) => {
 		"background-size": "cover",
 	}
 });
+watch(info, (val) => {
+	const { y } = useScroll(listRef.value.$el, { behavior: 'smooth' });
+	let index = songlist.value.findIndex((item) => item.id === val.id);
+	y.value = 33.675 * index;
+})
 </script>
 <style lang="scss" scoped>
 .beatmap-player {
@@ -178,7 +167,7 @@ watch(bgUrl, (val) => {
 		.mask {
 			width: 100%;
 			backdrop-filter: brightness(0.6) blur(10px);
-			-webkit-backdrop-filter: brightness(0.6) blur(1px);
+			-webkit-backdrop-filter: brightness(0.6) blur(10px);
 			padding: 10px;
 			display: flex;
 			border-radius: 10px;
@@ -235,40 +224,6 @@ watch(bgUrl, (val) => {
 	.beatmap-query {
 		display: flex;
 		column-gap: 20px;
-
-		// :deep(.ant-input-search .ant-input-group .ant-input-affix-wrapper:not(:last-child)) {
-		// 	border-start-start-radius: 0px;
-		// 	border-end-start-radius: 0px;
-		// }
-
-		// :deep(.ant-input-search >.ant-input-group >.ant-input-group-addon:last-child .ant-input-search-button) {
-		// 	padding-top: 0;
-		// 	padding-bottom: 0;
-		// 	border-start-start-radius: 0;
-		// 	border-start-end-radius: 0px;
-		// 	border-end-end-radius: 0px;
-		// 	border-end-start-radius: 0;
-		// 	border-color: rgb(255, 255, 255, .6);
-		// }
-
-		// :deep(.ant-input-search .ant-input-group .ant-input-affix-wrapper:not(:last-child)) {
-		// 	background-color: #2A2226;
-		// 	border-color: rgb(255, 255, 255, .6);
-		// }
-
-		// :deep(.ant-input-clear-icon) {
-		// 	color: rgb(255, 255, 255, .6);
-		// }
-
-		// :deep(.ant-input) {
-		// 	background-color: #2A2226;
-		// 	color: #ffffff;
-		// }
-
-		// ::placeholder {
-		// 	color: rgb(255, 255, 255, .6);
-		// }
-
 	}
 }
 
@@ -293,34 +248,6 @@ watch(bgUrl, (val) => {
 		.ant-list-item-action {
 			width: 55px;
 		}
-	}
-}
-
-@keyframes wordsLoop {
-	0% {
-		transform: translateX(10px);
-	}
-
-	50% {
-		transform: translateX(-20%);
-	}
-
-	100% {
-		transform: translateX(-10px);
-	}
-}
-
-@-webkit-keyframes wordsLoop {
-	0% {
-		transform: translateX(10px);
-	}
-
-	50% {
-		transform: translateX(-20%);
-	}
-
-	100% {
-		transform: translateX(-10px);
 	}
 }
 </style>

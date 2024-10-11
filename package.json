@@ -17,7 +17,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.5.2",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@fortawesome/vue-fontawesome": "^3.0.6",
-    "@vueuse/core": "^10.11.0",
+    "@vueuse/core": "^11.1.0",
     "ant-design-vue": "^4.2.3",
     "axios": "^1.7.0",
     "dayjs": "^1.11.11",

@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-29 14:21:51
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-10-11 12:32:53
+ * @LastEditTime: 2024-10-11 14:00:33
  * @FilePath: /osu-tourney-online/src/views/songlist/player.vue
  * @Description: 音乐播放器面板
 -->
@@ -28,9 +28,9 @@
 		</div>
 		<a-list ref="listRef" size="small" bordered :data-source="songlist" style="overflow: auto;height: 100%;">
 			<template #renderItem="{ item }">
-				<a-list-item>
+				<a-list-item ref="listItemRef">
 					<template #actions>
-						<a v-if="info?.id !== item?.id && item?.id" @click="info = item">
+						<a v-if="info?.id !== item?.id && item?.id" @click="listScroll(); info = item;">
 							<font-awesome-icon icon="fa-solid fa-circle-play" />
 						</a>
 						<Musicbar v-else-if="info?.id === item?.id && item?.id" />
@@ -55,7 +55,7 @@ import { getBeatmapInfo } from '@/api/data_api.js';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
 import Musicbar from '@/components/element/musicbar.vue';
-import { useScroll } from '@vueuse/core';
+import { useScroll, useResizeObserver } from '@vueuse/core';
 const usePlyr = usePlyrStore();
 const { bgUrl, info, spinning, songlist } = storeToRefs(usePlyr); //播放器实例
 let bid = ref(""); //谱面ID
@@ -65,6 +65,7 @@ const onSearch = ref((val) => {
 	getBeatMap(val);
 }); //搜索事件钩子
 const listRef = ref(null);
+const listItemRef = ref(null);
 // 获取谱面信息
 async function getBeatMap(bid) {
 	let data;
@@ -81,12 +82,12 @@ async function getBeatMap(bid) {
 					}
 				});
 				let arr = songlist.value.filter((item) => item.id === data.id);
-				console.log(arr, songlist.value);
-
 				if (arr.length === 0) {
 					songlist.value.push(data);
 					info.value = data;
-				};
+				} else {
+					info.value = data;
+				}
 				spinning.value = false;
 			}
 		}
@@ -100,6 +101,12 @@ async function getBeatMap(bid) {
 // 移除歌曲
 function deleteMusic(value) {
 	songlist.value = songlist.value.filter((item) => item?.id !== value?.id);
+}
+// 播放列表滚动条跟随
+function listScroll() {
+	const { y } = useScroll(listRef.value.$el, { behavior: 'smooth' });
+	let index = songlist.value.findIndex((item) => item.id === info.value.id);
+	y.value = (index + 1) === songlist.value.length ? listItemRef.value.$el.clientHeight * (index + 1) : listItemRef.value.$el.clientHeight * index;
 }
 // 谱面信息官网跳转
 // function jumpBeatmap(bid) {
@@ -138,10 +145,8 @@ watch(bgUrl, (val) => {
 		"background-size": "cover",
 	}
 });
-watch(info, (val) => {
-	const { y } = useScroll(listRef.value.$el, { behavior: 'smooth' });
-	let index = songlist.value.findIndex((item) => item.id === val.id);
-	y.value = 33.675 * index;
+watch(info, () => {
+	listScroll();
 })
 </script>
 <style lang="scss" scoped>

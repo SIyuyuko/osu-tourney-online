@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-29 14:21:51
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-10-11 14:00:33
+ * @LastEditTime: 2024-10-11 14:51:34
  * @FilePath: /osu-tourney-online/src/views/songlist/player.vue
  * @Description: 音乐播放器面板
 -->
@@ -30,7 +30,7 @@
 			<template #renderItem="{ item }">
 				<a-list-item ref="listItemRef">
 					<template #actions>
-						<a v-if="info?.id !== item?.id && item?.id" @click="listScroll(); info = item;">
+						<a v-if="info?.id !== item?.id && item?.id" @click="info = item; listScroll();">
 							<font-awesome-icon icon="fa-solid fa-circle-play" />
 						</a>
 						<Musicbar v-else-if="info?.id === item?.id && item?.id" />
@@ -55,7 +55,7 @@ import { getBeatmapInfo } from '@/api/data_api.js';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
 import Musicbar from '@/components/element/musicbar.vue';
-import { useScroll, useResizeObserver } from '@vueuse/core';
+import { useScroll } from '@vueuse/core';
 const usePlyr = usePlyrStore();
 const { bgUrl, info, spinning, songlist } = storeToRefs(usePlyr); //播放器实例
 let bid = ref(""); //谱面ID

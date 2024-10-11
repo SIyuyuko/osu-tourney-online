@@ -1,5 +1,4 @@
 import axios from '../http/axios.js';
-import { model } from './environment.js';
 /** 登录获取授权链接 */
 export const getOauthUrl = () => {
   return axios({
@@ -42,7 +41,7 @@ export const getDice = (params) => {
 export const getLogin = (params) => {
   return axios({
     method: 'get',
-    url: `/login`,
+    url: `/bot/login`,
     params,
   });
 };
@@ -50,7 +49,7 @@ export const getLogin = (params) => {
 export const getUserInfo = (params) => {
   return axios({
     method: 'get',
-    url: `/info/json?uid=${params}`,
+    url: `/bot/info/json?uid=${params}`,
   });
 };
 /**
@@ -61,7 +60,7 @@ export const getUserInfo = (params) => {
 export const getBeatmapInfo = params => {
   return axios({
     method: "get",
-    url: `/api/info/${params}`,
+    url: `/bot/api/info/${params}`,
   });
 };
 /**
@@ -72,14 +71,14 @@ export const getBeatmapInfo = params => {
 export const getBeatmapAttributes = params => {
   return axios({
     method: "get",
-    url: `/attr/json?bid=${params.bid}&mods=${params.mod}&mode=${params.mode}`,
+    url: `/bot/attr/json?bid=${params.bid}&mods=${params.mod}&mode=${params.mode}`,
   });
 };
 // 获取谱面bg
 export const getBeatmapBg = params => {
   return axios({
     method: "get",
-    url: `/api/background/${params}`,
+    url: `/bot/api/background/${params}`,
     headers: {
       'Cache-Control': 'max-age=604800000'
     },
@@ -91,6 +90,6 @@ export const getBeatmapFile = params => {
   return axios({
     method: "get",
     url: `/sp/file/map/fileName/song/${params}`,
-    baseURL: model.sp,
+    baseURL: window.location.href,
   });
 };

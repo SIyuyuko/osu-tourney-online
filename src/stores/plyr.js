@@ -20,7 +20,6 @@ export const usePlyrStore = defineStore('plyr', () => {
 	// 加载音乐
 	async function loadMusic(bid, data) {
 		info.value = data;
-		clearTimeout(timer.value);
 		let param = getFileUrl(info.value.beatmapset_id, "audio.mp3");
 		fetch(param).then(() => {
 			songUrl.value = param;

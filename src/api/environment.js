@@ -17,5 +17,5 @@ export const isTestEnv = window.location.hostname === 'api.test.cn'; // 是否�
 /* 接口地址 */
 export const customBaseUrl = isDevelopEnv ? 'https://sp.365246692.xyz' : '';
 export const model = {
-  sp: "http://localhost:5173",// 开发环境重定向
+  sp: !isDevelopEnv ? "http://localhost:5173" : "",// 开发环境重定向
 }

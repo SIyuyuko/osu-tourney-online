@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-25 15:12:59
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-10-10 16:37:20
+ * @LastEditTime: 2024-10-11 10:28:55
  * @FilePath: /osu-tourney-online/src/components/util/FloatButtons.vue
  * @Description: 浮动播放器组件
 -->
@@ -48,8 +48,7 @@ import { onMounted, ref, watch } from 'vue';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
 const usePlyr = usePlyrStore();
-const { plyr, bgUrl, info, spinning, songUrl, songlist } = storeToRefs(usePlyr); //播放器实例
-const { loadMusic } = usePlyr;
+const { plyr, bgUrl, info, songUrl, songlist } = storeToRefs(usePlyr); //播放器实例
 import { debounce, shuffle } from "lodash";
 let playerStyle = ref({}); //播放器样式
 let bgStyle = ref({
@@ -107,7 +106,12 @@ function skipMusic(param) {
 			info.value = songlist.value[currentIndex - 1 < 0 ? songlist.value.length - 1 : currentIndex - 1];
 			break;
 		case "forward":
-			info.value = songlist.value[currentIndex + 1 > songlist.value.length - 1 ? 0 : currentIndex + 1];
+			if (playMode.value === "random") {
+				let index = Math.floor(Math.random() * songlist.value.length);
+				info.value = songlist.value[index];
+			} else {
+				info.value = songlist.value[currentIndex + 1 > songlist.value.length - 1 ? 0 : currentIndex + 1];
+			}
 			break;
 	}
 };
@@ -164,9 +168,6 @@ watch(isEnd, debounce(() => {
 		skipMusic("forward");
 	};
 }, 2000))
-// watch(info, debounce((val) => {
-// 	loadMusic(val.id, val);
-// }, 2000))
 </script>
 <style lang="scss" scoped>
 .beatmap-player {

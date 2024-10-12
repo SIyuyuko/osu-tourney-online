@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-29 11:42:08
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-10-10 01:08:11
+ * @LastEditTime: 2024-10-12 10:16:58
  * @FilePath: /osu-tourney-online/src/views/songlist/index.vue
  * @Description: 歌单页面组件
 -->
@@ -13,12 +13,15 @@
 			<div>
 				<Player />
 			</div>
-			<div></div>
+			<div>
+				<Album />
+			</div>
 		</div>
 	</div>
 </template>
 <script setup name="Songlist">
 import Player from './player.vue';
+import Album from './album.vue';
 </script>
 <style lang="scss" scoped>
 .page {
@@ -36,7 +39,7 @@ import Player from './player.vue';
 
 	.view {
 		overflow-x: hidden;
-		overflow-y: auto;
+		overflow-y: hidden;
 		padding: 10px;
 		display: flex;
 		column-gap: 10px;
@@ -45,6 +48,22 @@ import Player from './player.vue';
 		div {
 			width: 50%;
 			height: 100%;
+			overflow: hidden;
+		}
+	}
+}
+:deep(.ant-list) {
+	* {
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		overflow: hidden;
+	}
+
+	.ant-list-item.songlist{
+		height: 45px;
+
+		.ant-list-item-action {
+			width: 55px;
 		}
 	}
 }

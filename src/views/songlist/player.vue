@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-29 14:21:51
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-10-11 14:51:34
+ * @LastEditTime: 2024-10-12 16:42:08
  * @FilePath: /osu-tourney-online/src/views/songlist/player.vue
  * @Description: 音乐播放器面板
 -->
@@ -28,9 +28,9 @@
 		</div>
 		<a-list ref="listRef" size="small" bordered :data-source="songlist" style="overflow: auto;height: 100%;">
 			<template #renderItem="{ item }">
-				<a-list-item ref="listItemRef">
+				<a-list-item class="songlist" ref="listItemRef">
 					<template #actions>
-						<a v-if="info?.id !== item?.id && item?.id" @click="info = item; listScroll();">
+						<a v-if="info?.id !== item?.id && item?.id" @click="queryMusic(item)">
 							<font-awesome-icon icon="fa-solid fa-circle-play" />
 						</a>
 						<Musicbar v-else-if="info?.id === item?.id && item?.id" />
@@ -85,6 +85,7 @@ async function getBeatMap(bid) {
 				if (arr.length === 0) {
 					songlist.value.push(data);
 					info.value = data;
+					listScroll();
 				} else {
 					info.value = data;
 				}
@@ -98,16 +99,34 @@ async function getBeatMap(bid) {
 	});
 
 };
+// 搜索歌曲
+function queryMusic(value) {
+	info.value = value;
+	listScroll();
+};
 // 移除歌曲
 function deleteMusic(value) {
 	songlist.value = songlist.value.filter((item) => item?.id !== value?.id);
-}
+};
 // 播放列表滚动条跟随
 function listScroll() {
 	const { y } = useScroll(listRef.value.$el, { behavior: 'smooth' });
-	let index = songlist.value.findIndex((item) => item.id === info.value.id);
-	y.value = (index + 1) === songlist.value.length ? listItemRef.value.$el.clientHeight * (index + 1) : listItemRef.value.$el.clientHeight * index;
-}
+	if (info.value) {
+		setTimeout(() => {
+			let index = songlist.value.findIndex((item) => item.id === info.value.id);
+			if (listItemRef.value) {
+				y.value = (index + 1) === songlist.value.length ? listItemRef.value.$el.clientHeight * (songlist.value.length + 1) : listItemRef.value.$el.clientHeight * index;
+			};
+		}, 1000);
+	} else {
+		setTimeout(() => {
+			if (listItemRef.value) {
+				y.value = listItemRef.value.$el.clientHeight * (songlist.value.length + 1);
+			};
+		}, 500)
+	}
+
+};
 // 谱面信息官网跳转
 // function jumpBeatmap(bid) {
 // 	let url = "http://osu.ppy.sh/b/" + bid;
@@ -147,7 +166,12 @@ watch(bgUrl, (val) => {
 });
 watch(info, () => {
 	listScroll();
-})
+});
+watch(songlist, (newVal, oldVal) => {
+	if (newVal.length === oldVal.length) {
+		listScroll();
+	}
+}, { deep: true })
 </script>
 <style lang="scss" scoped>
 .beatmap-player {

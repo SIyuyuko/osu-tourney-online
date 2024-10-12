@@ -51,7 +51,10 @@ export default {
   },
   songlist: {
     header: "谱面歌单",
-    floatButton:"听音乐"
+    floatButton:"听音乐",
+    playAll:"播放全部",
+    create:"创建",
+    albumList:"歌单列表"
   },
   element: {
     mapInput:"请输入谱面ID"

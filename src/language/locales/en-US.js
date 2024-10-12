@@ -51,7 +51,10 @@ export default {
   },
   songlist: {
     header: "Beatmap Song List",
-    floatButton: "Music Player"
+    floatButton: "Music Player",
+    playAll:"Play",
+    create:"created",
+    albumList:"Album List"
   },
   element: {
     mapInput: "input beatmap ID here"

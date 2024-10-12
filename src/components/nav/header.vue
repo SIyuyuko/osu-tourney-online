@@ -1,8 +1,8 @@
 <!--
  * @Author: SIyuyuko
  * @Date: 2024-05-06 15:55:22
- * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-09-25 14:39:14
+ * @LastEditors: SIyuyuko 3228981717@qq.com
+ * @LastEditTime: 2024-10-12 23:03:48
  * @FilePath: /osu-tourney-online/src/components/nav/header.vue
  * @Description: 页头导航栏
 -->
@@ -45,7 +45,7 @@
       </a-button>
     </div>
     <div class="user-header">
-      <a-button type="link">
+      <a-button type="link" @click="log()">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
       </a-button>
       <a-button type="link" @click="openUrl(repoUrl)">
@@ -59,6 +59,7 @@
 </template>
 <script setup name="Header">
 import { inject, ref, onBeforeMount } from 'vue';
+import { getOauthUrl } from "@/api/data_api";
 import Menu from './menu.vue';
 let theme = inject('themeMode');
 let collapsed = inject('collapsed');
@@ -79,6 +80,17 @@ function toggleTheme() {
 // 网页跳转
 function openUrl(url) {
   window.open(url, '_blank');
+}
+// 登录/登出
+async function log() {
+  getOauthUrl().then((res) => {
+    if (res.status === 200 && res.data) {
+      const link = document.createElement("a");
+      link.href = res.data.message;
+      link.click();
+    }
+  })
+
 }
 onBeforeMount(() => {
   if (localStorage.getItem('userKey')) {

@@ -1,8 +1,8 @@
 <!--
  * @Author: SIyuyuko
  * @Date: 2024-10-11 16:30:06
- * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-10-12 17:45:02
+ * @LastEditors: SIyuyuko 3228981717@qq.com
+ * @LastEditTime: 2024-10-12 21:45:55
  * @FilePath: /osu-tourney-online/src/views/songlist/album.vue
  * @Description: 歌单列表组件
 -->
@@ -35,9 +35,10 @@
 	</a-tabs>
 </template>
 <script setup name="Album">
-import { ref, nextTick, watch, onMounted } from 'vue';
+import { ref, nextTick, watch, onMounted,computed } from 'vue';
 import AlbumView from './albumView.vue';
 import { useResizeObserver } from '@vueuse/core';
+import i18n from '@/language';
 let paneRef = ref(null);
 let viewHeight = ref(0);
 useResizeObserver(paneRef, (entries) => {
@@ -61,7 +62,7 @@ let listData = ref([
 	// }
 ])
 let panes = ref([{
-	title: '歌单列表',
+	title: computed(()=>i18n.global.t('songlist.albumList')),
 	content: listData.value,
 	key: "home",
 	closable: false,

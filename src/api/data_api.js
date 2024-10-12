@@ -1,9 +1,18 @@
+/*
+ * @Author: SIyuyuko 3228981717@qq.com
+ * @Date: 2024-10-10 22:34:35
+ * @LastEditors: SIyuyuko 3228981717@qq.com
+ * @LastEditTime: 2024-10-12 22:32:51
+ * @FilePath: \osu-tourney-online\src\api\data_api.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import axios from '../http/axios.js';
 /** 登录获取授权链接 */
 export const getOauthUrl = () => {
   return axios({
     method: 'get',
-    url: '/api/public/getOauthUrl',
+    url: '/sp/public/getOauthUrl',
+    baseURL: window.location.href,
   });
 };
 /** token登陆 */

@@ -1,4 +1,12 @@
 <!--
+ * @Author: SIyuyuko 3228981717@qq.com
+ * @Date: 2024-10-12 18:48:53
+ * @LastEditors: SIyuyuko 3228981717@qq.com
+ * @LastEditTime: 2024-10-12 21:44:26
+ * @FilePath: \osu-tourney-online\src\views\songlist\albumView.vue
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+-->
+<!--
  * @Author: SIyuyuko
  * @Date: 2024-10-11 22:12:33
  * @LastEditors: SIyuyuko
@@ -19,15 +27,14 @@
 				<span class="title">{{ albumList.title }}</span>
 				<span class="creator" v-if="typeof albumList.creator === 'object'"><a-avatar class="avatar" :size="24"
 						:src="albumList.creator?.avatar_url" @click="jumpPage(albumList.creator)"></a-avatar>{{
-							albumList.creator?.username }}
-					创建</span>
+							albumList.creator?.username }} {{ $t("songlist.create") }}</span>
 				<span class="operate-group">
 					<a-button-group>
 						<a-button type="primary" shape="round" @click="playMusic(albumList.content, 'playAll')">
 							<template #icon>
 								<font-awesome-icon icon="fa-regular fa-circle-play" />
 							</template>
-							<span>播放全部</span>
+							<span>{{ $t("songlist.playAll") }}</span>
 						</a-button>
 						<a-button type="primary" shape="round" @click="playMusic(albumList.content, 'addAll')">
 							<template #icon><font-awesome-icon icon="fa-solid fa-plus" /></template>

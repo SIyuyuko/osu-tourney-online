@@ -48,7 +48,7 @@ import { onMounted, ref, watch } from 'vue';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
 const usePlyr = usePlyrStore();
-const { plyr, bgUrl, info, songUrl, songlist } = storeToRefs(usePlyr); //播放器实例
+const { plyr, bgUrl, info, songUrl, songlist, onPlaying } = storeToRefs(usePlyr); //播放器实例
 import { debounce, shuffle } from "lodash";
 let playerStyle = ref({}); //播放器样式
 let bgStyle = ref({
@@ -87,6 +87,7 @@ function initPlyr(songUrl) {
 	// 监听是否播放
 	plyr.value.player.on('play', (playing) => {
 		isPlaying.value = playing.detail.plyr.playing;
+		onPlaying.value = isPlaying.value;
 	});
 	// 监听是否暂停
 	plyr.value.player.on('pause', (playing) => {

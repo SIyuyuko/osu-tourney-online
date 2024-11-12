@@ -10,6 +10,7 @@ export const usePlyrStore = defineStore('plyr', () => {
 	const info = ref(); //谱面信息
 	const spinning = ref(false); //是否正在加载
 	const songlist = ref([]); //播放列表
+	const onPlaying = ref(false);
 	const timer = ref();
 	const getPlyr = computed(() => plyr.value);
 	// 音乐url模版
@@ -84,12 +85,13 @@ export const usePlyrStore = defineStore('plyr', () => {
 			bgUrl.value = val.bgUrl;
 		}
 	}, 2000));
+	// 镜像站歌曲加载失败时切换备用接口
 	watch(songUrl, debounce((val) => {
-		if (val) {
+		if (val && onPlaying.value) {
 			songUrl.value = `/sp/file/map/song/${info.value.id}`;
 			updateFileUrl(info.value, songUrl.value, 'file');
 		}
-	}, 3000));
+	}, 5000));
 
-	return { plyr, getPlyr, bgUrl, info, spinning, songUrl, songlist, loadMusic };
+	return { plyr, getPlyr, bgUrl, info, spinning, songUrl, songlist, onPlaying, loadMusic };
 });

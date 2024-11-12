@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref, watch } from 'vue';
-import { getBeatmapBg, getBeatmapFile, getBeatmapSong } from '@/api/data_api.js';
+import { getBeatmapBg, getBeatmapFile } from '@/api/data_api.js';
 import { debounce } from "lodash";
 
 export const usePlyrStore = defineStore('plyr', () => {
@@ -86,7 +86,7 @@ export const usePlyrStore = defineStore('plyr', () => {
 	}, 2000));
 	watch(songUrl, debounce((val) => {
 		if (val) {
-			songUrl.value = `/bot/sp/file/map/song/${info.value.id}`;
+			songUrl.value = `/sp/file/map/song/${info.value.id}`;
 			updateFileUrl(info.value, songUrl.value, 'file');
 		}
 	}, 3000));

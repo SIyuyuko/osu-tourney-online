@@ -85,13 +85,13 @@ export const usePlyrStore = defineStore('plyr', () => {
 			bgUrl.value = val.bgUrl;
 		}
 	}, 2000));
-	// 镜像站歌曲加载失败时切换备用接口
+	// 镜像站歌曲加载失败时切换备用接口 回调等待时间为15秒
 	watch(songUrl, debounce((val) => {
 		if (val && onPlaying.value) {
 			songUrl.value = `/sp/file/map/song/${info.value.id}`;
 			updateFileUrl(info.value, songUrl.value, 'file');
 		}
-	}, 5000));
+	}, 15000));
 
 	return { plyr, getPlyr, bgUrl, info, spinning, songUrl, songlist, onPlaying, loadMusic };
 });

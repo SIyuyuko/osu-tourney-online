@@ -85,13 +85,15 @@ export const usePlyrStore = defineStore('plyr', () => {
 			bgUrl.value = val.bgUrl;
 		}
 	}, 2000));
-	// 镜像站歌曲加载失败时切换备用接口 回调等待时间为15秒
+	// 镜像站歌曲加载失败时切换备用接口 回调等待时间为10秒
 	watch(songUrl, debounce((val) => {
-		if (val && onPlaying.value) {
+		if (val && !onPlaying.value) {
 			songUrl.value = `/sp/file/map/song/${info.value.id}`;
 			updateFileUrl(info.value, songUrl.value, 'file');
 		}
-	}, 15000));
+	}, 10000, {
+		'trailing': true, // 在延迟结束后调用
+	}));
 
 	return { plyr, getPlyr, bgUrl, info, spinning, songUrl, songlist, onPlaying, loadMusic };
 });

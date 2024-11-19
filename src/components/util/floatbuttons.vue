@@ -2,7 +2,7 @@
  * @Author: SIyuyuko
  * @Date: 2024-09-25 15:12:59
  * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-11-19 11:28:19
+ * @LastEditTime: 2024-11-19 12:06:49
  * @FilePath: /osu-tourney-online/src/components/util/FloatButtons.vue
  * @Description: 浮动播放器组件
 -->
@@ -87,7 +87,7 @@ function initPlyr(songUrl) {
 	// 监听是否播放
 	plyr.value.player.on('play', (playing) => {
 		isPlaying.value = playing.detail.plyr.playing;
-		onPlaying.value = isPlaying.value ? true : false;
+		onPlaying.value = isPlaying.value && playing.detail.plyr.duration > 0 ? true : false;
 	});
 	// 监听是否暂停
 	plyr.value.player.on('pause', (playing) => {

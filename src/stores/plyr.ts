@@ -4,57 +4,67 @@ import { getBeatmapInfo, getBeatmapBg, getBeatmapFile, getUserInfo } from '@/api
 import { shuffle } from 'lodash';
 import Plyr from 'plyr';
 
+// 曲目类型
+interface Track {
+  id: number;
+  beatmapset_id: string;
+  url?: string;
+  bgUrl?: string;
+  [key: string]: any;
+}
+
+// 专辑类型
+interface Album {
+  title: string;
+  content: (Track | number)[];
+  cover: string;
+  key: string;
+  creator: number | object;
+  description?: string;
+}
+
+// 播放状态类型
+interface PlaybackState {
+  isPlaying: boolean;
+  isLoading: boolean;
+  playMode: 'orderby' | 'random' | 'single';
+}
+
+// 当前曲目类型
+interface CurrentTrack {
+  url: string;
+  bgUrl: string;
+  info: Track | null;
+}
+
 export const usePlyrStore = defineStore('plyr', () => {
-  // 当前曲目
-  const currentTrack = ref({
+  // Core State
+  const playbackState = ref<PlaybackState>({
+    isPlaying: false,
+    isLoading: false,
+    playMode: 'orderby', // 'orderby' | 'random' | 'single'
+  });
+
+  const currentTrack = ref<CurrentTrack>({
     url: '',
     bgUrl: '',
     info: null,
   });
 
-  // 曲目类型
-  interface Track {
-    id: number;
-    beatmapset_id: string;
-    url?: string;
-    bgUrl?: string;
-    [key: string]: any;
-  }
-
-  // 资源缓存类型
-  interface ResourceCache {
-    [key: number]: {
-      audioUrl?: string;
-      bgUrl?: string;
-      loaded: boolean;
-    };
-  }
-
-  const resourceCache = ref<ResourceCache>({});
-  const originalPlaylist = ref<Track[]>([]);
+  const playlist = ref<Track[]>([]);
   const randomizedIndices = ref<number[]>([]);
-
-  // 专辑列表
-  const albums = ref([]);
-
-  // 当前激活的专辑
-  const activeAlbum = ref(null);
-
-  const playbackState = ref({
-    isPlaying: false,
-    isLoading: false,
-    playMode: 'orderby', // 'orderby' | 'random' | 'single'
-    manualSkip: false,
-  });
+  const plyrInstance = shallowRef<Plyr | null>(null);
 
   const playModeConfig = {
     orderby: {
       icon: 'fa-solid fa-repeat',
+      isSvg: false,
       fade: false,
       next: 'random',
     },
     random: {
       icon: 'fa-solid fa-shuffle',
+      isSvg: false,
       fade: false,
       next: 'single',
     },
@@ -66,16 +76,128 @@ export const usePlyrStore = defineStore('plyr', () => {
     },
   }; // 播放模式配置
 
-  // Plyr 相关
-  const audioElement = shallowRef<HTMLAudioElement | null>(null);
-  const plyrInstance = shallowRef<Plyr | null>(null);
+  // Private Methods
+  const saveToPersistentStorage = () => {
+    localStorage.setItem('plyr_playlist', JSON.stringify(playlist.value));
+    localStorage.setItem('plyr_playMode', playbackState.value.playMode);
+  };
+
+  const loadFromPersistentStorage = () => {
+    const savedPlaylist = localStorage.getItem('plyr_playlist');
+    const savedPlayMode = localStorage.getItem('plyr_playMode');
+
+    if (savedPlaylist) {
+      playlist.value = JSON.parse(savedPlaylist);
+    }
+    if (savedPlayMode) {
+      playbackState.value.playMode = savedPlayMode as PlaybackState['playMode'];
+    }
+  };
+
+  const getNextIndex = (direction: 'prev' | 'next' = 'next'): number => {
+    const currentIndex = playlist.value.findIndex((track) => track.id === currentTrack.value.info?.id);
+
+    if (playbackState.value.playMode === 'random') {
+      const randomIdx = randomizedIndices.value.findIndex((i) => i === currentIndex);
+      if (direction === 'prev') {
+        return randomizedIndices.value[randomIdx - 1 < 0 ? randomizedIndices.value.length - 1 : randomIdx - 1];
+      }
+      return randomizedIndices.value[(randomIdx + 1) % randomizedIndices.value.length];
+    }
+
+    if (direction === 'prev') {
+      return currentIndex - 1 < 0 ? playlist.value.length - 1 : currentIndex - 1;
+    }
+    return currentIndex + 1 >= playlist.value.length ? 0 : currentIndex + 1;
+  };
+
+  const setupPlyrListeners = () => {
+    if (!plyrInstance.value) return;
+
+    plyrInstance.value.on('play', () => {
+      playbackState.value.isPlaying = true;
+    });
+
+    plyrInstance.value.on('pause', () => {
+      playbackState.value.isPlaying = false;
+    });
+
+    plyrInstance.value.on('ended', () => {
+      if (playbackState.value.playMode === 'single') {
+        plyrInstance.value?.play();
+      } else {
+        skipTrack('next');
+      }
+    });
+  };
+
+  // Resource Loading
+  const loadTrackResources = async (track: Track) => {
+    if (!track) return;
+
+    try {
+      // Load audio
+      const audioFormats = ['mp3', 'ogg'];
+      let audioUrl = null;
+
+      for (const format of audioFormats) {
+        const url = `https://dl.sayobot.cn/beatmaps/files/${track.beatmapset_id}/audio.${format}`;
+        try {
+          const response = await fetch(url, { mode: 'no-cors' });
+          if (response.ok) {
+            audioUrl = url;
+            break;
+          }
+        } catch {
+          continue;
+        }
+      }
+
+      if (!audioUrl) {
+        const response = await getBeatmapFile(track.id);
+        audioUrl = response?.data?.audioUrl || `/sp/file/map/song/${track.id}`;
+      }
+
+      // Load background
+      let bgUrl = '/config/image/banner/cover.jpeg';
+      try {
+        const response = await getBeatmapBg(track.id);
+        if (response.status === 200 && response.data) {
+          const blob = new Blob([response.data], { type: 'image/jpeg' });
+          bgUrl = URL.createObjectURL(blob);
+        }
+      } catch (error) {
+        console.error('Failed to load background:', error);
+      }
+
+      currentTrack.value = {
+        url: audioUrl,
+        bgUrl,
+        info: track,
+      };
+
+      if (plyrInstance.value) {
+        plyrInstance.value.source = {
+          type: 'audio',
+          sources: [{ src: audioUrl, type: 'audio/mp3' }],
+        };
+      }
+    } catch (error) {
+      console.error('Failed to load resources:', error);
+      throw error;
+    }
+  };
+
+  // 专辑列表
+  const albums = ref([]);
+
+  // 当前激活的专辑
+  const activeAlbum = ref(null);
 
   // 初始化 Plyr
   const initializePlyr = (audioElement: HTMLAudioElement) => {
     if (plyrInstance.value) {
-      console.log('Destroying existing Plyr instance');
       plyrInstance.value.destroy();
-      console.log('Destroyed Plyr instance');
     }
 
     plyrInstance.value = new Plyr(audioElement, {
@@ -108,58 +230,16 @@ export const usePlyrStore = defineStore('plyr', () => {
     console.log('Initialized Plyr instance:', plyrInstance.value);
 
     setupPlyrListeners();
+    loadFromPersistentStorage();
   };
 
-  // 设置 Plyr 监听器
-  const setupPlyrListeners = () => {
-    if (!plyrInstance.value) return;
-
-    plyrInstance.value.on('play', () => {
-      const source = plyrInstance.value.source;
-      console.log('Current source', source);
-      playbackState.value.isPlaying = true;
-      console.log('[Invoked by plyrInstance.value.on(play,...)] Playing:', currentTrack.value.info);
-    });
-
-    plyrInstance.value.on('pause', () => {
-      playbackState.value.isPlaying = false;
-      console.log('[Invoked by plyrInstance.value.on(pause,...)] Paused:', currentTrack.value.info);
-    });
-
-    let lastPreloadCheck = 0;
-    const preloadThreshold = 0.8;
-    const checkInterval = 1000;
-
-    // 检查是否需要预加载下一首曲目
-    plyrInstance.value.on('timeupdate', () => {
-      const now = Date.now();
-      if (now - lastPreloadCheck < checkInterval) return;
-
-      const duration = plyrInstance.value?.duration || 0;
-      const currentTime = plyrInstance.value?.currentTime || 0;
-
-      if (duration && currentTime / duration > preloadThreshold) {
-        const nextTrack = getNextTrack();
-        if (nextTrack && !resourceCache.value[nextTrack.id]?.loaded) {
-          preloadTrackResources(nextTrack);
-        }
-        lastPreloadCheck = now;
-      }
-    });
-
-    plyrInstance.value.on('ended', handleTrackEnd);
-  };
-
-  // 处理播放结束
-  const handleTrackEnd = () => {
-    if (playbackState.value.playMode === 'single' && !playbackState.value.manualSkip) {
-      plyrInstance.value?.restart();
-    } else {
-      skipTrack('next');
+  const destroy = () => {
+    if (plyrInstance.value) {
+      plyrInstance.value.destroy();
+      plyrInstance.value = null;
     }
   };
 
-  // 暂停/播放
   const togglePlayback = () => {
     if (!plyrInstance.value) return;
 
@@ -170,68 +250,80 @@ export const usePlyrStore = defineStore('plyr', () => {
     }
   };
 
-  // 释放资源
-  const destroy = () => {
-    if (plyrInstance.value) {
-      plyrInstance.value.destroy();
-      plyrInstance.value = null;
+  const skipTrack = (direction: 'prev' | 'next') => {
+    if (!currentTrack.value.info || playlist.value.length === 0) return;
+    console.log('Skip track:', direction);
+    playTrack(playlist.value[getNextIndex(direction)]);
+  };
+
+  const togglePlayMode = () => {
+    const currentMode = playbackState.value.playMode;
+    playbackState.value.playMode = playModeConfig[currentMode].next as PlaybackState['playMode'];
+
+    if (playbackState.value.playMode === 'random') {
+      randomizedIndices.value = shuffle(Array.from({ length: playlist.value.length }, (_, i) => i));
+    }
+
+    saveToPersistentStorage();
+  };
+
+  const addToPlaylist = async (beatmapId: number, autoPlay = true) => {
+    try {
+      playbackState.value.isLoading = true;
+      const response = await getBeatmapInfo(beatmapId);
+
+      if (response?.status === 200 && response.data?.data) {
+        const track = response.data.data;
+
+        if (!playlist.value.some((item) => item.id === track.id)) {
+          playlist.value.push(track);
+          saveToPersistentStorage();
+        }
+
+        if (autoPlay) {
+          await playTrack(track);
+        }
+
+        return track;
+      }
+    } catch (error) {
+      console.error('Failed to add to playlist:', error);
+      throw error;
+    } finally {
+      playbackState.value.isLoading = false;
     }
   };
 
-  // 播放控制
-  async function playTrack(track: Track) {
+  const removeFromPlaylist = (trackId: number) => {
+    playlist.value = playlist.value.filter((item) => item.id !== trackId);
+
+    if (currentTrack.value.info?.id === trackId) {
+      currentTrack.value = { url: '', bgUrl: '', info: null };
+    }
+
+    saveToPersistentStorage();
+  };
+
+  const playTrack = async (track: Track) => {
     try {
-      // 先更新当前曲目信息
-      currentTrack.value.info = track;
-
-      // 标记加载状态
       playbackState.value.isLoading = true;
-
-      // 如果曲目已在播放列表中且已有资源URL，直接使用
-      if (resourceCache.value[track.id]?.loaded) {
-        const { audioUrl, bgUrl } = resourceCache.value[track.id];
-        currentTrack.value.url = audioUrl;
-        currentTrack.value.bgUrl = bgUrl;
-      } else {
-        await loadTrackResources(track);
-        resourceCache.value[track.id] = {
-          audioUrl: currentTrack.value.url,
-          bgUrl: currentTrack.value.bgUrl,
-          loaded: true,
-        };
-      }
+      currentTrack.value.info = track;
+      await loadTrackResources(track);
+      plyrInstance.value?.play();
     } catch (error) {
       console.error('Failed to play track:', error);
       throw error;
     } finally {
       playbackState.value.isLoading = false;
     }
-  }
-
-  function skipTrack(direction: 'prev' | 'next') {
-    if (!currentTrack.value.info || originalPlaylist.value.length === 0) return;
-
-    playbackState.value.manualSkip = true;
-    playTrack(originalPlaylist.value[getNextIndex(direction)]).finally(() => {
-      playbackState.value.manualSkip = false;
-    });
-  }
-
-  function togglePlayMode() {
-    const currentMode = playbackState.value.playMode;
-    playbackState.value.playMode = playModeConfig[currentMode].next;
-    if (playbackState.value.playMode === 'random') {
-      // 只打乱索引数组
-      randomizedIndices.value = shuffleArray(Array.from({ length: originalPlaylist.value.length }, (_, i) => i));
-    }
-  }
+  };
 
   // Getters
   const currentAlbumTracks = computed(() => {
     if (!activeAlbum.value) return [];
     return activeAlbum.value.content.map((id) => {
       if (typeof id === 'object') return id;
-      const track = originalPlaylist.value.find((t) => t.id === id);
+      const track = playlist.value.find((t) => t.id === id);
       return track || id;
     });
   });
@@ -251,121 +343,6 @@ export const usePlyrStore = defineStore('plyr', () => {
       throw error;
     } finally {
       playbackState.value.isLoading = false;
-    }
-  }
-
-  // 添加到播放列表
-  async function addToPlaylist(beatmapId: number, autoPlay = true) {
-    try {
-      const track = await loadBeatmap(beatmapId);
-      if (!originalPlaylist.value.some((item) => item.id === track.id)) {
-        originalPlaylist.value.push(track);
-      }
-      if (autoPlay) {
-        await loadTrackResources(track);
-      }
-      return track;
-    } catch (error) {
-      console.error('Failed to add to originalPlaylist:', error);
-      throw error;
-    }
-  }
-
-  // 加载资源
-  async function loadTrackResources(track: Track) {
-    if (!track) return;
-
-    try {
-      // 加载音频
-      const audioUrl = await loadAudioUrl(track);
-      currentTrack.value.url = audioUrl;
-      console.log('Loaded audio URL:', audioUrl);
-
-      // 加载背景
-      const bgUrl = await loadBackgroundUrl(track);
-      currentTrack.value.bgUrl = bgUrl;
-      console.log('Loaded background URL:', bgUrl);
-
-      if (!plyrInstance.value) {
-        console.log('Plyr instance not initialized, cannot play track');
-        return;
-      }
-      plyrInstance.value.play();
-    } catch (error) {
-      console.error('Failed to load resources:', error);
-      throw error;
-    }
-  }
-
-  async function preloadTrackResources(track) {
-    if (!track || resourceCache.value[track.id]?.loaded) return;
-
-    try {
-      const [audioUrl, bgUrl] = await Promise.all([loadAudioUrl(track), loadBackgroundUrl(track)]);
-
-      resourceCache.value[track.id] = {
-        audioUrl,
-        bgUrl,
-        loaded: true,
-      };
-    } catch (error) {
-      console.warn('Failed to preload:', error);
-    }
-  }
-
-  const audioUrl = (sid: string, format: string) => `https://dl.sayobot.cn/beatmaps/files/${sid}/audio.${format}`;
-
-  async function loadAudioUrl(track) {
-    const formats = ['mp3', 'ogg'];
-
-    // 添加 no-cors 模式
-    const fetchOptions: RequestInit = {
-      mode: 'no-cors' as RequestMode,
-      headers: {
-        Accept: 'audio/*',
-      },
-    };
-
-    for (const format of formats) {
-      const url = audioUrl(track.beatmapset_id, format);
-      try {
-        const response = await fetch(url, fetchOptions);
-        if (response.ok) {
-          console.log('Found audio URL:', url);
-          return url;
-        }
-      } catch {
-        continue;
-      }
-    }
-
-    console.warn('Failed to load audio URL:', track);
-
-    // 如果常规格式都失败，尝试API
-    try {
-      const response = await getBeatmapFile(track.id);
-      if (response?.data?.audioUrl) {
-        // 确保API返回了正确的音频URL
-        return response.data.audioUrl;
-      }
-    } catch (error) {
-      console.error('API load failed:', error);
-    }
-
-    // 最后的后备方案
-    return `/sp/file/map/song/${track.id}`;
-  }
-
-  async function loadBackgroundUrl(track) {
-    try {
-      const response = await getBeatmapBg(track.id);
-      if (response.status === 200 && response.data) {
-        const blob = new Blob([response.data], { type: 'image/jpeg' });
-        return URL.createObjectURL(blob);
-      }
-    } catch (error) {
-      console.error('Failed to load background:', error);
-      return '/config/image/banner/cover.jpeg';
     }
   }
 
@@ -393,17 +370,12 @@ export const usePlyrStore = defineStore('plyr', () => {
     }
   }
 
-  function getNextTrack() {
-    if (!currentTrack.value.info) return null;
-    return originalPlaylist.value[getNextIndex()];
-  }
-
   function playAlbum(album, shuffle = false) {
     if (shuffle) {
       album.content = shuffleArray([...album.content]);
     }
     if (album.content.length > 0) {
-      const firstTrack = typeof album.content[0] === 'object' ? album.content[0] : originalPlaylist.value.find((t) => t.id === album.content[0]);
+      const firstTrack = typeof album.content[0] === 'object' ? album.content[0] : playlist.value.find((t) => t.id === album.content[0]);
       if (firstTrack) {
         playTrack(firstTrack);
       }
@@ -415,73 +387,23 @@ export const usePlyrStore = defineStore('plyr', () => {
     return shuffle(array);
   }
 
-  function getNextIndex(direction: 'prev' | 'next' = 'next'): number {
-    const currentIndex = originalPlaylist.value.findIndex((track) => track.id === currentTrack.value.info?.id);
-
-    if (playbackState.value.playMode === 'random') {
-      const randomIdx = randomizedIndices.value.findIndex((i) => i === currentIndex);
-      if (direction === 'prev') {
-        return randomizedIndices.value[randomIdx - 1 < 0 ? randomizedIndices.value.length - 1 : randomIdx - 1];
-      }
-      return randomizedIndices.value[(randomIdx + 1) % randomizedIndices.value.length];
-    }
-
-    if (direction === 'prev') {
-      return currentIndex - 1 < 0 ? originalPlaylist.value.length - 1 : currentIndex - 1;
-    }
-    return currentIndex + 1 >= originalPlaylist.value.length ? 0 : currentIndex + 1;
-  }
-
-  // 持久化
-  function saveToLocalStorage() {
-    localStorage.setItem('songlist', JSON.stringify(originalPlaylist.value));
-    localStorage.setItem('albums', JSON.stringify(albums.value));
-  }
-
-  function loadFromLocalStorage() {
-    const savedPlaylist = localStorage.getItem('songlist');
-    const savedAlbums = localStorage.getItem('albums');
-
-    if (savedPlaylist) {
-      originalPlaylist.value = JSON.parse(savedPlaylist);
-    }
-
-    if (savedAlbums) {
-      albums.value = JSON.parse(savedAlbums);
-    }
-  }
-
   return {
     // State
     playbackState,
     currentTrack,
-    originalPlaylist,
-    audioElement,
-    plyrInstance,
-    albums,
-    activeAlbum,
+    playlist,
     playModeConfig,
 
-    // Getters
-    currentAlbumTracks,
-
-    // Actions
-    loadBeatmap,
-    addToPlaylist,
-    loadTrackResources,
-    loadAlbum,
+    // Methods
+    saveToPersistentStorage,
+    loadFromPersistentStorage,
     initializePlyr,
-    togglePlayback,
     destroy,
-    playTrack,
-    playAlbum,
-    togglePlayMode,
+    togglePlayback,
     skipTrack,
-    saveToLocalStorage,
-    loadFromLocalStorage,
-
-    // Utils
-    // loadAudioUrl,
-    // loadBackgroundUrl,
+    togglePlayMode,
+    addToPlaylist,
+    removeFromPlaylist,
+    playTrack,
   };
 });

@@ -40,13 +40,13 @@
 </template>
 
 <script setup lang="ts" name="FloatButtons">
-import { onBeforeUnmount, onMounted, ref, computed, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
 import 'plyr/dist/plyr.css';
 
 const store = usePlyrStore();
-const { audioElement, plyrInstance, currentTrack, playbackState } = storeToRefs(store);
+const { currentTrack, playbackState } = storeToRefs(store);
 let isExpanded = ref(false); //是否显示播放器
 
 let playerStyle = computed(() => ({
@@ -55,7 +55,7 @@ let playerStyle = computed(() => ({
 })); //播放器样式
 
 const backgroundStyle = computed(() => ({
-  backgroundImage: `url(${currentTrack.value.bgUrl})`,
+  backgroundImage: `url(${currentTrack.value.bgUrl || '/config/image/banner/cover.jpeg'})`,
   backgroundPosition: 'center',
   backgroundSize: 'cover',
   // "transition": "margin-bottom 0.5s ease",
@@ -81,11 +81,8 @@ const openBeatmapPage = () => {
 // 只需在组件挂载时初始化 Plyr
 onMounted(() => {
   const audioElement = document.querySelector('audio');
-  console.log(audioElement);
   if (audioElement) {
-    console.log('initialize plyr');
     store.initializePlyr(audioElement);
-    console.log('plyr initialized');
   }
 });
 
@@ -94,25 +91,6 @@ onMounted(() => {
 //     store.plyrInstance.play();
 //   }
 // });
-
-// 监听 currentTrack 变化
-watch(
-  () => currentTrack.value.url,
-  (newUrl) => {
-    if (!newUrl || !plyrInstance.value) return;
-
-    // 更新播放源
-    plyrInstance.value.source = {
-      type: 'audio',
-      sources: [
-        {
-          src: newUrl,
-          type: 'audio/mp3',
-        },
-      ],
-    };
-  }
-);
 
 // Lifecycle
 onBeforeUnmount(() => {

@@ -1,0 +1,64 @@
+{
+  "compilerOptions": {
+    // 目标 ECMAScript 版本
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "module": "ESNext",
+
+    // 模块解析策略
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+
+    // 源码映射
+    "sourceMap": true,
+
+    // 解析非相对模块的基地址
+    "baseUrl": ".",
+
+    // 路径别名
+    "paths": {
+      "@/*": ["src/*"],
+      "~/*": ["types/*"]
+    },
+
+    // 类型定义文件
+    "types": ["node", "vite/client", "vue/ref-macros"],
+
+    // 库定义文件
+    "lib": ["ESNext", "DOM", "DOM.Iterable"],
+
+    // 允许从没有默认导出的模块进行默认导入
+    "allowSyntheticDefaultImports": true,
+
+    // 解析 JSON 模块
+    "resolveJsonModule": true,
+
+    // 不生成输出文件
+    "noEmit": true,
+
+    // 跳过库检查，加快编译速度
+    "skipLibCheck": true,
+
+    // 允许导入 .js 文件
+    "allowJs": true,
+
+    // 生成 ES 模块互操作性辅助函数
+    "esModuleInterop": true,
+
+    // 不允许隐式的 any
+    "noImplicitAny": false,
+
+    // 支持装饰器
+    "experimentalDecorators": true
+  },
+
+  // 包含的文件
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
+
+  // 排除的文件
+  "exclude": ["node_modules", "dist", "**/*.js"],
+
+  // 引用其他配置文件
+  "references": [{ "path": "./tsconfig.node.json" }]
+}

@@ -41,15 +41,15 @@
     </div>
 
     <!-- 播放列表区域 -->
-    <a-list ref="listRef" size="small" bordered :data-source="originalPlaylist" style="overflow: auto; height: 100%" v-bind="listProps">
+    <a-list ref="listRef" size="small" bordered :data-source="playlist" v-bind="listProps" style="overflow: auto; height: 100%" >
       <template #renderItem="{ item }">
         <a-list-item class="songlist" ref="listItemRef">
           <template #actions>
             <Musicbar v-if="currentTrack.info?.id === item?.id && playbackState.isPlaying" />
-            <a v-else @click="playTrack(item)">
+            <a v-else @click="store.playTrack(item)">
               <font-awesome-icon icon="fa-solid fa-circle-play" />
             </a>
-            <a @click="deleteTrack(item)">
+            <a @click="store.removeFromPlaylist(item.id)">
               <font-awesome-icon icon="fa-solid fa-trash" />
             </a>
           </template>
@@ -66,26 +66,31 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed, nextTick } from 'vue';
-import type { ListProps } from 'ant-design-vue';
 import { useScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import { usePlyrStore } from '@/stores/plyr';
 import Musicbar from '@/components/element/musicbar.vue';
 
-const plyrStore = usePlyrStore();
-const { currentTrack, originalPlaylist, playbackState } = storeToRefs(plyrStore);
+const store = usePlyrStore();
+const { currentTrack, playlist, playbackState } = storeToRefs(store);
 const searchQuery = ref('');
+
 const bgStyle = computed(() => ({
   'background-image': `url(${currentTrack.value.bgUrl || '/config/image/banner/cover.jpeg'})`,
   'background-position': 'center',
   'background-size': 'cover',
 }));
 
+const listProps = computed(() => ({
+  rowKey: (item) => item?.id,
+  loading: playbackState.value.isLoading,
+}));
+
 const handleSearch = async (value: string) => {
   if (!value || isNaN(Number(value))) return;
 
   try {
-    await plyrStore.addToPlaylist(Number(value), true);
+    await store.addToPlaylist(Number(value), true);
     await scrollToTrack();
   } catch (error) {
     console.error('Search failed:', error);
@@ -96,32 +101,6 @@ const listRef = ref(null);
 const listItemRef = ref(null);
 let scrollY: ReturnType<typeof useScroll>['y'];
 
-// 列表配置
-
-const listProps = computed<Partial<ListProps>>(() => ({
-  rowKey: (item) => item?.id,
-  loading: playbackState.value.isLoading,
-}));
-
-// Play selected track
-const playTrack = async (track) => {
-  console.log('playTrack:', track);
-  try {
-    await plyrStore.playTrack(track);
-    await scrollToTrack();
-  } catch (error) {
-    console.error('Failed to play track:', error);
-  }
-};
-
-// Remove track from originalPlaylist
-const deleteTrack = (track) => {
-  originalPlaylist.value = originalPlaylist.value.filter((item) => item?.id !== track?.id);
-  if (currentTrack.value.info?.id === track.id) {
-    currentTrack.value = { url: '', bgUrl: '', info: null };
-  }
-};
-
 // Scroll to current track
 const scrollToTrack = async () => {
   if (!listRef.value || !listItemRef.value) return;
@@ -129,22 +108,16 @@ const scrollToTrack = async () => {
   await nextTick();
 
   if (currentTrack.value.info) {
-    const index = originalPlaylist.value.findIndex((track) => track.id === currentTrack.value.info.id);
+    const index = playlist.value.findIndex((track) => track.id === currentTrack.value.info.id);
     const itemHeight = listItemRef.value.$el.clientHeight;
 
-    scrollY.value = index === originalPlaylist.value.length - 1 ? itemHeight * (originalPlaylist.value.length + 1) : itemHeight * index;
+    scrollY.value = index === playlist.value.length - 1 ? itemHeight * (playlist.value.length + 1) : itemHeight * index;
   } else {
-    scrollY.value = listItemRef.value.$el.clientHeight * (originalPlaylist.value.length + 1);
+    scrollY.value = listItemRef.value.$el.clientHeight * (playlist.value.length + 1);
   }
 };
 
-watch(() => originalPlaylist.value.length, scrollToTrack);
-
-watch(() => currentTrack.value.info, scrollToTrack);
-
-onMounted(async () => {
-  await plyrStore.loadFromLocalStorage();
-});
+watch(() => playlist.value.length, scrollToTrack);
 
 onMounted(() => {
   if (listRef.value) {

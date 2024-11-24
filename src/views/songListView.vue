@@ -21,20 +21,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onBeforeUnmount } from 'vue';
-import { usePlyrStore } from '@/stores/plyr';
 import Player from '@/components/songlist/player.vue';
 import Album from '@/components/songlist/album.vue';
-
-const songlistStore = usePlyrStore();
-
-onMounted(() => {
-  songlistStore.loadFromLocalStorage();
-});
-
-onBeforeUnmount(() => {
-  songlistStore.saveToLocalStorage();
-});
 </script>
 
 <style lang="scss" scoped>

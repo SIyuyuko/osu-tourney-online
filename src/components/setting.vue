@@ -7,7 +7,7 @@
  * @Description: 设置页面
 -->
 <template>
-  <div class="setting-page" :data-theme="theme">
+  <div class="setting-page">
     <a-alert :message="$t('setting.tip') + `'config/'`" type="info" />
     <div class="setting-button-group">
       <a-button @click="res.open()">{{ $t('setting.open') }}</a-button>

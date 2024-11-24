@@ -7,7 +7,7 @@
  * @Description: 谱面组件
 -->
 <template>
-  <a-card :data-theme="themeMode" class="map-panel" :class="isCard ? '' : 'detail'" v-if="map || loaded" size="small">
+  <a-card :data-theme="theme" class="map-panel" :class="isCard ? '' : 'detail'" v-if="map || loaded" size="small">
     <a-card-meta v-if="!isReferee">
       <template #description>
         <div class="cover">
@@ -86,12 +86,15 @@
   </div>
 </template>
 
-<script setup name="Map">
-import { ref, inject, onMounted, nextTick, watch } from 'vue';
+<script setup>
+import { ref, onMounted, nextTick, watch } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useThemeStore } from '@/stores/themeStore';
 // import { getModDiffStar } from '@/utils/mappool';
 import { beatmapApi } from '@/api';
 
-let themeMode = inject('themeMode');
+const store = useThemeStore()
+const { theme } = storeToRefs(store);
 let imgApi = ref('https://assets.ppy.sh/beatmaps/');
 let imgApiSuffix = ref('/covers/card.jpg');
 let beatmapUrl = ref('http://osu.ppy.sh/b/');

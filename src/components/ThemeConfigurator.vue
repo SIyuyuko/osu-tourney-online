@@ -18,7 +18,7 @@
         colorLinkActive: '#08979c',
         colorLinkHover: '#36cfc9',
       },
-      algorithm: themeAlgorithm,
+      algorithm: skin,
     }"
   >
   </a-config-provider>
@@ -26,12 +26,30 @@
 
 <script setup lang="ts">
 import { useThemeStore } from '@/stores/themeStore'
-import { onMounted } from 'vue'
+import { theme as antTheme } from 'ant-design-vue'
+import { onBeforeMount, watch, ref } from 'vue'
 
-const { themeAlgorithm, initTheme } = useThemeStore()
+const themeStore = useThemeStore()
+const { initTheme } = themeStore
 
-// 组件挂载时初始化主题
-onMounted(() => {
-  initTheme()
-})
+let skin = ref();
+
+function toggleGlobalTheme(val: string) {
+  skin.value = val === 'light' ? antTheme.defaultAlgorithm : antTheme.darkAlgorithm;
+}
+
+onBeforeMount(() => {
+  initTheme();
+});
+
+watch(
+  () => themeStore.theme,
+  (val) => {
+    toggleGlobalTheme(val);
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 </script>

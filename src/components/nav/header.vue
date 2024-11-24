@@ -72,12 +72,15 @@
 <script setup lang="ts">
 import { inject, ref, onBeforeMount, computed } from 'vue';
 import { useI18n } from 'vue-i18n'
+import { storeToRefs } from 'pinia';
 import { useThemeStore } from '@/stores/themeStore'
 import { globalState } from '@/utils/initApp';
 import { authApi } from '@/api';
 import Menu from './Menu.vue';
 
-const { theme, toggleTheme } = useThemeStore()
+const store = useThemeStore()
+const { toggleTheme } = store
+const { theme } = storeToRefs(store);
 const { locale } = useI18n()
 const showSetting = inject('showSetting')
 const { siderCollapsed: collapsed } = globalState

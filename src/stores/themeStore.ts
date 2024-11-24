@@ -1,51 +1,54 @@
-// themeStore.ts
-import { ref, computed } from 'vue';
-import { theme as antTheme } from 'ant-design-vue';
+// src/stores/themeStore.ts
+import { ref } from 'vue';
+import { defineStore } from 'pinia';
 
-export const useThemeStore = () => {
-  // 主题状态
-  type Theme = 'light' | 'dark'
+// 将类型定义提取出来
+export type Theme = 'light' | 'dark';
+
+export const useThemeStore = defineStore('theme', () => {
   const theme = ref<Theme>('light');
 
-  // 计算主题算法
-  const themeAlgorithm = computed(() => (theme.value === 'light' ? antTheme.defaultAlgorithm : antTheme.darkAlgorithm));
-
-  // 切换主题
   const toggleTheme = () => {
     theme.value = theme.value === 'light' ? 'dark' : 'light';
     localStorage.setItem('theme', theme.value);
+    // 可以添加其他主题切换时的副作用，比如修改 HTML 的 data-theme 属性
+    document.documentElement.setAttribute('data-theme', theme.value);
   };
 
-  // 初始化主题
   const initTheme = async () => {
     try {
+      // 优先从 localStorage 获取
       const savedTheme = localStorage.getItem('theme') as Theme;
-      if (savedTheme) {
+      if (savedTheme && ['light', 'dark'].includes(savedTheme)) {
         theme.value = savedTheme;
+        document.documentElement.setAttribute('data-theme', savedTheme);
         return;
       }
 
-      await new Promise<void>((resolve) => {
-        const checkUser = () => {
-          if ((window as any).user) {
-            resolve();
-          } else {
-            requestAnimationFrame(checkUser);
-          }
-        };
-        checkUser();
-      });
-      theme.value = (window as any).user?.theme ?? 'light';
+      // 如果需要等待用户信息
+      if ((import.meta as any).env.PROD) {  // 只在生产环境等待用户信息
+        await new Promise<void>((resolve) => {
+          const checkUser = () => {
+            if ((window as any).user) {
+              resolve();
+            } else {
+              requestAnimationFrame(checkUser);
+            }
+          };
+          checkUser();
+        });
+        theme.value = (window as any).user?.theme ?? 'light';
+      }
     } catch (error) {
       console.warn('主题初始化失败:', error);
-      theme.value = 'light' // 使用默认主题
+    } finally {
+      document.documentElement.setAttribute('data-theme', theme.value);
     }
   };
 
   return {
     theme,
-    themeAlgorithm,
     toggleTheme,
     initTheme,
   };
-};
+});

@@ -12,24 +12,27 @@
   </div>
 
   <!-- Setting -->
-  <a-drawer v-model:open="showSetting" :title="$t('setting.title')" :width="450">
+  <a-drawer v-model:open="showSetting" :title="$t('setting.title')" :width="450" :data-theme="theme">
     <Setting />
   </a-drawer>
 
   <!-- MusicPlayBar -->
-  <Floatbuttons />
+  <Floatbutton />
 </template>
 
 <script setup lang="ts">
-import { inject, ref, onBeforeMount, provide } from 'vue';
+import { ref, onBeforeMount, provide } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useThemeStore } from '@/stores/themeStore';
+import Floatbutton from '@/components/FloatButton.vue';
 import Header from '@/components/nav/Header.vue';
 import Sider from '@/components/nav/Sider.vue';
-import Floatbuttons from '@/components/FloatButton.vue';
 import Setting from '@/components/setting.vue';
 import i18n from '@/i18n';
 
-let showSetting = ref(false);
-const theme = inject('themeMode');
+const themeStore = useThemeStore();
+const { theme } = storeToRefs(themeStore);
+const showSetting = ref(false);
 
 provide('showSetting', showSetting);
 

@@ -7,15 +7,17 @@
  * @Description: 侧边导航栏
 -->
 <template>
-  <a-layout-sider class="sider" v-model:collapsed="collapsed" :trigger="null" collapsible breakpoint="xl" theme="light">
+  <a-layout-sider class="sider" v-model:collapsed="collapsed" :trigger="null" collapsible breakpoint="xl" theme="light" :width="150" :collapsedWidth="80">
     <Menu />
   </a-layout-sider>
 </template>
-<script setup name="Sider">
+
+<script setup lang="ts" name="Sider">
 import { inject } from 'vue';
 import Menu from './menu.vue';
 let collapsed = inject('collapsed');
 </script>
+
 <style lang="scss" scoped>
 .sider :deep(.ant-layout-sider-children) {
   display: flex;

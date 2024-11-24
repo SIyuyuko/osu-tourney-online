@@ -7,232 +7,220 @@
  * @Description: 浮动播放器组件
 -->
 <template>
-	<!-- 谱面播放器 -->
-	<div class="beatmap-player" :style="playerStyle">
-		<div class="beatmap-info" :style="bgStyle">
-			<div class="beatmap-title">
-				<font-awesome-icon icon="fa-solid fa-backward-step" @click="skipMusic('backward')" />
-				<font-awesome-icon v-if="isPlaying" icon="fa-solid fa-pause" @click="plyr.player.pause()" />
-				<font-awesome-icon v-else icon="fa-solid fa-play" @click="plyr.player.play()" />
-				<font-awesome-icon icon="fa-solid fa-forward-step" @click="skipMusic('forward')" />
-				<font-awesome-icon v-if="playMode === 'orderby'" icon="fa-solid fa-repeat"
-					@click="toggleMode('random')" />
-				<font-awesome-icon v-if="playMode === 'random'" icon="fa-solid fa-shuffle"
-					@click="toggleMode('single')" />
-				<font-awesome-icon v-if="playMode === 'single'" icon="fa-solid fa-repeat" fade
-					@click="toggleMode('orderby')" />
-				<font-awesome-icon icon="fa-solid fa-share-nodes" @click="jumpBeatmap(info)" />
-			</div>
-			<!-- <div v-else class="beatmap-title">
-				<a-spin :spinning="spinning" tip="Loading..." size="small" style="color: inherit;"></a-spin>
-			</div> -->
-		</div>
-		<vue-plyr ref="plyr">
-			<audio controls crossorigin playsinline autoplay source=songUrl>
-				<source :src="songUrl" type="audio/mp3" />
-			</audio>
-		</vue-plyr>
-	</div>
-	<!-- 浮动按钮组 -->
-	<a-float-button-group>
-		<a-float-button class="backtop-btn" :tooltip="$t('songlist.floatButton')" @click="togglePlayer()">
-			<template #icon>
-				<font-awesome-icon v-if="isPlaying" icon="fa-solid fa-compact-disc" spin />
-				<font-awesome-icon v-else icon="fa-solid fa-compact-disc" />
-			</template>
-		</a-float-button>
-	</a-float-button-group>
+  <!-- 谱面播放器 -->
+  <div class="beatmap-player" :style="playerStyle">
+    <div class="beatmap-info" :style="backgroundStyle">
+      <div class="beatmap-title">
+        <font-awesome-icon icon="fa-solid fa-backward-step" @click="store.skipTrack('prev')" />
+        <font-awesome-icon :icon="playbackIcon" @click="store.togglePlayback" />
+        <font-awesome-icon icon="fa-solid fa-forward-step" @click="store.skipTrack('next')" />
+        <font-awesome-icon v-if="!currentPlayModeConfig.isSvg" :icon="currentPlayModeConfig.icon" :fade="currentPlayModeConfig.fade" @click="store.togglePlayMode()" />
+        <span v-else v-html="currentPlayModeConfig.icon" class="svg-icon" :fade="currentPlayModeConfig.fade" @click="store.togglePlayMode()" />
+        <font-awesome-icon icon="fa-solid fa-share-nodes" @click="openBeatmapPage" />
+      </div>
+      <!-- <div v-else class="beatmap-title">
+        <a-spin :spinning="spinning" tip="Loading..." size="small" style="color: inherit"></a-spin>
+      </div> -->
+    </div>
+    <div class="audio-container">
+      <audio ref="audioElement" crossorigin="anonymous" playsinline>
+        <source :src="currentTrack.url" type="audio/mp3" />
+      </audio>
+    </div>
+  </div>
+
+  <!-- 浮动按钮组 -->
+  <a-float-button-group>
+    <a-float-button class="music-btn" :tooltip="$t('songlist.floatButton')" @click="toggleExpanded()">
+      <template #icon>
+        <font-awesome-icon icon="fa-solid fa-compact-disc" :spin="playbackState.isPlaying" />
+      </template>
+    </a-float-button>
+  </a-float-button-group>
 </template>
-<script setup name="FloatButtons">
-import { onMounted, ref, watch } from 'vue';
+
+<script setup lang="ts" name="FloatButtons">
+import { onBeforeUnmount, onMounted, ref, computed, watch } from 'vue';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
-const usePlyr = usePlyrStore();
-const { plyr, bgUrl, info, songUrl, songlist, onPlaying } = storeToRefs(usePlyr); //播放器实例
-import { debounce, shuffle } from "lodash";
-let playerStyle = ref({}); //播放器样式
-let bgStyle = ref({
-	// "visibility": "hidden",
-}); //封面样式
-let isPlaying = ref(false); //是否正在播放
-let isShow = ref(false); //是否显示播放器
-let isEnd = ref(0); //当前歌曲是否结束播放
-let playMode = ref("orderby"); //播放模式
+import 'plyr/dist/plyr.css';
+
+const store = usePlyrStore();
+const { audioElement, plyrInstance, currentTrack, playbackState } = storeToRefs(store);
+let isExpanded = ref(false); //是否显示播放器
+
+let playerStyle = computed(() => ({
+  right: isExpanded.value ? '15px' : '-450px',
+  transition: 'right 0.5s ease',
+})); //播放器样式
+
+const backgroundStyle = computed(() => ({
+  backgroundImage: `url(${currentTrack.value.bgUrl})`,
+  backgroundPosition: 'center',
+  backgroundSize: 'cover',
+  // "transition": "margin-bottom 0.5s ease",
+  // "visibility": "visible",
+})); // 歌曲背景样式
+
+const playbackIcon = computed(() => (playbackState.value.isPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play')); // 播放/暂停图标
+
+const currentPlayModeConfig = computed(() => store.playModeConfig[playbackState.value.playMode]);
+
 // 是否显示播放器
-function togglePlayer() {
-	playerStyle.value = isShow.value ? {
-		// 折叠播放器
-		right: "-400px",
-		transition: "right 0.5s ease"
-	} : {
-		// 展开播放器
-		right: "15px",
-		transition: "right 0.5s ease"
-	}
-	isShow.value = !isShow.value;
-}
-// 播放器初始化
-function initPlyr(songUrl) {
-	// 音频信息配置
-	plyr.value.player.source = {
-		type: 'audio',
-		title: 'Example title',
-		sources: [
-			{
-				src: songUrl,
-				type: 'audio/mp3',
-			},
-		],
-	};
-	// 监听是否播放
-	plyr.value.player.on('play', (playing) => {
-		isPlaying.value = playing.detail.plyr.playing;
-		onPlaying.value = isPlaying.value && playing.detail.plyr.duration > 0 ? true : false;
-	});
-	// 监听是否暂停
-	plyr.value.player.on('pause', (playing) => {
-		isPlaying.value = playing.detail.plyr.playing;
-	});
-	// 监听是否播放结束
-	plyr.value.player.on('ended', () => {
-		isEnd.value++;
-	});
-	// console.log(plyr.value);
-};
-// 切换歌曲（前进/后退）
-function skipMusic(param) {
-	let currentIndex = songlist.value.findIndex((item) => item.id === info.value.id);
-	switch (param) {
-		case "backward":
-			info.value = songlist.value[currentIndex - 1 < 0 ? songlist.value.length - 1 : currentIndex - 1];
-			break;
-		case "forward":
-			if (playMode.value === "random") {
-				let index = Math.floor(Math.random() * songlist.value.length);
-				info.value = songlist.value[index];
-			} else {
-				info.value = songlist.value[currentIndex + 1 > songlist.value.length - 1 ? 0 : currentIndex + 1];
-			}
-			break;
-	}
-};
-// 切换播放模式
-function toggleMode(mode) {
-	playMode.value = mode;
-	switch (mode) {
-		case "random":
-			songlist.value = shuffle(songlist.value);
-			break;
-		default:
-			break;
-	}
+const toggleExpanded = () => {
+  isExpanded.value = !isExpanded.value;
 };
 
 // 谱面信息官网跳转
-function jumpBeatmap(info) {
-	if (info) {
-		let url = "http://osu.ppy.sh/b/" + info.id;
-		window.open(url, "_blank");
-	};
-}
+const openBeatmapPage = () => {
+  if (currentTrack.value.info) {
+    window.open(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`, '_blank');
+  }
+};
+
+// 只需在组件挂载时初始化 Plyr
 onMounted(() => {
-	// initPlyr();
+  const audioElement = document.querySelector('audio');
+  console.log(audioElement);
+  if (audioElement) {
+    console.log('initialize plyr');
+    store.initializePlyr(audioElement);
+    console.log('plyr initialized');
+  }
 });
-watch(songUrl, (val) => {
-	if (val !== "") {
-		initPlyr(val);
-	};
+
+// watch(() => currentTrack.value.url, (newTrack) => {
+//   if (newTrack && !playbackState.value.isPlaying) {
+//     store.plyrInstance.play();
+//   }
+// });
+
+// 监听 currentTrack 变化
+watch(
+  () => currentTrack.value.url,
+  (newUrl) => {
+    if (!newUrl || !plyrInstance.value) return;
+
+    // 更新播放源
+    plyrInstance.value.source = {
+      type: 'audio',
+      sources: [
+        {
+          src: newUrl,
+          type: 'audio/mp3',
+        },
+      ],
+    };
+  }
+);
+
+// Lifecycle
+onBeforeUnmount(() => {
+  store.destroy();
 });
-watch(bgUrl, (val) => {
-	bgStyle.value = {
-		"background-image": `url(${val})`,
-		"background-position": "center",
-		"background-size": "cover",
-		"margin-bottom": "-10px",
-		// "transition": "margin-bottom 0.5s ease",
-		// "visibility": "visible",
-	}
-}, {
-	deep: true
-});
-watch(isPlaying, (val) => {
-	if (val && !isShow.value) {
-		togglePlayer();
-	};
-}, {
-	once: true
-});
-watch(isEnd, debounce(() => {
-	if (playMode.value === 'single') {
-		plyr.value.player.play();
-	} else {
-		skipMusic("forward");
-	};
-}, 2000))
 </script>
+
 <style lang="scss" scoped>
 .beatmap-player {
-	height: auto;
-	width: 400px;
-	position: fixed;
-	z-index: 999;
-	right: -400px;
-	bottom: 15%;
-	color: #ffffff;
-	box-shadow: 0 0 5px #16c2c3;
-	border-radius: 10px;
+  position: fixed;
+  width: 400px;
+  max-width: 90vw; // 防止在小屏幕上溢出
+  height: auto;
+  z-index: 10000;
+  right: -400px;
+  bottom: 15%;
+  color: #ffffff;
+  box-shadow: 0 0 5px #16c2c3;
+  border-radius: 10px;
 
-	.beatmap-info {
-		display: flex;
-		height: 60px;
-		z-index: -1;
-		margin-bottom: -10px;
-		position: relative;
-		border-radius: 10px 10px 0 0;
-		overflow: hidden;
+  .beatmap-info {
+    display: flex;
+    height: 60px;
+    position: relative;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
 
-		.beatmap-title {
-			width: 100%;
-			display: flex;
-			text-align: center;
-			align-items: center;
-			justify-content: space-around;
-			font-size: 24px;
-			position: relative;
-			top: -4px;
-			backdrop-filter: brightness(0.4) blur(0.4px);
-			-webkit-backdrop-filter: brightness(0.4) blur(0.4px);
+    .beatmap-title {
+      width: 100%;
+      display: flex;
+      text-align: center;
+      align-items: center;
+      justify-content: space-around;
+      font-size: 24px;
+      backdrop-filter: brightness(0.4) blur(0.4px);
+      -webkit-backdrop-filter: brightness(0.4) blur(0.4px);
+      padding: 10px 0;
 
-			*[data-prefix="fas"] {
-				width: 20%;
-			}
+      %icon-base {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+        padding: 0 10px;
+        cursor: pointer;
+        transition: opacity 0.2s;
 
-			*[data-prefix="fas"]:hover {
-				cursor: pointer;
-				opacity: 0.6;
-			}
+        &:hover {
+          opacity: 0.6;
+        }
 
-			*[data-prefix="fas"]:active {
-				opacity: 0.9;
-			}
+        &:active {
+          opacity: 0.9;
+        }
+      }
 
-			:deep(.ant-spin) {
-				position: unset;
-				color: inherit;
+      // Font Awesome 图标
+      *[data-prefix='fas'] {
+        @extend %icon-base;
+        width: 44px !important;
+      }
 
-				.ant-spin-dot-item {
-					background-color: #ffffff;
-				}
+      // SVG 图标
+      .svg-icon {
+        @extend %icon-base;
+        width: 64px !important;
 
-			}
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+    }
+  }
 
+  .audio-container {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 0 0 10px 10px;
+    padding: 10px;
 
-			:hover {
-				border: none;
-			}
+    audio {
+      width: 100%;
+      height: 40px;
+    }
+  }
+}
 
-		}
-	}
+.svg-icon {
+  display: inline-flex;
+  width: 1em;
+  height: 1em;
 
+  :deep(svg) {
+    width: 100%;
+    height: 100%;
+    fill: currentColor; /* 这样图标颜色会跟随父元素文字颜色 */
+  }
+}
+
+// 媒体查询，适配移动设备
+@media screen and (max-width: 768px) {
+  .beatmap-player {
+    width: 300px;
+    right: -300px;
+
+    .beatmap-title {
+      font-size: 20px;
+    }
+  }
 }
 </style>

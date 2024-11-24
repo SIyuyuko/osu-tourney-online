@@ -7,40 +7,84 @@
  * @Description: 目录菜单组件
 -->
 <template>
-  <a-menu class="menu" :selectable="true" v-model:selectedKeys="selectedKeys" theme="light" mode="inline"
-    @click="selectMenu" :forceSubMenuRender="true" triggerSubMenuAction="click">
-    <a-menu-item key="home">
-      <span class="anticon"><font-awesome-icon icon="fa-solid fa-house-user" /></span>
-      <span>{{ $t('menu.home') }}</span>
-    </a-menu-item>
-    <a-menu-item key="tournament">
-      <span class="anticon"><font-awesome-icon icon="fa-solid fa-chess" /></span>
-      <span>{{ $t('menu.tournament') }}</span>
-    </a-menu-item>
-    <a-menu-item key="mappool">
-      <span class="anticon"><font-awesome-icon icon="fa-solid fa-map" /></span>
-      <span>{{ $t('menu.mappool') }}</span>
-    </a-menu-item>
-    <a-menu-item key="songlist">
-      <span class="anticon"><font-awesome-icon icon="fa-solid fa-compact-disc" /></span>
-      <span>{{ $t('menu.songlist') }}</span>
-    </a-menu-item>
-    <a-menu-item key="command">
-      <span class="anticon"><font-awesome-icon icon="fa-solid fa-terminal" /></span>
-      <span>{{ $t('menu.command') }}</span>
-    </a-menu-item>
+  <a-menu
+    class="menu"
+    :selectable="true"
+    v-model:selectedKeys="selectedKeys"
+    theme="light"
+    mode="inline"
+    @click="handleMenuClick"
+    :forceSubMenuRender="true"
+    triggerSubMenuAction="click"
+  >
+    <template v-for="item in menuItems" :key="item.key">
+      <a-menu-item>
+        <router-link :to="{ name: item.key }">
+          <span class="anticon">
+            <font-awesome-icon :icon="item.icon" />
+          </span>
+          <span>{{ $t(item.i18nKey) }}</span>
+        </router-link>
+      </a-menu-item>
+    </template>
   </a-menu>
   <div class="logo">
     <span>Tourney Web</span>
   </div>
 </template>
-<script setup name="Menu">
-import { ref, inject } from 'vue';
-let current = inject('current');
-let selectedKeys = ref(['home']);
-function selectMenu(val) {
-  current.value = val.key;
-}
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+
+// 菜单配置
+const menuItems = [
+  {
+    key: 'Home',
+    icon: 'fa-solid fa-house-user',
+    i18nKey: 'menu.home',
+  },
+  {
+    key: 'Tournament',
+    icon: 'fa-solid fa-chess',
+    i18nKey: 'menu.tournament',
+  },
+  {
+    key: 'Mappool',
+    icon: 'fa-solid fa-map',
+    i18nKey: 'menu.mappool',
+  },
+  {
+    key: 'Songlist',
+    icon: 'fa-solid fa-compact-disc',
+    i18nKey: 'menu.songlist',
+  },
+  {
+    key: 'Command',
+    icon: 'fa-solid fa-terminal',
+    i18nKey: 'menu.command',
+  },
+];
+
+// 当前选中的菜单项
+const selectedKeys = ref<string[]>([route.name as string]);
+
+// 处理菜单点击
+const handleMenuClick = ({ key }: { key: string }) => {
+  router.push({ name: key });
+};
+
+// 监听路由变化更新选中项
+watch(
+  () => route.name,
+  (newRouteName) => {
+    if (newRouteName) {
+      selectedKeys.value = [newRouteName as string];
+    }
+  }
+);
 </script>
 <style lang="scss" scoped>
 .menu {
@@ -55,6 +99,21 @@ function selectMenu(val) {
 
   span {
     font-weight: 600;
+  }
+}
+
+// 处理折叠状态
+:deep(.ant-menu-inline-collapsed) {
+  .menu-title {
+    display: none;
+  }
+
+  .anticon {
+    margin-right: 0;
+  }
+
+  .ant-menu-item {
+    padding: 0 calc(50% - 16px / 2);
   }
 }
 

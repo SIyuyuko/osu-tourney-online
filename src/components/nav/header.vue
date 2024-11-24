@@ -8,26 +8,31 @@
 -->
 <template>
   <a-layout-header>
+    <!-- 左侧操作按钮组 -->
     <div class="operate-button-group">
-      <a-button class="collapse-btn" type="link" @click="() => (collapsed = !collapsed)">
-        <font-awesome-icon v-if="collapsed" class="trigger" icon="fa-solid fa-indent" />
-        <font-awesome-icon v-else class="trigger" icon="fa-solid fa-outdent" />
+      <!-- 桌面端折叠按钮 -->
+      <a-button class="collapse-btn" type="link" @click="toggleSidebar">
+        <font-awesome-icon :icon="collapsed ? 'fa-solid fa-indent' : 'fa-solid fa-outdent'" />
       </a-button>
+
+      <!-- 移动端折叠按钮 -->
       <a-dropdown v-model:open="mobileCollapsed" :trigger="['click', 'hover']">
         <a-button class="collapse-btn-mobile" type="link" @click="mobileCollapsed = !mobileCollapsed">
-          <font-awesome-icon v-if="!mobileCollapsed" icon="fa-solid fa-bars" />
-          <font-awesome-icon v-else icon="fa-solid fa-bars" fade />
+          <font-awesome-icon icon="fa-solid fa-bars" :fade="mobileCollapsed" />
         </a-button>
         <template #overlay>
           <div>
-            <Menu></Menu>
+            <Menu />
           </div>
         </template>
       </a-dropdown>
+
+      <!-- 主题切换按钮 -->
       <a-button class="theme-btn" type="link" @click="toggleTheme()">
-        <font-awesome-icon v-show="theme === 'light'" icon="fa-regular fa-moon" />
-        <font-awesome-icon v-show="theme === 'dark'" icon="fa-solid fa-moon" />
+        <font-awesome-icon :icon="theme === 'light' ? 'fa-regular fa-moon' : 'fa-solid fa-moon'" />
       </a-button>
+
+      <!-- 多语言切换按钮 -->
       <a-button class="lang-btn" type="link" v-if="$i18n.locale">
         <a-dropdown placement="bottomLeft">
           <div>
@@ -35,66 +40,102 @@
           </div>
           <template #overlay>
             <a-menu class="operate-button-menu">
-              <a-menu-item :style="$i18n.locale === 'zh' ? langStyle : ''"
-                @click="$i18n.locale = 'zh'">简体中文</a-menu-item>
-              <a-menu-item :style="$i18n.locale === 'en' ? langStyle : ''"
-                @click="$i18n.locale = 'en'">English</a-menu-item>
+              <a-menu-item v-for="locale in availableLocales" :key="locale.code" :style="currentLocale === locale.code ? selectedLangStyle : {}" @click="changeLocale(locale.code)">
+                {{ locale.label }}
+              </a-menu-item>
             </a-menu>
           </template>
         </a-dropdown>
       </a-button>
     </div>
+
+    <!-- 右侧用户操作按钮组 -->
     <div class="user-header">
-      <a-button type="link" @click="log()">
-        <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
+      <!-- 登录/登出按钮 -->
+      <a-button type="link" @click="handleAuth">
+        <font-awesome-icon :icon="isLoggedIn ? 'fa-solid fa-right-from-bracket' : 'fa-solid fa-right-to-bracket'" />
       </a-button>
-      <a-button type="link" @click="openUrl(repoUrl)">
+
+      <!-- GitHub链接 -->
+      <a-button type="link" @click="openExternalLink(REPO_URL)">
         <font-awesome-icon icon="fa-brands fa-github" />
       </a-button>
-      <a-button type="link" @click="loadView('setting')">
+
+      <!-- 设置按钮 -->
+      <a-button type="link" @click="showSetting = true">
         <font-awesome-icon icon="fa-solid fa-gear" />
       </a-button>
     </div>
   </a-layout-header>
 </template>
-<script setup name="Header">
-import { inject, ref, onBeforeMount } from 'vue';
-import { getOauthUrl } from "@/api/data_api";
+<script setup lang="ts">
+import { inject, ref, onBeforeMount, computed } from 'vue';
+import { useI18n } from 'vue-i18n'
+import { globalState } from '@/utils/init';
+import { getOauthUrl } from '@/api/data_api';
 import Menu from './menu.vue';
-let theme = inject('themeMode');
-let collapsed = inject('collapsed');
-let mobileCollapsed = ref(false);
-let isLogin = ref(false);
-const loadView = inject('loadView');
-const repoUrl = 'https://github.com/SIyuyuko/osu-tourney-online';
+
+const { t, locale } = useI18n()
+const showSetting = inject('showSetting')
+const { theme, siderCollapsed: collapsed } = globalState
+let mobileCollapsed = ref(false)
+const isLoggedIn = ref(!!localStorage.getItem('userKey'))
+const REPO_URL = 'https://github.com/SIyuyuko/osu-tourney-online'
 // const wikiUrl = 'https://github.com/SIyuyuko/osu-tourney-online/wiki';
-const langStyle = {
+
+// 多语言配置
+const currentLocale = computed(() => locale.value);
+const availableLocales = [
+  { code: 'zh', label: '简体中文' },
+  { code: 'en', label: 'English' },
+];
+
+const selectedLangStyle = computed(() => ({
   'text-decoration': 'underline',
   'background-color': theme.value === 'light' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)',
-};
-// 切换主题
-function toggleTheme() {
-  theme.value = theme.value === 'light' ? 'dark' : 'light';
-  langStyle['background-color'] = theme.value === 'light' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)';
-}
-// 网页跳转
-function openUrl(url) {
-  window.open(url, '_blank');
-}
-// 登录/登出
-async function log() {
-  getOauthUrl().then((res) => {
-    if (res.status === 200 && res.data) {
-      const link = document.createElement("a");
-      link.href = res.data.message;
-      link.click();
-    }
-  })
+}));
 
-}
+const toggleSidebar = () => {
+  collapsed.value = !collapsed.value;
+};
+
+// 切换主题
+const toggleTheme = () => {
+  theme.value = theme.value === 'light' ? 'dark' : 'light';
+};
+
+const changeLocale = (newLocale: string) => {
+  locale.value = newLocale;
+};
+
+// 网页跳转
+const openExternalLink = (url: string) => {
+  window.open(url, '_blank');
+};
+
+// 登录/登出
+const handleAuth = async () => {
+  // if (isLoggedIn.value) {
+  //   // 处理登出逻辑
+  //   localStorage.removeItem('userKey')
+  //   isLoggedIn.value = false
+  //   router.push('/')
+  // } else {
+  // 处理登录逻辑
+  try {
+    const response = await getOauthUrl();
+    if (response.status === 200 && response.data) {
+      window.location.href = response.data.message;
+    }
+  } catch (error) {
+    console.error('Failed to get OAuth URL:', error);
+  }
+  // }
+};
+
 onBeforeMount(() => {
   if (localStorage.getItem('userKey')) {
-    isLogin.value = true;
+    isLoggedIn.value = true;
   }
 });
 </script>

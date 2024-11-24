@@ -1,4 +1,4 @@
-export default {
+export const en = {
   menu: {
     home: 'Home',
     tournament: 'Tournament',

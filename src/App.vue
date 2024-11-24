@@ -1,8 +1,8 @@
 <template>
   <theme />
-  <RouterView />
+  <Layout />
 </template>
 <script setup>
 import theme from '@/components/theme/theme.vue';
+import Layout from '@/layout/Layout.vue';
 </script>
-<style lang="scss" scoped></style>

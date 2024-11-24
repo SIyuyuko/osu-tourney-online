@@ -1,4 +1,4 @@
-export default {
+export const zh = {
   menu: {
     home: '主页',
     tournament: '比赛',

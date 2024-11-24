@@ -25,16 +25,38 @@ export default defineConfig({
       "/sp": {
         target: "https://sp.365246692.xyz/api/",
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/sp/, '')
+        rewrite: (path) => path.replace(/^\/sp/, ''),
+        secure: false,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          'Access-Control-Allow-Private-Network': true
+        }
       },
       "/bot": {
         target: "https://bot.365246692.xyz/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/bot/, ''),
-      },
+        secure: false,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          'Access-Control-Allow-Private-Network': true
+        }
+      }
     },
   },
   esbuild: {
-    drop: ['console', 'debugger'],
+    pure: [
+      'console.log',
+      'console.debug',
+    ]
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern'
+      }
+    }
+  }
 });

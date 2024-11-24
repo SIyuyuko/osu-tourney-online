@@ -5,7 +5,7 @@
 ## Language 语言
 
 - [中文](#中文)
-- [English](#English)
+- [English](#english)
 
 ---
 
@@ -25,34 +25,35 @@ osu!tourney web 是一个 osu! 比赛信息管理项目，通过个性化配置�
 
    - 安装成功后，在终端输入 `node` 并回车。
    - 出现如下内容时，表示 Node.js 安装成功。
-   
+
    ```bash
    Welcome to Node.js v20.12.1.
    Type ".help" for more information.
-   > 
+   >
    (To exit, press Ctrl+C again or Ctrl+D or type .exit)
-   > 
+   >
    ```
-   
+
 2. 使用 npm 全局安装 [anywhere](https://www.npmjs.com/package/anywhere)。
-   
+
    - 在终端输入指令：
-   
+
    ```bash
    npm install anywhere -g
    ```
-   
+
 3. 项目解压后进入该目录，在当前目录下打开终端，输入指令启动项目。
-   
+
    ```bash
    anywhere -h localhost -p 5173
    ```
+
    - 项目成功启动后，在浏览器中输入 <http://localhost:5173/> 即可开始使用。
 
 #### 开发
 
 - 克隆项目仓库到本地
-  
+
 - 编辑器打开文件夹，在终端中输入指令下载依赖
 
 ```bash
@@ -66,6 +67,7 @@ npm run dev
 ```
 
 - 当终端中出现如下内容时，表示运行成功，点击网址即可在浏览器打开的网站页面中，查看内容。
+
 ```bash
   vite v5.2.10 dev server running at:
 
@@ -110,35 +112,38 @@ If you are inexperienced in osu! tournament management, don't have time to creat
 #### Running the project
 
 1. Download and install [Node.js](https://nodejs.org/zh-cn/download/prebuilt-installer)
-   
+
    - After installing, input `node` in terminal and press `Enter`.
-   
-   - When it shows words as follows, that means you installed successfully 
-   
+
+   - When it shows words as follows, that means you installed successfully
+
    ```bash
    Welcome to Node.js v20.12.1.
    Type ".help" for more information.
-   > 
+   >
    (To exit, press Ctrl+C again or Ctrl+D or type .exit)
-   > 
+   >
    ```
+
 2. use npm to install [anywhere](https://www.npmjs.com/package/anywhere) globally.
-   
+
    - input command in terminal
-   
+
    ```bash
    npm install anywhere -g
    ```
+
 3. unzip the project and go to the folder, open a terminal under this directory, type command shown below to run anywhere.
+
    ```bash
    anywhere -h localhost -p 5173
    ```
+
    - When the program running successfully, input <http://localhost:5173> in your browser. then use it.
 
 #### Developing the project
 
 - clone project to local.
-  
 - open project folder with IDE, input command in terminal as follows to install dependencies that project needs.
 
 ```bash
@@ -168,19 +173,19 @@ npm run dev
 
 ##### Tournament
 
-**Tournament** shows each tournament infomation, you can click detail to see joined players, where provides functions here:
+**Tournament** shows each tournament information, you can click detail to see joined players, where provides functions here:
 
-  - jump to view player info page
-  - copy invite command
+- jump to view player info page
+- copy invite command
 
 ##### Mappool
 
 **Mappool** shows mappools in a tournament, providing functions like:
 
-  - jump to view beatmap info page
-  - copy beatmap id
-  - download beatmap file
-  - copy tournament command of beatmap
+- jump to view beatmap info page
+- copy beatmap id
+- download beatmap file
+- copy tournament command of beatmap
 
 ##### Command
 

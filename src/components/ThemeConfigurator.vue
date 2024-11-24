@@ -18,31 +18,20 @@
         colorLinkActive: '#08979c',
         colorLinkHover: '#36cfc9',
       },
-      algorithm: skin,
+      algorithm: themeAlgorithm,
     }"
   >
   </a-config-provider>
 </template>
-<script setup name="Theme">
-import { theme } from 'ant-design-vue';
-import { onBeforeMount, ref, watch, inject } from 'vue';
-let skin = ref();
-let mode = inject('themeMode');
-// 切换主题样式
-function toggleTheme(val) {
-  skin.value = val === 'light' ? theme.defaultAlgorithm : theme.darkAlgorithm;
-}
-onBeforeMount(() => {
-  toggleTheme(mode.value);
-});
-watch(
-  mode,
-  (val) => {
-    toggleTheme(val);
-  },
-  {
-    deep: true,
-    immediate: true,
-  }
-);
+
+<script setup lang="ts">
+import { useThemeStore } from '@/stores/themeStore'
+import { onMounted } from 'vue'
+
+const { themeAlgorithm, initTheme } = useThemeStore()
+
+// 组件挂载时初始化主题
+onMounted(() => {
+  initTheme()
+})
 </script>

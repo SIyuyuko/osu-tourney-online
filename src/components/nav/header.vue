@@ -16,7 +16,7 @@
       </a-button>
 
       <!-- 移动端折叠按钮 -->
-      <a-dropdown v-model:open="mobileCollapsed" :trigger="['click', 'hover']">
+      <a-dropdown v-model:open="mobileCollapsed" :trigger="['click']">
         <a-button class="collapse-btn-mobile" type="link" @click="mobileCollapsed = !mobileCollapsed">
           <font-awesome-icon icon="fa-solid fa-bars" :fade="mobileCollapsed" />
         </a-button>
@@ -72,13 +72,15 @@
 <script setup lang="ts">
 import { inject, ref, onBeforeMount, computed } from 'vue';
 import { useI18n } from 'vue-i18n'
-import { globalState } from '@/utils/init';
-import { getOauthUrl } from '@/api/data_api';
+import { useThemeStore } from '@/stores/themeStore'
+import { globalState } from '@/utils/initApp';
+import { authApi } from '@/api';
 import Menu from './Menu.vue';
 
+const { theme, toggleTheme } = useThemeStore()
 const { locale } = useI18n()
 const showSetting = inject('showSetting')
-const { theme, siderCollapsed: collapsed } = globalState
+const { siderCollapsed: collapsed } = globalState
 let mobileCollapsed = ref(false)
 const isLoggedIn = ref(!!localStorage.getItem('userKey'))
 const REPO_URL = 'https://github.com/SIyuyuko/osu-tourney-online'
@@ -100,11 +102,6 @@ const toggleSidebar = () => {
   collapsed.value = !collapsed.value;
 };
 
-// 切换主题
-const toggleTheme = () => {
-  theme.value = theme.value === 'light' ? 'dark' : 'light';
-};
-
 const changeLocale = (newLocale: string) => {
   locale.value = newLocale;
 };
@@ -124,9 +121,9 @@ const handleAuth = async () => {
   // } else {
   // 处理登录逻辑
   try {
-    const response = await getOauthUrl();
-    if (response.status === 200 && response.data) {
-      window.location.href = response.data.message;
+    const response = await authApi.getOauthUrl();
+    if (response.code === 200 && response.message) {
+      window.location.href = response.message;
     }
   } catch (error) {
     console.error('Failed to get OAuth URL:', error);

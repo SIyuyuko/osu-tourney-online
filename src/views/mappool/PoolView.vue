@@ -16,18 +16,32 @@
   </div>
   <!-- <a-button type="primary" @click="showSettingPage(true)">设置</a-button> -->
 </template>
-<script setup>
-import { onMounted } from 'vue';
+
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useRoute } from 'vue-router';
 import Map from '@/components/map/map.vue';
 // const showSettingPage = inject('showSetting');
-let props = defineProps({
-  data: {
-    type: Object,
+
+const route = useRoute();
+const poolData = ref();
+const emit = defineEmits(['pool-selected']);
+
+watch(
+  () => route.params.title,
+  (title) => {
+    if (title) {
+      poolData.value = (window as any).mappool?.list?.find((p: any) => p.title === title);
+      if (poolData.value) {
+        emit('pool-selected', poolData.value);
+      }
+    }
   },
-});
-let poolData = props.data;
-onMounted(() => { });
+  { immediate: true }
+);
+
 </script>
+
 <style lang="scss" scoped>
 .pool-title {
   font-size: 24px;

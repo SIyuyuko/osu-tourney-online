@@ -32,6 +32,7 @@
     <span>Tourney Web</span>
   </div>
 </template>
+
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
@@ -45,26 +46,31 @@ const menuItems = [
     key: 'Home',
     icon: 'fa-solid fa-house-user',
     i18nKey: 'menu.home',
+    path: '/home'
   },
   {
     key: 'Tournament',
     icon: 'fa-solid fa-chess',
     i18nKey: 'menu.tournament',
+    path: '/tournament'
   },
   {
     key: 'Mappool',
     icon: 'fa-solid fa-map',
     i18nKey: 'menu.mappool',
+    path: '/mappool/list'
   },
   {
     key: 'Songlist',
     icon: 'fa-solid fa-compact-disc',
     i18nKey: 'menu.songlist',
+    path: '/songlist'
   },
   {
     key: 'Command',
     icon: 'fa-solid fa-terminal',
     i18nKey: 'menu.command',
+    path: '/command'
   },
 ];
 
@@ -86,6 +92,7 @@ watch(
   }
 );
 </script>
+
 <style lang="scss" scoped>
 .menu {
   padding: 9px 0 0 0;

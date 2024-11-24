@@ -60,7 +60,7 @@
 import { Empty } from 'ant-design-vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
 import { onMounted, ref, onUnmounted } from 'vue';
-import { getUserInfo } from '@/api/data_api';
+import { userApi } from '@/api';
 const emit = defineEmits(['showDetail']);
 const props = defineProps({
   data: {
@@ -116,7 +116,7 @@ function initUser() {
       for (let e in item.player) {
         if (typeof item.player[e] === 'number') {
           let obj = {};
-          getUserInfo(item.player[e])
+          userApi.getUserInfo(item.player[e])
             .then((res) => {
               if (res) {
                 obj = {

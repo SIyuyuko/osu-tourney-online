@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import { computed, ref, shallowRef } from 'vue';
-import { getBeatmapInfo, getBeatmapBg, getBeatmapFile, getUserInfo } from '@/api/data_api.js';
+import { beatmapApi, userApi } from '@/api';
 import { shuffle } from 'lodash';
 import Plyr from 'plyr';
 
@@ -154,14 +154,14 @@ export const usePlyrStore = defineStore('plyr', () => {
       }
 
       if (!audioUrl) {
-        const response = await getBeatmapFile(track.id);
+        const response = await beatmapApi.getBeatmapFile(String(track.id));
         audioUrl = response?.data?.audioUrl || `/sp/file/map/song/${track.id}`;
       }
 
       // Load background
       let bgUrl = '/config/image/banner/cover.jpeg';
       try {
-        const response = await getBeatmapBg(track.id);
+        const response = await beatmapApi.getBeatmapBg(String(track.id));
         if (response.status === 200 && response.data) {
           const blob = new Blob([response.data], { type: 'image/jpeg' });
           bgUrl = URL.createObjectURL(blob);
@@ -267,10 +267,10 @@ export const usePlyrStore = defineStore('plyr', () => {
     saveToPersistentStorage();
   };
 
-  const addToPlaylist = async (beatmapId: number, autoPlay = true) => {
+  const addToPlaylist = async (beatmapId: string, autoPlay = true) => {
     try {
       playbackState.value.isLoading = true;
-      const response = await getBeatmapInfo(beatmapId);
+      const response = await beatmapApi.getBeatmapInfo(beatmapId);
 
       if (response?.status === 200 && response.data?.data) {
         const track = response.data.data;
@@ -335,7 +335,7 @@ export const usePlyrStore = defineStore('plyr', () => {
 
   //     // 加载创建者信息
   //     if (typeof albumData.creator !== 'object' && albumData.creator) {
-  //       const creatorResponse = await getUserInfo(albumData.creator);
+  //       const creatorResponse = await userApi.getUserInfo(albumData.creator);
   //       if (creatorResponse.status === 200) {
   //         albumData.creator = creatorResponse.data;
   //       }

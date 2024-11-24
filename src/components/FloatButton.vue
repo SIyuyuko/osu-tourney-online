@@ -41,7 +41,7 @@
 
 <script setup lang="ts" name="FloatButtons">
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
-import { usePlyrStore } from '@/stores/plyr';
+import { usePlyrStore } from '@/stores/plyrStore';
 import { storeToRefs } from 'pinia';
 import 'plyr/dist/plyr.css';
 

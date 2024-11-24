@@ -7,23 +7,34 @@
  * @Description: 用户绑定页
 -->
 <template>bind page</template>
-<script setup>
+
+<script setup lang="ts">
 import { useRouter, useRoute } from 'vue-router';
 import { onMounted } from 'vue';
-import { login } from '@/api/data_api.js';
+import { authApi } from '@/api';
+
 const route = useRoute();
 const router = useRouter();
-function log() {
-  let token = route.query.code;
-  login(token).then((res) => {
-    if (res.data.data) {
-      let data = JSON.stringify(res.data.data);
+
+const log = () => {
+  let token = route.query.code as string;
+  if (Array.isArray(token)) {
+    token = token[0];
+  }
+  interface AuthResponse {
+    data: any;
+  }
+
+  authApi.login(token).then((res: AuthResponse) => {
+    if (res.data) {
+      let data = JSON.stringify(res.data);
       sessionStorage.setItem('userData', data);
       window.alert('登录成功！');
       router.push('/');
     }
   });
 }
+
 onMounted(() => {
   log();
 });

@@ -24,7 +24,7 @@
 import { inject, ref, onBeforeMount, provide } from 'vue';
 import Header from '@/components/nav/Header.vue';
 import Sider from '@/components/nav/Sider.vue';
-import Floatbuttons from '@/components/util/floatbuttons.vue';
+import Floatbuttons from '@/components/FloatButton.vue';
 import Setting from '@/components/setting.vue';
 import i18n from '@/i18n';
 

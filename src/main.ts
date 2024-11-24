@@ -9,7 +9,7 @@ import { far } from '@fortawesome/free-regular-svg-icons';
 import { fab } from '@fortawesome/free-brands-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { router } from '@/router';
-import init from '@/utils/init';
+import initApp from '@/utils/initApp';
 import i18n from '@/i18n';
 import App from '@/App.vue';
 
@@ -21,6 +21,6 @@ app.use(Antd)
     .use(createPinia())
     .use(i18n)
     .use(router)
-    .use(init)
+    .use(initApp)
     .component('font-awesome-icon', FontAwesomeIcon)
     .mount('#app');

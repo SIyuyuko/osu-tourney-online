@@ -89,12 +89,13 @@
 <script setup name="Map">
 import { ref, inject, onMounted, nextTick, watch } from 'vue';
 // import { getModDiffStar } from '@/utils/mappool';
-import { getBeatmapInfo, getBeatmapAttributes } from '@/api/data_api';
+import { beatmapApi } from '@/api';
+
 let themeMode = inject('themeMode');
 let imgApi = ref('https://assets.ppy.sh/beatmaps/');
 let imgApiSuffix = ref('/covers/card.jpg');
-let beatmapApi = ref('http://osu.ppy.sh/b/');
-let beatmapdownloadApi = ref('https://dl.sayobot.cn/beatmaps/download/');
+let beatmapUrl = ref('http://osu.ppy.sh/b/');
+let beatmapDownloadApi = ref('https://dl.sayobot.cn/beatmaps/download/');
 let props = defineProps({
   item: {
     type: Object,
@@ -111,7 +112,7 @@ let map = ref();
 let loaded = ref(false);
 // 打开谱面官网链接
 function openBeatmapWebsite(bid) {
-  let url = beatmapApi.value + bid;
+  let url = beatmapUrl.value + bid;
   window.open(url, '_blank');
 }
 // 复制谱面ID
@@ -129,7 +130,7 @@ function copyBeatmapID(item) {
 }
 // 下载谱面文件
 function downloadBeatmap(sid) {
-  let url = beatmapdownloadApi.value + sid;
+  let url = beatmapDownloadApi.value + sid;
   window.open(url, '_self');
 }
 function toggleMapStatus(map) {
@@ -166,7 +167,7 @@ function copyCommand(item, type) {
   }, 1000);
 }
 function initBeatmap(item) {
-  getBeatmapInfo(item.id)
+  beatmapApi.getBeatmapInfo(item.id)
     .then((res) => {
       if (res.status === 200) {
         nextTick(() => {
@@ -189,7 +190,7 @@ async function getBeatmapParams(map) {
     mod: noModList.includes(map.mod) ? 'NM' : map.mod,
     mode: map.data.mode,
   };
-  getBeatmapAttributes(params).then((res) => {
+  beatmapApi.getBeatmapAttributes(params).then((res) => {
     let data = res.data;
     for (let i in data) {
       if (data[i].toString().indexOf('.') !== -1) {
@@ -230,6 +231,7 @@ onMounted(() => {
   }
 });
 </script>
+
 <style lang="scss" scoped>
 .map-panel {
   display: flex;

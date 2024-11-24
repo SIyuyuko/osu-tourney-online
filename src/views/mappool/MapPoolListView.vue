@@ -8,14 +8,10 @@
 -->
 <template>
   <div class="list-page">
-    <div class="list-header">
-      <a-button type="primary" @click="createPool" v-if="hasCreatePermission"> 创建新图池 </a-button>
-    </div>
-
-    <a-list v-if="pools.length" :grid="{ gutter: 16, column: 4 }" :data-source="pools">
+    <a-list v-if="pools.length" :grid="{ gutter: 16, column: 4 }" :data-source="listData">
       <template #renderItem="{ item }">
         <a-list-item>
-          <PoolCard :item="item" @click="navigateToPool(item)" @delete="handleDeletePool" />
+          <PoolCard :item="item" @create="handleCreate" />
         </a-list-item>
       </template>
     </a-list>
@@ -25,16 +21,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { Empty, message } from 'ant-design-vue';
-import PoolCard from '@/components/map/poolCard.vue';
-const data = window.mappool; // 图池配置
-const list = data.list.length > 0 ? data.list : null; // 图池列表
-function createPool() {
-  let pool = { title: '空白图池' };
-  data.value.push(pool);
-}
+import { ref, computed } from 'vue';
+import { Empty } from 'ant-design-vue';
+import PoolCard from '@/components/map/PoolCard.vue';
+
+const pools = ref((window as any).mappool?.list || []);
+
+const listData = computed(() => {
+  return [...pools.value, { title: '新建图池' }];
+});
+
+const handleCreate = async () => {
+  // 创建新图池
+  const newPool = {
+    id: Date.now(), // 临时ID生成方式
+    title: '空白图池',
+    // ... 其他必要字段
+  };
+
+  pools.value.push(newPool);
+
+  // 如果有API调用:
+  // try {
+  //   const response = await createPool(newPool);
+  //   pools.value.push(response.data);
+  // } catch (error) {
+  //   message.error('创建失败');
+  // }
+};
 </script>
 
 <style lang="scss" scoped>

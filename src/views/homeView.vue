@@ -46,7 +46,7 @@ import Countdown from '../components/util/countdown.vue';
 import Cover from '../components/util/cover.vue';
 import TournamentInfo from '../components/tour/tournamentInfo.vue';
 import PoolSelector from '../components/map/poolSelector.vue';
-import { getUserInfo } from '@/api/data_api';
+import { userApi } from '@/api';
 import dayjs from 'dayjs';
 import { ref, watch, onMounted } from 'vue';
 let user = window.user; // 用户配置

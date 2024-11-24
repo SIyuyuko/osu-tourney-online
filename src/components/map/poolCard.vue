@@ -7,35 +7,39 @@
  * @Description: 图池列表卡片组件
 -->
 <template>
-  <a-card class="pool-card" v-if="item.title !== '新建图池'" @click="changeCurPage('mappool', item)" hoverable>
+  <a-card class="pool-card" v-if="item.title !== '新建图池'" @click="navigateToPool(item)" hoverable>
     <span :title="item.title">{{ item.title }}</span>
   </a-card>
-  <a-card class="add-card" v-else hoverable @click="createMappool()">
+  <a-card class="add-card" v-else hoverable @click="$emit('create')">
     <div>
       <font-awesome-icon icon="fa-solid fa-folder-plus" />
       <span class="add-title">新建图池</span>
     </div>
   </a-card>
 </template>
-<script setup name="poolCard">
-import { inject, onMounted } from 'vue';
-const changeCurPage = inject('changeCurPage');
-// import { addPool } from '@/api/data_api.js';
+
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 defineProps({
   item: {
     type: Object,
-  },
-  data: {
-    type: Array,
-  },
+    required: true
+  }
 });
-const emit = defineEmits(['createPool']);
-// 创建图池
-function createMappool() {
-  emit('createPool');
-}
-onMounted(() => { });
+
+const emit = defineEmits(['create']);
+
+const navigateToPool = (item: Record<string, any>) => {
+  router.push({
+    name: 'MappoolDetail',
+    params: { title: item.title }
+  });
+};
 </script>
+
 <style lang="scss" scoped>
 .pool-card {
   :deep(.ant-card-body) {

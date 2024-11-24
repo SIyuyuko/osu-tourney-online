@@ -9,72 +9,51 @@
 <template>
   <div class="page no-scroll">
     <div class="nav">
-      <a-breadcrumb :routes="routes">
-        <template #itemRender="{ route, paths }">
-          <span v-if="routes.indexOf(route) === routes.length - 1">
-            {{ $t(route.breadcrumbName) }}
-          </span>
-          <router-link v-else :to="generatePath(paths)">
-            {{ $t(route.breadcrumbName) }}
+      <a-breadcrumb>
+        <a-breadcrumb-item>
+          <router-link to="/mappool/list">
+            {{ $t('mappool.list') }}
           </router-link>
-        </template>
+        </a-breadcrumb-item>
+        <a-breadcrumb-item v-if="currentPool">
+          {{ currentPool.title }}
+        </a-breadcrumb-item>
       </a-breadcrumb>
     </div>
+
     <div class="view">
       <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <component :is="Component" :key="$route.path" />
-        </transition>
+        <keep-alive>
+          <component :is="Component" @pool-selected="updateCurrentPool" />
+        </keep-alive>
       </router-view>
     </div>
   </div>
 </template>
 
-<script setup lang="ts" name="Mappool">
-import { computed } from 'vue';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
+const currentPool = ref();
 
-// 路由配置
-const routes = computed(() => {
-  const baseRoute = {
-    path: 'list',
-    breadcrumbName: 'mappool.list'
-  };
-
-  const breadcrumbs = [baseRoute];
-
-  if (route.name === 'MappoolView' || route.name === 'MappoolSetting') {
-    // 添加图池详情路由
-    breadcrumbs.push({
-      path: `view/${route.params.id}`,
-      breadcrumbName: typeof route.meta.poolTitle === 'string' ? route.meta.poolTitle : 'mappool.view'
-    });
-  }
-
-  if (route.name === 'MappoolSetting') {
-    // 添加设置路由
-    breadcrumbs.push({
-      path: `setting/${route.params.id}`,
-      breadcrumbName: 'mappool.setting'
-    });
-  }
-
-  return breadcrumbs;
-});
-
-const generatePath = (paths: string[]) => {
-  return `/mappool/${paths.join('/')}`;
+const updateCurrentPool = (pool: any) => {
+  currentPool.value = pool;
 };
 
-// 显示图池设置
-// function showSettingPage(visible) {
-//   showSetting.value = visible;
-//   if (visible) {
-//     changeCurPage('setting');
-//   }
-// }
+// 监听路由变化更新当前图池
+watch(
+  () => route.params.title,
+  async (title) => {
+    if (title) {
+      currentPool.value = (window as any).mappool?.list?.find((p: any) => p.title === title) || null;
+    } else {
+      currentPool.value = null;
+    }
+  },
+  { immediate: true }
+);
 </script>
 
 <style lang="scss" scoped>

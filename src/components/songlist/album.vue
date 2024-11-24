@@ -16,6 +16,7 @@
               <template #extra>
                 <img class="logo" alt="cover" :src="item.cover" @click="add(item)" />
               </template>
+
               <a-list-item-meta>
                 <template #title>
                   <a @click="add(item)">{{ item.title }}</a>
@@ -29,6 +30,7 @@
           </template>
         </a-list>
       </div>
+
       <AlbumView class="page" v-else :albumList="pane" @update="updateList" />
     </a-tab-pane>
   </a-tabs>

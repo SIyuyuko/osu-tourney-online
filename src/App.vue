@@ -1,8 +1,8 @@
 <template>
-  <theme />
+  <ThemeConfigurator />
   <Layout />
 </template>
 <script setup>
-import theme from '@/components/theme/theme.vue';
+import ThemeConfigurator from '@/components/ThemeConfigurator.vue';
 import Layout from '@/layout/Layout.vue';
 </script>

@@ -58,7 +58,7 @@ const getLogin = (params) => {
   });
 };
 // 获取玩家信息
-const getUserInfo = (params: string) => {
+const getUserInfo = (params) => {
   return axios({
     method: 'get',
     url: `/bot/info/json?uid=${params}`,
@@ -69,7 +69,7 @@ const getUserInfo = (params: string) => {
 * @param {Number} params 谱面ID
 * @return void
 */
-const getBeatmapInfo = (params: string) => {
+const getBeatmapInfo = (params) => {
   return axios({
     method: "get",
     url: `/bot/api/info/${params}`,
@@ -87,7 +87,7 @@ const getBeatmapAttributes = (params) => {
   });
 };
 // 获取谱面bg
-const getBeatmapBg = (params: string) => {
+const getBeatmapBg = (params) => {
   return axios({
     method: "get",
     url: `/bot/api/background/${params}`,

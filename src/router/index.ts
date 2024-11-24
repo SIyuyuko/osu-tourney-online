@@ -28,12 +28,34 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/mappool',
     name: 'Mappool',
+    redirect: '/mappool/list',
     component: () => import('@/views/mappool/MapPoolHub.vue'),
     meta: {
       title: '图池',
       keepAlive: true,
       noScroll: false,
     },
+    children: [
+      {
+        path: 'list',
+        name: 'MapPoolList',
+        component: () => import('@/views/mappool/MapPoolListView.vue'),
+        meta: {
+          title: '图池列表',
+        },
+      },
+      {
+        path: ':title',
+        name: 'MappoolDetail',
+        component: () => import('@/views/mappool/PoolView.vue'),
+        meta: {
+          title: '图池详情',
+          keepAlive: true,
+          noScroll: false,
+        },
+        props: true,
+      },
+    ],
   },
   {
     path: '/songlist',
@@ -80,12 +102,14 @@ router.beforeEach(async (to, from, next) => {
     try {
       const token = Array.isArray(to.query.code) ? to.query.code[0] : to.query.code;
 
-      const loginService = (await import('@/api/data_api')).login;
-      const response = await loginService(token);
+      const loginService = (await import('@/api')).authApi.login;
+      if (token) {
+        const response = await loginService(token as string);
 
-      if (response.data?.data) {
-        localStorage.setItem('userKey', JSON.stringify(response.data.data));
-        next('/');
+        if (response.data) {
+          localStorage.setItem('userKey', JSON.stringify(response.data));
+          return;
+        }
         return;
       }
     } catch (error) {

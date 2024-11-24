@@ -45,7 +45,7 @@
       <template #renderItem="{ item }">
         <a-list-item class="songlist" ref="listItemRef">
           <template #actions>
-            <Musicbar v-if="currentTrack.info?.id === item?.id && playbackState.isPlaying" />
+            <MusicBar v-if="currentTrack.info?.id === item?.id && playbackState.isPlaying" />
             <a v-else @click="store.playTrack(item)">
               <font-awesome-icon icon="fa-solid fa-circle-play" />
             </a>
@@ -66,14 +66,15 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed, nextTick } from 'vue';
-import { useScroll } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
-import { usePlyrStore } from '@/stores/plyr';
-import Musicbar from '@/components/element/musicbar.vue';
+import { usePlyrStore } from '@/stores/plyrStore';
+import MusicBar from '@/components/songlist/MusicBar.vue';
 
 const store = usePlyrStore();
 const { currentTrack, playlist, playbackState } = storeToRefs(store);
 const searchQuery = ref('');
+const listContainerRef = ref<HTMLElement | null>(null);
+const listItemRefs = ref<Map<number, HTMLElement>>(new Map());
 
 const bgStyle = computed(() => ({
   'background-image': `url(${currentTrack.value.bgUrl || '/config/image/banner/cover.jpeg'})`,
@@ -90,7 +91,7 @@ const handleSearch = async (value: string) => {
   if (!value || isNaN(Number(value))) return;
 
   try {
-    await store.addToPlaylist(Number(value), true);
+    await store.addToPlaylist(value, true);
     await scrollToTrack();
   } catch (error) {
     console.error('Search failed:', error);
@@ -101,31 +102,40 @@ const listRef = ref(null);
 import type { ComponentPublicInstance } from 'vue';
 
 const listItemRef = ref<ComponentPublicInstance | null>(null);
-let scrollY: ReturnType<typeof useScroll>['y'];
 
 // Scroll to current track
 const scrollToTrack = async () => {
-  if (!listRef.value || !listItemRef.value) return;
-
   await nextTick();
 
-  if (currentTrack.value.info) {
-    const index: number = playlist.value.findIndex((track: { id: number }) => track.id === currentTrack.value.info?.id);
-    const itemHeight: number = listItemRef.value.$el.clientHeight;
+  const container = listContainerRef.value;
+  if (!container) return;
 
-    scrollY.value = index === playlist.value.length - 1 ? itemHeight * (playlist.value.length + 1) : itemHeight * index;
+  if (currentTrack.value.info) {
+    const trackElement = listItemRefs.value.get(currentTrack.value.info.id);
+    if (trackElement) {
+      container.scrollTo({
+        top: trackElement.offsetTop,
+        behavior: 'smooth'
+      });
+    }
   } else {
-    scrollY.value = listItemRef.value.$el.clientHeight * (playlist.value.length + 1);
+    // Scroll to bottom if no current track
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: 'smooth'
+    });
   }
 };
 
 watch(() => playlist.value.length, scrollToTrack);
 
+// Clear refs when playlist changes
+watch(() => playlist.value, () => {
+  listItemRefs.value.clear();
+}, { deep: true });
+
 onMounted(() => {
-  if (listRef.value) {
-    const scroll = useScroll(listRef.value as HTMLElement, { behavior: 'smooth' });
-    scrollY = scroll.y;
-  }
+  scrollToTrack();
 });
 </script>
 

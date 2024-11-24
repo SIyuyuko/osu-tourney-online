@@ -21,7 +21,7 @@
 </template>
 
 <script setup lang="ts">
-import Player from '@/components/songlist/player.vue';
+import Player from '@/components/songlist/PlayList.vue';
 import Album from '@/components/songlist/album.vue';
 </script>
 

@@ -82,7 +82,7 @@ const bgStyle = computed(() => ({
 }));
 
 const listProps = computed(() => ({
-  rowKey: (item) => item?.id,
+  rowKey: (item: any) => item?.id,
   loading: playbackState.value.isLoading,
 }));
 
@@ -98,7 +98,9 @@ const handleSearch = async (value: string) => {
 };
 
 const listRef = ref(null);
-const listItemRef = ref(null);
+import type { ComponentPublicInstance } from 'vue';
+
+const listItemRef = ref<ComponentPublicInstance | null>(null);
 let scrollY: ReturnType<typeof useScroll>['y'];
 
 // Scroll to current track
@@ -108,8 +110,8 @@ const scrollToTrack = async () => {
   await nextTick();
 
   if (currentTrack.value.info) {
-    const index = playlist.value.findIndex((track) => track.id === currentTrack.value.info.id);
-    const itemHeight = listItemRef.value.$el.clientHeight;
+    const index: number = playlist.value.findIndex((track: { id: number }) => track.id === currentTrack.value.info?.id);
+    const itemHeight: number = listItemRef.value.$el.clientHeight;
 
     scrollY.value = index === playlist.value.length - 1 ? itemHeight * (playlist.value.length + 1) : itemHeight * index;
   } else {
@@ -121,7 +123,7 @@ watch(() => playlist.value.length, scrollToTrack);
 
 onMounted(() => {
   if (listRef.value) {
-    const scroll = useScroll(listRef.value.$el, { behavior: 'smooth' });
+    const scroll = useScroll(listRef.value as HTMLElement, { behavior: 'smooth' });
     scrollY = scroll.y;
   }
 });

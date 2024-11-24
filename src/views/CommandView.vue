@@ -200,7 +200,7 @@ import { CaretRightOutlined } from '@ant-design/icons-vue';
 import { ref, onMounted, computed, watch } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
 import PoolSelector from '@/components/map/poolSelector.vue';
-import i18n from '@/language';
+import i18n from '@/i18n';
 let commandCopy = ref();
 let defaultCommand = null;
 let commandList = computed({

@@ -4,33 +4,36 @@
  * @LastEditors: SIyuyuko 3228981717@qq.com
  * @LastEditTime: 2024-10-12 22:32:51
  * @FilePath: \osu-tourney-online\src\api\data_api.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import axios from '../http/axios.js';
-/** 登录获取授权链接 */
-export const getOauthUrl = () => {
+
+// 登录获取授权链接
+const getOauthUrl = () => {
   return axios({
     method: 'get',
     url: '/sp/public/getOauthUrl',
     baseURL: window.location.href,
   });
 };
+
 /** token登陆 */
-export const login = (params) => {
+const login = (params: string) => {
   return axios({
     method: 'get',
     url: `/api/user/login?code=${params}`,
   });
 };
-/** 创建图池 */
-export const addPool = () => {
+
+// 创建图池
+const addPool = () => {
   return axios({
     method: 'put',
     url: '/api/map/createPool',
   });
 };
+
 // 生成比赛图池
-export const getMappool = (params) => {
+const getMappool = (params) => {
   return axios({
     method: 'post',
     url: `/pool?name=${params.name}`,
@@ -39,7 +42,7 @@ export const getMappool = (params) => {
   });
 };
 // 投骰子
-export const getDice = (params) => {
+const getDice = (params) => {
   return axios({
     method: 'get',
     url: `/dice`,
@@ -47,7 +50,7 @@ export const getDice = (params) => {
   });
 };
 // 玩家登录
-export const getLogin = (params) => {
+const getLogin = (params) => {
   return axios({
     method: 'get',
     url: `/bot/login`,
@@ -55,7 +58,7 @@ export const getLogin = (params) => {
   });
 };
 // 获取玩家信息
-export const getUserInfo = (params) => {
+const getUserInfo = (params: string) => {
   return axios({
     method: 'get',
     url: `/bot/info/json?uid=${params}`,
@@ -66,7 +69,7 @@ export const getUserInfo = (params) => {
 * @param {Number} params 谱面ID
 * @return void
 */
-export const getBeatmapInfo = params => {
+const getBeatmapInfo = (params: string) => {
   return axios({
     method: "get",
     url: `/bot/api/info/${params}`,
@@ -77,14 +80,14 @@ export const getBeatmapInfo = params => {
 * @param {Object} params 谱面ID
 * @return void
 */
-export const getBeatmapAttributes = params => {
+const getBeatmapAttributes = (params) => {
   return axios({
     method: "get",
     url: `/bot/attr/json?bid=${params.bid}&mods=${params.mod}&mode=${params.mode}`,
   });
 };
 // 获取谱面bg
-export const getBeatmapBg = params => {
+const getBeatmapBg = (params: string) => {
   return axios({
     method: "get",
     url: `/bot/api/background/${params}`,
@@ -95,10 +98,28 @@ export const getBeatmapBg = params => {
   });
 };
 // 获取谱面文件
-export const getBeatmapFile = params => {
+const getBeatmapFile = params => {
   return axios({
     method: "get",
     url: `/sp/file/map/fileName/song/${params}`,
     baseURL: window.location.href,
   });
 };
+
+export {
+  getOauthUrl,
+  login,
+
+  // pool
+  addPool,
+  getMappool,
+  getDice,
+  getLogin,
+  getUserInfo,
+
+  // beatmap
+  getBeatmapInfo,
+  getBeatmapAttributes,
+  getBeatmapBg,
+  getBeatmapFile,
+}

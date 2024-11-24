@@ -8,7 +8,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/home',
     name: 'Home',
-    component: () => import('@/views/homeView.vue'),
+    component: () => import('@/views/HomeView.vue'),
     meta: {
       title: '首页',
       keepAlive: true,
@@ -18,7 +18,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/tournament',
     name: 'Tournament',
-    component: () => import('@/views/tournament/index.vue'),
+    component: () => import('@/views/TournamentView.vue'),
     meta: {
       title: '比赛',
       keepAlive: true,
@@ -28,7 +28,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/mappool',
     name: 'Mappool',
-    component: () => import('@/views/mappool/index.vue'),
+    component: () => import('@/views/mappool/MapPoolHub.vue'),
     meta: {
       title: '图池',
       keepAlive: true,
@@ -38,7 +38,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/songlist',
     name: 'Songlist',
-    component: () => import('@/views/songListView.vue'),
+    component: () => import('@/views/SongListView.vue'),
     meta: {
       title: '歌曲列表',
       keepAlive: true,
@@ -48,7 +48,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/command',
     name: 'Command',
-    component: () => import('@/views/command/index.vue'),
+    component: () => import('@/views/CommandView.vue'),
     meta: {
       title: '指令',
       keepAlive: true,
@@ -58,12 +58,12 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/bind',
     name: 'Bind',
-    component: () => import('@/views/bind.vue'),
+    component: () => import('@/views/BindView.vue'),
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: () => import('@/views/error/NotFound.vue'),
+    component: () => import('@/views/NotFound.vue'),
   },
 ];
 

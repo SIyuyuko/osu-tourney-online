@@ -14,14 +14,14 @@ interface Track {
 }
 
 // 专辑类型
-interface Album {
-  title: string;
-  content: (Track | number)[];
-  cover: string;
-  key: string;
-  creator: number | object;
-  description?: string;
-}
+// interface Album {
+//   title: string;
+//   content: (Track | number)[];
+//   cover: string;
+//   key: string;
+//   creator: number | object;
+//   description?: string;
+// }
 
 // 播放状态类型
 interface PlaybackState {
@@ -138,7 +138,7 @@ export const usePlyrStore = defineStore('plyr', () => {
     try {
       // Load audio
       const audioFormats = ['mp3', 'ogg'];
-      let audioUrl = null;
+      let audioUrl = '';
 
       for (const format of audioFormats) {
         const url = `https://dl.sayobot.cn/beatmaps/files/${track.beatmapset_id}/audio.${format}`;
@@ -189,10 +189,10 @@ export const usePlyrStore = defineStore('plyr', () => {
   };
 
   // 专辑列表
-  const albums = ref([]);
+  // const albums = ref([]);
 
   // 当前激活的专辑
-  const activeAlbum = ref(null);
+  // const activeAlbum = ref(null);
 
   // 初始化 Plyr
   const initializePlyr = (audioElement: HTMLAudioElement) => {
@@ -319,73 +319,50 @@ export const usePlyrStore = defineStore('plyr', () => {
   };
 
   // Getters
-  const currentAlbumTracks = computed(() => {
-    if (!activeAlbum.value) return [];
-    return activeAlbum.value.content.map((id) => {
-      if (typeof id === 'object') return id;
-      const track = playlist.value.find((t) => t.id === id);
-      return track || id;
-    });
-  });
-
-  // Actions
-  // get beatmap from api
-  async function loadBeatmap(beatmapId: number) {
-    playbackState.value.isLoading = true;
-    try {
-      const response = await getBeatmapInfo(beatmapId);
-      if (response.status === 200 && response.data) {
-        const data = response.data.data;
-        return data;
-      }
-    } catch (error) {
-      console.error('Failed to load beatmap:', error);
-      throw error;
-    } finally {
-      playbackState.value.isLoading = false;
-    }
-  }
+  // const currentAlbumTracks = computed(() => {
+  //   if (!activeAlbum.value) return [];
+  //   return activeAlbum.value.content.map((id) => {
+  //     if (typeof id === 'object') return id;
+  //     const track = playlist.value.find((t) => t.id === id);
+  //     return track || id;
+  //   });
+  // });
 
   // 专辑管理
-  async function loadAlbum(albumData) {
-    try {
-      activeAlbum.value = albumData;
+  // async function loadAlbum(albumData) {
+  //   try {
+  //     activeAlbum.value = albumData;
 
-      // 加载创建者信息
-      if (typeof albumData.creator !== 'object' && albumData.creator) {
-        const creatorResponse = await getUserInfo(albumData.creator);
-        if (creatorResponse.status === 200) {
-          albumData.creator = creatorResponse.data;
-        }
-      }
+  //     // 加载创建者信息
+  //     if (typeof albumData.creator !== 'object' && albumData.creator) {
+  //       const creatorResponse = await getUserInfo(albumData.creator);
+  //       if (creatorResponse.status === 200) {
+  //         albumData.creator = creatorResponse.data;
+  //       }
+  //     }
 
-      // 加载专辑内的曲目
-      for (const trackId of albumData.content) {
-        if (typeof trackId !== 'object') {
-          await addToPlaylist(trackId);
-        }
-      }
-    } catch (error) {
-      console.error('Failed to load album:', error);
-    }
-  }
+  //     // 加载专辑内的曲目
+  //     for (const trackId of albumData.content) {
+  //       if (typeof trackId !== 'object') {
+  //         await addToPlaylist(trackId);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error('Failed to load album:', error);
+  //   }
+  // }
 
-  function playAlbum(album, shuffle = false) {
-    if (shuffle) {
-      album.content = shuffleArray([...album.content]);
-    }
-    if (album.content.length > 0) {
-      const firstTrack = typeof album.content[0] === 'object' ? album.content[0] : playlist.value.find((t) => t.id === album.content[0]);
-      if (firstTrack) {
-        playTrack(firstTrack);
-      }
-    }
-  }
-
-  // 工具函数
-  function shuffleArray<T>(array: T[]): T[] {
-    return shuffle(array);
-  }
+  // function playAlbum(album, shuffle = false) {
+  //   if (shuffle) {
+  //     album.content = shuffleArray([...album.content]);
+  //   }
+  //   if (album.content.length > 0) {
+  //     const firstTrack = typeof album.content[0] === 'object' ? album.content[0] : playlist.value.find((t) => t.id === album.content[0]);
+  //     if (firstTrack) {
+  //       playTrack(firstTrack);
+  //     }
+  //   }
+  // }
 
   return {
     // State

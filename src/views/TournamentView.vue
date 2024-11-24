@@ -50,7 +50,7 @@
 import { Empty } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
-import TourView from './tourView.vue';
+import TourView from '@/views/tournament/tourView.vue';
 let tournament = window.tournament;
 const listData = tournament.list;
 // const pagination = {

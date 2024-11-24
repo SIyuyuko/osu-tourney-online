@@ -68,14 +68,15 @@
     </div>
   </a-layout-header>
 </template>
+
 <script setup lang="ts">
 import { inject, ref, onBeforeMount, computed } from 'vue';
 import { useI18n } from 'vue-i18n'
 import { globalState } from '@/utils/init';
 import { getOauthUrl } from '@/api/data_api';
-import Menu from './menu.vue';
+import Menu from './Menu.vue';
 
-const { t, locale } = useI18n()
+const { locale } = useI18n()
 const showSetting = inject('showSetting')
 const { theme, siderCollapsed: collapsed } = globalState
 let mobileCollapsed = ref(false)
@@ -139,6 +140,7 @@ onBeforeMount(() => {
   }
 });
 </script>
+
 <style lang="scss" scoped>
 .ant-layout-header {
   padding: 0;

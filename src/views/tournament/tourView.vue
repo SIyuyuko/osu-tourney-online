@@ -60,7 +60,7 @@
 import { Empty } from 'ant-design-vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
 import { onMounted, ref, onUnmounted } from 'vue';
-import { getUserInfo } from '@/api/data_api.js';
+import { getUserInfo } from '@/api/data_api';
 const emit = defineEmits(['showDetail']);
 const props = defineProps({
   data: {

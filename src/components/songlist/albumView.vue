@@ -63,7 +63,7 @@
 </template>
 <script setup name="AlbumView">
 import { onMounted } from 'vue';
-import { getBeatmapInfo, getUserInfo } from '@/api/data_api.js';
+import { getBeatmapInfo, getUserInfo } from '@/api/data_api';
 import { usePlyrStore } from '@/stores/plyr';
 import { storeToRefs } from 'pinia';
 const usePlyr = usePlyrStore();

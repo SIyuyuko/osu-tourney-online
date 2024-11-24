@@ -10,7 +10,7 @@ import { fab } from '@fortawesome/free-brands-svg-icons';
 import { fas } from '@fortawesome/free-solid-svg-icons';
 import { router } from '@/router';
 import init from '@/utils/init';
-import i18n from '@/language';
+import i18n from '@/i18n';
 import App from '@/App.vue';
 
 library.add(fas, far, fab);

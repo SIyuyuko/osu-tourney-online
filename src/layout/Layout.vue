@@ -22,11 +22,11 @@
 
 <script setup lang="ts">
 import { inject, ref, onBeforeMount, provide } from 'vue';
-import Header from '@/components/nav/header.vue';
-import Sider from '@/components/nav/sider.vue';
+import Header from '@/components/nav/Header.vue';
+import Sider from '@/components/nav/Sider.vue';
 import Floatbuttons from '@/components/util/floatbuttons.vue';
 import Setting from '@/components/setting.vue';
-import i18n from '@/language';
+import i18n from '@/i18n';
 
 let showSetting = ref(false);
 const theme = inject('themeMode');

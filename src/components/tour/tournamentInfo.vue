@@ -35,7 +35,7 @@
 <script setup name="TournamentInfo">
 import { onMounted, ref } from 'vue';
 import { message, Empty } from 'ant-design-vue';
-import i18n from '@/language';
+import i18n from '@/i18n';
 const data = window.tournament; // 比赛配置
 const tournamentName = data.homeTournament;
 let tourData = ref();

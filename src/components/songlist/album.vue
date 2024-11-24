@@ -38,7 +38,7 @@
 import { ref, nextTick, watch, onMounted, computed } from 'vue';
 import AlbumView from './albumView.vue';
 import { useResizeObserver } from '@vueuse/core';
-import i18n from '@/language';
+import i18n from '@/i18n';
 let paneRef = ref(null);
 let viewHeight = ref(0);
 useResizeObserver(paneRef, (entries) => {

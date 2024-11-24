@@ -14,7 +14,7 @@
 
 <script setup lang="ts" name="Sider">
 import { inject } from 'vue';
-import Menu from './menu.vue';
+import Menu from './Menu.vue';
 let collapsed = inject('collapsed');
 </script>
 

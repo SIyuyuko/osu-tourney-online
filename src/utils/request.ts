@@ -15,7 +15,7 @@ class Request {
 
   constructor(config: AxiosRequestConfig) {
     this.instance = axios.create({
-      baseURL: (import.meta as any).env.VITE_BASEURL,
+      baseURL: import.meta.env.VITE_BASEURL,
       timeout: 60000,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',

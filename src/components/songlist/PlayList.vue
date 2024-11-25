@@ -41,7 +41,7 @@
     </div>
 
     <!-- 播放列表区域 -->
-    <a-list ref="listRef" size="small" bordered :data-source="playlist" v-bind="listProps" style="overflow: auto; height: 100%" >
+    <a-list ref="listRef" size="small" bordered :data-source="playlist" v-bind="listProps" style="overflow: auto; height: 100%">
       <template #renderItem="{ item }">
         <a-list-item class="songlist" ref="listItemRef">
           <template #actions>
@@ -115,14 +115,14 @@ const scrollToTrack = async () => {
     if (trackElement) {
       container.scrollTo({
         top: trackElement.offsetTop,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   } else {
     // Scroll to bottom if no current track
     container.scrollTo({
       top: container.scrollHeight,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 };
@@ -130,9 +130,13 @@ const scrollToTrack = async () => {
 watch(() => playlist.value.length, scrollToTrack);
 
 // Clear refs when playlist changes
-watch(() => playlist.value, () => {
-  listItemRefs.value.clear();
-}, { deep: true });
+watch(
+  () => playlist.value,
+  () => {
+    listItemRefs.value.clear();
+  },
+  { deep: true }
+);
 
 onMounted(() => {
   scrollToTrack();
@@ -155,8 +159,7 @@ onMounted(() => {
     height: 160px;
     position: relative;
     justify-content: space-between;
-    border-radius: 11.5px;
-    box-shadow: 0 0 5px #141414 inset;
+    border-radius: 10px;
     transition: background-image 0.5s ease-in-out 0s;
 
     .mask {
@@ -167,47 +170,47 @@ onMounted(() => {
       display: flex;
       border-radius: 10px;
       overflow: hidden;
-    }
+      gap: 10px;
 
-    .cover {
-      width: 140px;
-      height: 140px;
-      margin: 0 10px 0 0;
-      border-radius: 10px;
-      transition: background-image 0.5s ease-in-out 0s;
-    }
+      .cover {
+        width: 140px;
+        height: 140px;
+        border-radius: 10px;
+        transition: background-image 0.5s ease-in-out 0s;
+      }
 
-    .beatmap-title {
-      width: calc(100% - 150px);
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      justify-content: center;
-      overflow: hidden;
-
-      .title {
-        font-size: 30px;
-        white-space: nowrap;
-        display: inline-block;
+      .beatmap-title {
+        width: calc(100% - 140px);
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
         overflow: hidden;
-        text-overflow: ellipsis;
-      }
 
-      .artist {
-        font-size: 16px;
-      }
-
-      :deep(.ant-spin) {
-        position: unset;
-        color: inherit;
-
-        .ant-spin-dot-item {
-          background-color: #ffffff;
+        .title {
+          font-size: 30px;
+          white-space: nowrap;
+          display: inline-block;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
-      }
 
-      :hover {
-        border: none;
+        .artist {
+          font-size: 16px;
+        }
+
+        :deep(.ant-spin) {
+          position: unset;
+          color: inherit;
+
+          .ant-spin-dot-item {
+            background-color: #ffffff;
+          }
+        }
+
+        :hover {
+          border: none;
+        }
       }
     }
   }
@@ -215,14 +218,6 @@ onMounted(() => {
   .beatmap-query {
     display: flex;
     column-gap: 20px;
-  }
-}
-
-[data-theme='dark'] {
-  .beatmap-player {
-    .beatmap-info {
-      box-shadow: 0 0 5px #eaeaea inset;
-    }
   }
 }
 

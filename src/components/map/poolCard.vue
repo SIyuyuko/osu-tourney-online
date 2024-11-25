@@ -10,7 +10,7 @@
   <a-card class="pool-card" v-if="item.title !== '新建图池'" @click="navigateToPool(item)" hoverable>
     <span :title="item.title">{{ item.title }}</span>
   </a-card>
-  <a-card class="add-card" v-else hoverable @click="$emit('create')">
+  <a-card class="add-card" v-else @click="$emit('create')" hoverable>
     <div>
       <font-awesome-icon icon="fa-solid fa-folder-plus" />
       <span class="add-title">新建图池</span>

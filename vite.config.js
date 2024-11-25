@@ -7,6 +7,9 @@ import VueDevTools from 'vite-plugin-vue-devtools';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_BASEURL': JSON.stringify("https://tourney.365246692.xyz/")
+  },
   plugins: [vue(), vueJsx(), VueDevTools()],
   resolve: {
     alias: {

@@ -10,18 +10,16 @@
   <div v-for="(pool, index) in poolData?.children" :key="index">
     <span class="pool-title">{{ pool?.title }}</span>
     <div class="pool-content">
-      <Map v-for="(map, index) in pool?.map" :key="index" :item="map" :isCard="false"> </Map>
+      <Map v-for="(map, index) in pool?.map" :key="index" :item="map" :isCard="false"></Map>
     </div>
     <a-divider dashed />
   </div>
-  <!-- <a-button type="primary" @click="showSettingPage(true)">设置</a-button> -->
 </template>
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import Map from '@/components/map/map.vue';
-// const showSettingPage = inject('showSetting');
 
 const route = useRoute();
 const poolData = ref();
@@ -39,7 +37,6 @@ watch(
   },
   { immediate: true }
 );
-
 </script>
 
 <style lang="scss" scoped>

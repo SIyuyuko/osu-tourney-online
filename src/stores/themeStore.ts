@@ -26,7 +26,7 @@ export const useThemeStore = defineStore('theme', () => {
       }
 
       // 如果需要等待用户信息
-      if ((import.meta as any).env.PROD) {  // 只在生产环境等待用户信息
+      if (import.meta.env.PROD) {  // 只在生产环境等待用户信息
         await new Promise<void>((resolve) => {
           const checkUser = () => {
             if ((window as any).user) {

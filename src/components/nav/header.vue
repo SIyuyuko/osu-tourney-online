@@ -70,19 +70,20 @@
 </template>
 
 <script setup lang="ts">
-import { inject, ref, onBeforeMount, computed } from 'vue';
+import { ref, onBeforeMount, computed } from 'vue';
 import { useI18n } from 'vue-i18n'
 import { storeToRefs } from 'pinia';
 import { useThemeStore } from '@/stores/themeStore'
+import { useSettingStore } from '@/stores/settingStore';
 import { globalState } from '@/utils/initApp';
 import { authApi } from '@/api';
 import Menu from './Menu.vue';
 
-const store = useThemeStore()
-const { toggleTheme } = store
-const { theme } = storeToRefs(store);
+const themeStore = useThemeStore()
+const { toggleTheme } = themeStore
+const { theme } = storeToRefs(themeStore);
 const { locale } = useI18n()
-const showSetting = inject('showSetting')
+const { showSetting } = storeToRefs(useSettingStore());
 const { siderCollapsed: collapsed } = globalState
 let mobileCollapsed = ref(false)
 const isLoggedIn = ref(!!localStorage.getItem('userKey'))

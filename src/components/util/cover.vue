@@ -103,7 +103,7 @@ watch(
   color: #fff;
   transition: ease all 0.3s;
   opacity: 0.3;
-  z-index: 1;
+  z-index: 999 !important;
 }
 :deep(.slick-arrow.custom-slick-arrow:before) {
   display: none;

@@ -13,6 +13,6 @@ module.exports = {
   },
   rules: {
     'vue/comment-directive': 'off',
-    'vue/multi-word-component-names':'off',
+    'vue/multi-word-component-names': 'off',
   }
 }

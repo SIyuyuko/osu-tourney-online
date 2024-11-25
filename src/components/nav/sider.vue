@@ -12,9 +12,10 @@
   </a-layout-sider>
 </template>
 
-<script setup lang="ts" name="Sider">
+<script setup lang="ts">
 import { inject } from 'vue';
 import Menu from './Menu.vue';
+
 let collapsed = inject('collapsed');
 </script>
 

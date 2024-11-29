@@ -14,17 +14,17 @@
   <SettingDrawer />
 
   <!-- MusicPlayBar -->
-  <Floatbutton />
+  <FloatButton />
 </template>
 
 <script setup lang="ts">
 import { onBeforeMount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeStore } from '@/stores/themeStore';
-import Floatbutton from '@/components/FloatButton.vue';
+import FloatButton from '@/components/global/FloatButton.vue';
 import Header from '@/components/nav/Header.vue';
 import Sider from '@/components/nav/Sider.vue';
-import SettingDrawer from '@/components/SettingDrawer.vue';
+import SettingDrawer from '@/components/global/SettingDrawer.vue';
 import i18n from '@/i18n';
 
 const themeStore = useThemeStore();

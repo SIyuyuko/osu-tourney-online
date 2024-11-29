@@ -3,7 +3,7 @@
  * @Date: 2024-09-25 15:12:59
  * @LastEditors: SIyuyuko
  * @LastEditTime: 2024-11-19 12:06:49
- * @FilePath: /osu-tourney-online/src/components/util/FloatButtons.vue
+ * @FilePath: /osu-tourney-online/src/components/global/FloatButtons.vue
  * @Description: 浮动播放器组件
 -->
 <template>

@@ -1,0 +1,35 @@
+{
+  "cSpell.words": [
+    "albumlist",
+    "anticon",
+    "beatmap",
+    "beatmaps",
+    "beatmapset",
+    "Floatbuttons",
+    "fontawesome",
+    "freemod",
+    "hoverable",
+    "mappool",
+    "mappools",
+    "mddir",
+    "Musicbar",
+    "njsproj",
+    "ntvs",
+    "plyr",
+    "rushstack",
+    "serde",
+    "Sider",
+    "SIyuyuko",
+    "songlist",
+    "teamsize",
+    "unlisten",
+    "VITE",
+    "vueuse",
+    "xmark"
+  ],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript",
+    "typescriptreact", "vue", "json", "jsonc"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  }
+}

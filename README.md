@@ -201,11 +201,11 @@ The command page provides quick tournament command copying, and referee sheet co
 
 #### 🔧 Technology Stack
 
-- 前端：Vue 3 + TypeScript + Vite ⚡
-- 桌面应用：Tauri (Rust) 🦀
-- UI 框架：Ant Design Vue 🐜
-- 状态管理：Pinia 🍍
-- 国际化：Vue I18n 🌍
+- Frontend: Vue 3 + TypeScript + Vite ⚡
+- Desktop Application: Tauri (Rust) 🦀
+- UI Framework: Ant Design Vue 🐜
+- State Management: Pinia 🍍
+- Internationalization: Vue I18n 🌍
 
 #### 🤝 Contribution Guide
 

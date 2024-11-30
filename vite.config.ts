@@ -1,9 +1,8 @@
-import { fileURLToPath, URL } from 'node:url';
-
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import VueDevTools from 'vite-plugin-vue-devtools';
+import { fileURLToPath, URL } from 'node:url';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -33,7 +32,7 @@ export default defineConfig({
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          'Access-Control-Allow-Private-Network': true
+          'Access-Control-Allow-Private-Network': 'true'
         }
       },
       "/bot": {
@@ -44,10 +43,14 @@ export default defineConfig({
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          'Access-Control-Allow-Private-Network': true
+          'Access-Control-Allow-Private-Network': 'true'
         }
-      }
+      },
     },
+    watch: {
+    // 3. tell vite to ignore watching `src-tauri`
+    ignored: ["**/src-tauri/**"],
+  },
   },
   esbuild: {
     pure: [

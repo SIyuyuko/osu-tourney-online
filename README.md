@@ -1,8 +1,6 @@
-<!-- markdownlint-disable MD041 MD045 -->
-
 # osu!tourney web
 
-## Language 语言
+## 🌐 Language 语言
 
 - [中文](#中文)
 - [English](#english)
@@ -15,87 +13,105 @@ osu!tourney web 是一个 osu! 比赛信息管理项目，通过个性化配置�
 
 如果你对于 osu! 比赛管理工作没有多少经验，没有时间制作或获取裁判表；或者对比赛指令的运用不够熟练，希望你能使用这个项目，并对你的工作有所帮助！uwu
 
-#### 运行环境
+#### 📥 快速开始
 
-- Node.js，版本高于 20.12.1
+1. 在 [Releases](https://github.com/你的用户名/仓库名/releases) 页面下载适合你系统的最新版本
+2. 安装并运行程序
+3. 开始使用！
 
-#### 运行
+#### 👨‍💻 开发指南
 
-1. 下载并安装 [Node.js](https://nodejs.org/zh-cn/download/prebuilt-installer)。
+##### 🛠️ 环境要求
 
-   - 安装成功后，在终端输入 `node` 并回车。
-   - 出现如下内容时，表示 Node.js 安装成功。
+- Node.js >= 20.12.1
+- Rust (最新稳定版)
+  - Windows: 需安装 [Microsoft Visual Studio C++ 构建工具](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+  - Linux: 需安装 `build-essential` 包
+  - macOS: 需安装 Xcode 命令行工具
 
-   ```bash
-   Welcome to Node.js v20.12.1.
-   Type ".help" for more information.
-   >
-   (To exit, press Ctrl+C again or Ctrl+D or type .exit)
-   >
-   ```
+##### 💻 本地开发
 
-2. 使用 npm 全局安装 [anywhere](https://www.npmjs.com/package/anywhere)。
-
-   - 在终端输入指令：
+1. 克隆项目到本地：
 
    ```bash
-   npm install anywhere -g
+   git clone https://github.com/你的用户名/osu-tourney-web.git
+   cd osu-tourney-web
    ```
 
-3. 项目解压后进入该目录，在当前目录下打开终端，输入指令启动项目。
+2. 安装依赖：
 
    ```bash
-   anywhere -h localhost -p 5173
+   npm install
    ```
 
-   - 项目成功启动后，在浏览器中输入 <http://localhost:5173/> 即可开始使用。
+3. 启动开发环境：
 
-#### 开发
+   ```bash
+   # 运行 Web 开发服务器
+   npm run dev
 
-- 克隆项目仓库到本地
+   # 运行桌面应用开发环境 npm/cargo
+   npm run tauri dev
+   cargo tauri dev
+   ```
 
-- 编辑器打开文件夹，在终端中输入指令下载依赖
-
-```bash
-npm install
-```
-
-- 然后输入指令运行项目
-
-```bash
-npm run dev
-```
-
-- 当终端中出现如下内容时，表示运行成功，点击网址即可在浏览器打开的网站页面中，查看内容。
+##### 🚀 构建
 
 ```bash
-  vite v5.2.10 dev server running at:
+# 构建 Web 版本
+npm run build
 
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: http://xxxx:5173/
+# 构建桌面应用 npm/cargo
+npm run tauri build
+cargo tauri build
 ```
 
-#### 页面介绍
+构建完成后：
 
-##### 主页
+- Web 版本：构建产物在 `dist` 目录
+- 桌面应用：构建产物在 `src-tauri/target/release`
+
+#### 📱 页面介绍
+
+##### 🏠 主页
 
 主页展示个人信息（即项目使用者）、自定义横幅组件；设置为置顶的比赛、图池将会出现在主页。
 
-##### 比赛页
+##### 🏆 比赛页
 
 比赛页展示每届比赛信息，点击比赛详情能查看参赛玩家，同时提供玩家主页入口和复制邀请指令功能。
 
-##### 图池页
+##### 🗺️ 图池页
 
 图池页展示每届比赛中的图池，提供谱面主页入口、复制谱面 ID、下载谱面、复制谱面比赛指令功能。
 
-##### 指令页
+##### ⌨️ 指令页
 
 指令页提供快捷比赛指令复制、裁判表组件功能。
 
-#### 贡献指南
+#### 🔧 技术栈
 
-我们欢迎并感谢您为此项目提出的积极建议与意见！如果有可行的新功能提议，将会在不久后实装。
+- 前端：Vue 3 + TypeScript + Vite ⚡
+- 桌面应用：Tauri (Rust) 🦀
+- UI 框架：Ant Design Vue 🐜
+- 状态管理：Pinia 🍍
+- 国际化：Vue I18n 🌍
+
+#### 🤝 贡献指南
+
+我们欢迎一切新的提议、在本项目上的改动！如果有可行的新功能提议，我们会尽快实现。您可以通过以下方式参与贡献：
+
+##### 📝 提交 PR
+
+1. Fork 本仓库
+2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交你的修改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 开启一个 Pull Request✨
+
+##### 🐛 问题反馈
+
+如果你发现了 bug 或者有新功能建议，欢迎提交 issue。
 
 ---
 
@@ -103,94 +119,108 @@ npm run dev
 
 osu! tourney web is a manage project for osu! tournaments by running in local with custom configurations, which you can view and manage your tournaments or mappools.
 
-If you are inexperienced in osu! tournament management, don't have time to create or obtain a handy referee sheets; or are not skilled enough in the use of tournament instructions, I hope that you will use this program and that it will help you in your work! uwu
+If you are inexperienced in osu! tournament management, don't have time to create or obtain a handy referee sheets; or are not skilled enough in the use of tournament instructions,
+I hope that you will use this program and that it will help you in your work! uwu
 
-#### Environment
+#### 📥 Quick Start
 
-- Node.js, version higher than 20.12.1
+1. Download the latest version for your system on the [Releases](
+2. Install and run the program
+3. Start using!
 
-#### Running the project
+#### 👨‍💻 Development Guide
 
-1. Download and install [Node.js](https://nodejs.org/zh-cn/download/prebuilt-installer)
+##### 🛠️ Environment Requirements
 
-   - After installing, input `node` in terminal and press `Enter`.
+- Node.js >= 20.12.1
+- Rust (latest stable version)
+  - Windows: Requires [Microsoft Visual Studio C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
+  - Linux: Requires `build-essential` package
+  - macOS: Requires Xcode command line tools
 
-   - When it shows words as follows, that means you installed successfully
+##### 💻 Local Development
 
-   ```bash
-   Welcome to Node.js v20.12.1.
-   Type ".help" for more information.
-   >
-   (To exit, press Ctrl+C again or Ctrl+D or type .exit)
-   >
-   ```
-
-2. use npm to install [anywhere](https://www.npmjs.com/package/anywhere) globally.
-
-   - input command in terminal
+1. Clone the project to your local machine:
 
    ```bash
-   npm install anywhere -g
+   git clone
+
+   cd osu-tourney-web
    ```
 
-3. unzip the project and go to the folder, open a terminal under this directory, type command shown below to run anywhere.
+2. Install dependencies:
 
    ```bash
-   anywhere -h localhost -p 5173
+   npm install
    ```
 
-   - When the program running successfully, input <http://localhost:5173> in your browser. then use it.
+3. Start the development environment:
 
-#### Developing the project
+   ```bash
+   # Run the Web development server
+   npm run dev
 
-- clone project to local.
-- open project folder with IDE, input command in terminal as follows to install dependencies that project needs.
+   # Run the desktop application development environment npm/cargo
+   npm run tauri dev
+   cargo tauri dev
+   ```
 
-```bash
-npm install
-```
-
-- input command to start project.
-
-```bash
-npm run dev
-```
-
-- When the terminal shows words like this, it means project started successfully. Now you can click the url to view website in your browser.
+##### 🚀 Build
 
 ```bash
-  vite v5.2.10 dev server running at:
+# Build the Web version
+npm run build
 
-  ➜  Local:   http://localhost:5173/
-  ➜  Network: http://xxxx:5173/
+# Build the desktop application npm/cargo
+npm run tauri build
+cargo tauri build
 ```
 
-#### Page Introduction
+After the build:
 
-##### Home
+- Web version: The build artifact is in the `dist` directory
+- Desktop application: The build artifact is in the `src-tauri/target/release`
 
-**Home** shows user information (here means the people who use the project) and custom banner components. Also the tournament or mappool that be set as pinned will shown in **Home** by default.
+#### 📱 Page Introduction
 
-##### Tournament
+##### 🏠 Home Page
 
-**Tournament** shows each tournament information, you can click detail to see joined players, where provides functions here:
+The home page displays personal information (i.e. the project user), custom banner components; tournaments and mappools set to be pinned will appear on the home page.
 
-- jump to view player info page
-- copy invite command
+##### 🏆 Tournament Page
 
-##### Mappool
+The tournament page displays information about each tournament, clicking on the tournament details will show the participating players, as well as providing player home page entry and copy invite command functions.
 
-**Mappool** shows mappools in a tournament, providing functions like:
+##### 🗺️ Mappool Page
 
-- jump to view beatmap info page
-- copy beatmap id
-- download beatmap file
-- copy tournament command of beatmap
+The mappool page displays the mappools for each tournament, providing beatmap home page entry, copy beatmap ID, download beatmap, and copy beatmap tournament command functions.
 
-##### Command
+##### ⌨️ Command Page
 
-**Command** provides functions to quick copy tournament commands and use referee panel.
+The command page provides quick tournament command copying, and referee sheet component functions.
 
-#### Contribution Guide
+#### 🔧 Technology Stack
 
-We welcome and appreciate your positive suggestions and comments on this project! If there are feasible new features proposed, they will be implemented soon.
+- 前端：Vue 3 + TypeScript + Vite ⚡
+- 桌面应用：Tauri (Rust) 🦀
+- UI 框架：Ant Design Vue 🐜
+- 状态管理：Pinia 🍍
+- 国际化：Vue I18n 🌍
+
+#### 🤝 Contribution Guide
+
+We welcome all new proposals and changes to this project! If there are feasible new feature proposals, we will implement them as soon as possible. You can contribute in the following ways:
+
+##### 📝 Submit PR
+
+1. Fork this repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request✨
+
+##### 🐛 Issue Feedback
+
+If you find a bug or have a new feature suggestion, please submit an issue.
+
+---

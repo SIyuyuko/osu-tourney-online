@@ -157,13 +157,46 @@ onMounted(async () => {
   padding: 2rem;
 
   .overview {
+    position: relative;
     display: flex;
     gap: 1.5rem;
     min-height: 12rem;
-    background: linear-gradient(135deg, #f6f8fc 0%, #f0f4f8 100%);
     border-radius: 1rem;
     padding: 2rem;
     box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.1);
+    transition: box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, var(--gradient-start-light) 0%, var(--gradient-end-light) 100%);
+      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
+      z-index: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: inherit;
+      background: linear-gradient(135deg, var(--gradient-start-dark) 0%, var(--gradient-end-dark) 100%);
+      opacity: 0;
+      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
+      z-index: 0;
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
 
     .welcome-panel {
       flex: 1;
@@ -185,10 +218,12 @@ onMounted(async () => {
             font-weight: 600;
             margin-bottom: 0.5rem;
             color: #2c3e50;
+            transition: color var(--theme-transition-duration) var(--theme-transition-timing);
 
             .username {
               color: #3498db;
               position: relative;
+              transition: color var(--theme-transition-duration) var(--theme-transition-timing);
 
               &::after {
                 content: '';
@@ -211,6 +246,7 @@ onMounted(async () => {
           .character-info {
             font-size: 1.1rem;
             color: #5c6c7c;
+            transition: color var(--theme-transition-duration) var(--theme-transition-timing);
 
             .highlight {
               color: #e74c3c;
@@ -236,6 +272,7 @@ onMounted(async () => {
             .avatar-img {
               border: 3px solid white;
               box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+              transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
             }
 
             .avatar-overlay {
@@ -272,10 +309,15 @@ onMounted(async () => {
         border-radius: 0.5rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         margin-bottom: 0;
+        transition:
+          background var(--theme-transition-duration) var(--theme-transition-timing),
+          color var(--theme-transition-duration) var(--theme-transition-timing),
+          box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
 
         .time-icon {
           color: #3498db;
           font-size: 1.5rem;
+          transition: color var(--theme-transition-duration) var(--theme-transition-timing);
         }
         // .time-icon {
         //   color: #7f8c8d;
@@ -286,6 +328,7 @@ onMounted(async () => {
     .divider {
       height: 100%;
       border-color: #79a4e4;
+      transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
     }
 
     .divider-mobile {
@@ -296,6 +339,7 @@ onMounted(async () => {
   .section-divider {
     margin: 2rem 0;
     border-color: #e2eaf5;
+    transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
   }
 
   .tour-view {
@@ -307,9 +351,11 @@ onMounted(async () => {
       font-weight: 600;
       color: #2c3e50;
       margin-bottom: 1.5rem;
+      transition: color var(--theme-transition-duration) var(--theme-transition-timing);
 
       .title-icon {
         color: #f1c40f;
+        transition: color var(--theme-transition-duration) var(--theme-transition-timing);
       }
     }
 
@@ -320,6 +366,9 @@ onMounted(async () => {
       padding: 1.5rem;
       border-radius: 1rem;
       box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.2);
+      transition:
+        background var(--theme-transition-duration) var(--theme-transition-timing),
+        box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
     }
   }
 }
@@ -328,8 +377,14 @@ onMounted(async () => {
 [data-theme='dark'] {
   .page {
     .overview {
-      background: linear-gradient(135deg, #1a1f24 0%, #252b32 100%);
       box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.3);
+
+      &::before {
+        opacity: 0;
+      }
+      &::after {
+        opacity: 1;
+      }
 
       .welcome-panel {
         .user-state {

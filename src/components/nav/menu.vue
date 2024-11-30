@@ -46,31 +46,31 @@ const menuItems = [
     key: 'Home',
     icon: 'fa-solid fa-house-user',
     i18nKey: 'menu.home',
-    path: '/home'
+    path: '/home',
   },
   {
     key: 'Tournament',
     icon: 'fa-solid fa-chess',
     i18nKey: 'menu.tournament',
-    path: '/tournament'
+    path: '/tournament',
   },
   {
     key: 'Mappool',
     icon: 'fa-solid fa-map',
     i18nKey: 'menu.mappool',
-    path: '/mappool/list'
+    path: '/mappool/list',
   },
   {
     key: 'Songlist',
     icon: 'fa-solid fa-compact-disc',
     i18nKey: 'menu.songlist',
-    path: '/songlist'
+    path: '/songlist',
   },
   {
     key: 'Command',
     icon: 'fa-solid fa-terminal',
     i18nKey: 'menu.command',
-    path: '/command'
+    path: '/command',
   },
 ];
 
@@ -97,15 +97,35 @@ watch(
 .menu {
   padding: 9px 0 0 0;
   height: 100%;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  background: #fff; // 亮色主题背景
+  transition: background var(--theme-transition-duration) var(--theme-transition-timing);
 }
 
 .logo {
   text-align: center;
   margin: auto 0 0 0;
-  padding: 0 0 5px 0;
+  padding: 0 0 0.5rem 0;
+  background: #fff; // 亮色主题背景
+  transition: background var(--theme-transition-duration) var(--theme-transition-timing);
 
   span {
     font-weight: 600;
+    transition: color var(--theme-transition-duration) var(--theme-transition-timing);
+  }
+}
+
+[data-theme='dark'] {
+  .menu {
+    background: var(--theme-black, #141414);
+  }
+
+  .logo {
+    background: var(--theme-black, #141414);
+    span {
+      color: #fff;
+    }
   }
 }
 

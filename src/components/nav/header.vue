@@ -29,7 +29,7 @@
 
       <!-- 主题切换按钮 -->
       <a-button class="theme-btn" type="link" @click="toggleTheme()">
-        <font-awesome-icon :icon="theme === 'light' ? 'fa-regular fa-moon' : 'fa-solid fa-moon'" />
+        <font-awesome-icon :icon="theme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun'" />
       </a-button>
 
       <!-- 多语言切换按钮 -->
@@ -65,29 +65,46 @@
       <a-button type="link" @click="showSetting = true">
         <font-awesome-icon icon="fa-solid fa-gear" />
       </a-button>
+
+      <!-- Tauri窗口控制按钮 -->
+      <div class="window-controls" v-if="isTauri">
+        <a-button type="link" @click="minimizeWindow">
+          <font-awesome-icon icon="fa-solid fa-minus" />
+        </a-button>
+        <a-button type="link" @click="toggleMaximizeWindow">
+          <font-awesome-icon :icon="maximizeIcon" />
+        </a-button>
+        <a-button type="link" class="close-btn" @click="closeWindow">
+          <font-awesome-icon icon="fa-solid fa-xmark" />
+        </a-button>
+      </div>
     </div>
   </a-layout-header>
 </template>
 
 <script setup lang="ts">
 import { ref, onBeforeMount, computed } from 'vue';
-import { useI18n } from 'vue-i18n'
+import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
-import { useThemeStore } from '@/stores/themeStore'
+import { useApp } from "@/stores/useApp";
+import { useThemeStore } from '@/stores/themeStore';
 import { useSettingStore } from '@/stores/settingStore';
 import { globalState } from '@/utils/initApp';
 import { authApi } from '@/api';
 import Menu from './Menu.vue';
 
-const themeStore = useThemeStore()
-const { toggleTheme } = themeStore
+const themeStore = useThemeStore();
+const { toggleTheme } = themeStore;
 const { theme } = storeToRefs(themeStore);
-const { locale } = useI18n()
+const appStore = useApp();
+const { isTauri, maximizeIcon } = storeToRefs(appStore);
+const { minimizeWindow, toggleMaximizeWindow, closeWindow } = appStore;
+const { locale } = useI18n();
 const { showSetting } = storeToRefs(useSettingStore());
-const { siderCollapsed: collapsed } = globalState
-let mobileCollapsed = ref(false)
-const isLoggedIn = ref(!!localStorage.getItem('userKey'))
-const REPO_URL = 'https://github.com/SIyuyuko/osu-tourney-online'
+const { siderCollapsed: collapsed } = globalState;
+let mobileCollapsed = ref(false);
+const isLoggedIn = ref(!!localStorage.getItem('userKey'));
+const REPO_URL = 'https://github.com/SIyuyuko/osu-tourney-online';
 // const wikiUrl = 'https://github.com/SIyuyuko/osu-tourney-online/wiki';
 
 // 多语言配置
@@ -108,36 +125,55 @@ const toggleSidebar = () => {
 
 const changeLocale = (newLocale: string) => {
   locale.value = newLocale;
+  localStorage.setItem('locale', newLocale);
 };
 
 // 网页跳转
-const openExternalLink = (url: string) => {
-  window.open(url, '_blank');
+const openExternalLink = async (url: string) => {
+  if (isTauri.value) {
+    await open(url);
+  } else {
+    window.open(url, '_blank');
+  }
 };
 
 // 登录/登出
 const handleAuth = async () => {
-  // if (isLoggedIn.value) {
-  //   // 处理登出逻辑
-  //   localStorage.removeItem('userKey')
-  //   isLoggedIn.value = false
-  //   router.push('/')
+  // if (isTauri.value) {
+  //   try {
+  //     // 调用Tauri后端处理OAuth
+  //     const oauthUrl = await invoke('get_oauth_url');
+  //     await open(oauthUrl as string);
+  //   } catch (error) {
+  //     console.error('Failed to handle auth:', error);
+  //   }
   // } else {
-  // 处理登录逻辑
-  try {
-    const response = await authApi.getOauthUrl();
-    if (response.code === 200 && response.message) {
-      window.location.href = response.message;
+    // if (isLoggedIn.value) {
+    //   // 处理登出逻辑
+    //   localStorage.removeItem('userKey')
+    //   isLoggedIn.value = false
+    //   router.push('/')
+    // } else {
+    // 处理登录逻辑
+    try {
+      const response = await authApi.getOauthUrl();
+      if (response.code === 200 && response.message) {
+        window.location.href = response.message;
+      }
+    } catch (error) {
+      console.error('Failed to get OAuth URL:', error);
     }
-  } catch (error) {
-    console.error('Failed to get OAuth URL:', error);
-  }
+    // }
   // }
 };
 
 onBeforeMount(() => {
   if (localStorage.getItem('userKey')) {
     isLoggedIn.value = true;
+  }
+
+  if (localStorage.getItem('locale')) {
+    locale.value = localStorage.getItem('locale') as string;
   }
 });
 </script>
@@ -146,6 +182,10 @@ onBeforeMount(() => {
 .ant-layout-header {
   padding: 0;
   display: flex;
+
+  .collapse-btn {
+    margin-left: 0.7rem;
+  }
 
   .operate-button-group {
     display: flex;
@@ -157,6 +197,18 @@ onBeforeMount(() => {
     margin: 0 0 0 auto;
     align-items: center;
     vertical-align: middle;
+
+    .window-controls {
+      display: flex;
+      align-items: center;
+      margin-left: 1rem;
+      margin-right: 1rem;
+
+      .close-btn:hover {
+        background-color: #ff4d4f;
+        color: white;
+      }
+    }
   }
 }
 

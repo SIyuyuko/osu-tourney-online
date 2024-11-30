@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     // 目标 ECMAScript 版本
-    "target": "ESNext",
+    "target": "ES2020",
     "useDefineForClassFields": true,
     "module": "ESNext",
 
@@ -11,6 +11,7 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -30,8 +31,7 @@
 
     // 路径别名
     "paths": {
-      "@/*": ["src/*"],
-      "~/*": ["types/*"]
+      "@/*": ["src/*"]
     },
 
     // 允许从没有默认导出的模块进行默认导入
@@ -45,8 +45,9 @@
   },
 
   // 包含的文件
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "vite.config.ts"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 
   // 排除的文件
-  "exclude": ["node_modules", "dist", "**/*.js"]
+  "exclude": ["node_modules", "dist", "**/*.js"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

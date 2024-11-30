@@ -3,6 +3,7 @@
 	.ant-layout-header,
 	.ant-layout-content {
 		background: #fff;
+		filter: brightness(var(--theme-brightness-shift));
 	}
 
 	.logo {

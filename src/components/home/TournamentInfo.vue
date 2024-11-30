@@ -119,7 +119,41 @@ onMounted(() => {
 .tournament-card {
   .ant-card {
     width: 500px;
-    background: linear-gradient(135deg, #f6f8fc 0%, #f0f4f8 100%);
+    position: relative;
+
+    // 使用伪元素来实现渐变过渡
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gradient-start-light) 0%, var(--gradient-end-light) 100%);
+      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
+      z-index: 0;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gradient-start-dark) 0%, var(--gradient-end-dark) 100%);
+      opacity: 0;
+      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
+      z-index: 0;
+    }
+
+    // 确保内容在渐变层之上
+    > * {
+      position: relative;
+      z-index: 1;
+    }
 
     :deep(.ant-card-cover > *) {
       height: 200px;
@@ -130,18 +164,22 @@ onMounted(() => {
       .ant-descriptions-header {
         padding-bottom: 1.2rem;
         border-bottom: 1px solid #d9d9d9;
+        transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
       }
     }
 
     :deep(.ant-card-actions) {
-      background: linear-gradient(135deg, #f6f8fc 0%, #f0f4f8 100%);
-      border-top: 1px solid #d9d9d9;
+      border: 1px solid #d9d9d9;
+      transition:
+        background-color var(--theme-transition-duration) var(--theme-transition-timing),
+        border-color var(--theme-transition-duration) var(--theme-transition-timing);
     }
   }
 
   .tournament-title {
     font-weight: 500;
     color: #2c3e50;
+    transition: color var(--theme-transition-duration) var(--theme-transition-timing);
   }
 }
 
@@ -152,6 +190,24 @@ onMounted(() => {
 // Dark mode
 [data-theme='dark'] {
   .tournament-card {
+    .ant-card {
+      &::before {
+        opacity: 0;
+      }
+      &::after {
+        opacity: 1;
+      }
+
+      :deep(.ant-card-body) {
+        .ant-descriptions-header {
+          border-bottom: 1px solid #2c3e50;
+        }
+      }
+
+      :deep(.ant-card-actions) {
+        border: 1px solid #2c3e50;
+      }
+    }
     .tournament-title {
       color: #e0e0e0;
     }

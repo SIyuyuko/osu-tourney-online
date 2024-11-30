@@ -127,6 +127,9 @@ onMounted(() => {
       display: flex;
       align-items: center;
       justify-content: center;
+      transition:
+        background-color var(--theme-transition-duration) var(--theme-transition-timing),
+        transform 0.3s ease; // 保留原有的 transform 过渡
       background: rgba(0, 0, 0, 0.4);
       border-radius: 50%;
       cursor: pointer;
@@ -171,6 +174,7 @@ onMounted(() => {
     background: #f5f5f5;
     border-radius: 12px;
     padding: 24px;
+    transition: background-color var(--theme-transition-duration) var(--theme-transition-timing);
   }
 }
 
@@ -232,6 +236,7 @@ onMounted(() => {
 
 [data-theme='light'] {
   .slick-arrow.custom-slick-arrow {
+    transition: color var(--theme-transition-duration) var(--theme-transition-timing);
     color: var(--theme-black);
   }
 

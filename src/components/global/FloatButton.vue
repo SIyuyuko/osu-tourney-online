@@ -190,6 +190,11 @@ onBeforeUnmount(() => {
   }
 }
 
+:deep(.ant-float-btn) {
+  position: fixed;
+  bottom: 2.5rem;
+}
+
 // 媒体查询，适配移动设备
 @media screen and (max-width: 768px) {
   .beatmap-player {

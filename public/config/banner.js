@@ -1,7 +1,7 @@
 // 首页横幅配置
 window.banner = {
   // 横幅类型 事件event
-  bannerType: 'cover',
+  bannerType: 'event',
   // 事件名称
   event: ' 2024 年第一季度 osu!mania 4K 速度挑战赛暨新人选拔赛',
   // 事件时间

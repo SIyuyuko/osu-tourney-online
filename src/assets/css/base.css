@@ -23,6 +23,28 @@
     sans-serif;
 }
 
+* {
+  scrollbar-color: rgb(188, 188, 188) transparent;
+  transition: scrollbar-color var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
+/* 需要主题过渡的通用属性 */
+body,
+.ant-layout,
+.ant-layout-header,
+.ant-layout-content,
+.ant-card,
+.ant-table,
+.ant-menu,
+.logo,
+.tag {
+  transition:
+    background-color var(--theme-transition-duration) var(--theme-transition-timing),
+    color var(--theme-transition-duration) var(--theme-transition-timing),
+    border-color var(--theme-transition-duration) var(--theme-transition-timing),
+    box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
+}
+
 body {
   min-height: 100vh;
   transition:

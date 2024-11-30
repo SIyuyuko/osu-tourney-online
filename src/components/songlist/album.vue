@@ -14,7 +14,7 @@
           <template #renderItem="{ item }">
             <a-list-item class="album-item" key="item.title">
               <template #extra>
-                <img class="logo" alt="cover" :src="item.cover" @click="add(item)" />
+                <img class="album-logo" alt="cover" :src="item.cover" @click="add(item)" />
               </template>
 
               <a-list-item-meta>
@@ -176,7 +176,7 @@ watch(
   overflow: hidden;
 }
 
-.logo {
+.album-logo {
   border-radius: 10px;
   width: 80px;
   height: 80px;

@@ -3,6 +3,7 @@
 	.ant-layout-header,
 	.ant-layout-content {
 		background: var(--theme-black);
+		filter: brightness(calc(2 - var(--theme-brightness-shift)));
 	}
 
 	.logo {
@@ -10,6 +11,6 @@
 	}
 
 	* {
-		scrollbar-color: rgba(255, 255, 255, 0.1) var(--theme-black);
+		scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 	}
 }

@@ -23,6 +23,7 @@ let collapsed = inject('collapsed');
 .sider :deep(.ant-layout-sider-children) {
   display: flex;
   flex-direction: column;
+  background: transparent;
 }
 @media (max-width: 1024px) {
   .sider {

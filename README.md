@@ -31,6 +31,53 @@ osu!tourney web 是一个 osu! 比赛信息管理项目，通过个性化配置�
 
 ##### 💻 本地开发
 
+是的，我们最好提供完整的环境配置指南。让我们在开发者指南部分添加详细说明：
+
+#### 👨‍💻 开发者指南
+
+##### 🛠️ 环境配置
+
+1. Node.js
+
+   ```bash
+   # 使用 nvm
+   nvm install 20.12.1
+   nvm use 20.12.1
+   ```
+
+   或直接从 [Node.js 官网](https://nodejs.org/) 下载安装包
+
+2. Rust (附带 Cargo)
+
+   访问 [Rust 官网](https://www.rust-lang.org/tools/install) 使用 rustup 安装 Rust 工具链
+
+3. Tauri
+
+   ```bash
+   # 安装 Tauri CLI
+   cargo install tauri-cli
+   ```
+
+4. 验证安装
+
+   ```bash
+   # 验证 Node.js 安装
+   node -v # 应显示 v20.12.1 或更高版本
+
+   # 验证 Rust 安装
+   rustc --V (大写V)
+   cargo --V (大写V)
+
+   # 验证 Tauri CLI 安装
+   cargo tauri --V (大写V)
+   ```
+
+5. 插件推荐
+
+   本项目强烈建议您使用 VS Code 编辑器进行开发，因为我们已经为项目配置了一些必要的插件和配置。请确保您已经安装了我们的项目在 .vscode/extension.json 中所推荐的插件支持。
+
+##### 🚀 开发
+
 1. 克隆项目到本地：
 
    ```bash
@@ -189,7 +236,8 @@ The home page displays personal information (i.e. the project user), custom bann
 
 ##### 🏆 Tournament Page
 
-The tournament page displays information about each tournament, clicking on the tournament details will show the participating players, as well as providing player home page entry and copy invite command functions.
+The tournament page displays information about each tournament, clicking on the tournament details will show the participating players, as well as providing player home page entry
+and copy invite command functions.
 
 ##### 🗺️ Mappool Page
 
@@ -209,7 +257,8 @@ The command page provides quick tournament command copying, and referee sheet co
 
 #### 🤝 Contribution Guide
 
-We welcome all new proposals and changes to this project! If there are feasible new feature proposals, we will implement them as soon as possible. You can contribute in the following ways:
+We welcome all new proposals and changes to this project! If there are feasible new feature proposals, we will implement them as soon as possible. You can contribute in the
+following ways:
 
 ##### 📝 Submit PR
 

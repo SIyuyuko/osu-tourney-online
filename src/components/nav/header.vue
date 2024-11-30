@@ -62,7 +62,7 @@
       </a-button>
 
       <!-- 设置按钮 -->
-      <a-button type="link" @click="showSetting = true">
+      <a-button class="setting-button" type="link" @click="showSetting = true">
         <font-awesome-icon icon="fa-solid fa-gear" />
       </a-button>
 
@@ -198,10 +198,13 @@ onBeforeMount(() => {
     align-items: center;
     vertical-align: middle;
 
+    .setting-button {
+      margin-right: 1rem;
+    }
+
     .window-controls {
       display: flex;
       align-items: center;
-      margin-left: 1rem;
       margin-right: 1rem;
 
       .close-btn:hover {

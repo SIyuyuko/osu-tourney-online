@@ -42,10 +42,14 @@
 <script setup lang="ts" name="FloatButtons">
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
 import { usePlyrStore } from '@/stores/plyrStore';
+import { open } from '@tauri-apps/plugin-shell';
 import { storeToRefs } from 'pinia';
+import { useApp } from '@/stores/appStore';
 import 'plyr/dist/plyr.css';
 
 const store = usePlyrStore();
+const appStore = useApp();
+const { isTauri } = storeToRefs(appStore);
 const { currentTrack, playbackState } = storeToRefs(store);
 let isExpanded = ref(false); //是否显示播放器
 
@@ -72,9 +76,13 @@ const toggleExpanded = () => {
 };
 
 // 谱面信息官网跳转
-const openBeatmapPage = () => {
+const openBeatmapPage = async() => {
   if (currentTrack.value.info) {
-    window.open(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`, '_blank');
+    if (isTauri.value) {
+      await open(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`);
+    } else {
+      window.open(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`, '_blank');
+    }
   }
 };
 

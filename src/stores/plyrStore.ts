@@ -162,7 +162,7 @@ export const usePlyrStore = defineStore('plyr', () => {
       let bgUrl = '/config/image/banner/cover.jpeg';
       try {
         const response = await beatmapApi.getBeatmapBg(String(track.id));
-        if (response.status === 200 && response.data) {
+        if (response.code === 200 && response.data) {
           const blob = new Blob([response.data], { type: 'image/jpeg' });
           bgUrl = URL.createObjectURL(blob);
         }
@@ -272,7 +272,7 @@ export const usePlyrStore = defineStore('plyr', () => {
       playbackState.value.isLoading = true;
       const response = await beatmapApi.getBeatmapInfo(beatmapId);
 
-      if (response?.status === 200 && response.data?.data) {
+      if (response?.code === 200 && response.data?.data) {
         const track = response.data.data;
 
         if (!playlist.value.some((item) => item.id === track.id)) {

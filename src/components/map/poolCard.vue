@@ -3,40 +3,50 @@
  * @Date: 2024-05-14 16:34:48
  * @LastEditors: SIyuyuko
  * @LastEditTime: 2024-08-08 15:52:15
- * @FilePath: /osu!tourney-site/tourney-site/src/components/map/poolCard.vue
+ * @FilePath: /osu!tourney-site/tourney-site/src/components/map/PoolCard.vue
  * @Description: 图池列表卡片组件
 -->
 <template>
-  <a-card class="pool-card" v-if="item.title !== '新建图池'" @click="navigateToPool(item)" hoverable>
-    <span :title="item.title">{{ item.title }}</span>
-  </a-card>
-  <a-card class="add-card" v-else @click="$emit('create')" hoverable>
-    <div>
-      <font-awesome-icon icon="fa-solid fa-folder-plus" />
-      <span class="add-title">新建图池</span>
-    </div>
+  <a-card
+    :class="['pool-card', { 'add-card': isNewPool }]"
+    @click="handleClick"
+    hoverable
+  >
+    <template v-if="!isNewPool">
+      <span :title="item.title">{{ item.title }}</span>
+    </template>
+    <template v-else>
+      <div>
+        <font-awesome-icon icon="fa-solid fa-folder-plus" />
+        <span class="add-title">新建图池</span>
+      </div>
+    </template>
   </a-card>
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import type { Pool } from '@/types/mappool';
+
+const props = defineProps<{
+  item: Partial<Pool>;
+}>();
 
 const router = useRouter();
-
-defineProps({
-  item: {
-    type: Object,
-    required: true
-  }
-});
-
 const emit = defineEmits(['create']);
 
-const navigateToPool = (item: Record<string, any>) => {
-  router.push({
-    name: 'MappoolDetail',
-    params: { title: item.title }
-  });
+const isNewPool = computed(() => props.item.title === '新建图池');
+
+const handleClick = () => {
+  if (isNewPool.value) {
+    emit('create');
+  } else {
+    router.push({
+      name: 'MappoolDetail',
+      params: { title: props.item.title }
+    });
+  }
 };
 </script>
 

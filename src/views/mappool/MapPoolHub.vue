@@ -34,20 +34,21 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import type { Pool } from '@/types/mappool';
 
 const route = useRoute();
-const currentPool = ref();
+const currentPool = ref<Pool | null>(null);
 
-const updateCurrentPool = (pool: any) => {
+const updateCurrentPool = (pool: Pool) => {
   currentPool.value = pool;
 };
 
 // 监听路由变化更新当前图池
 watch(
   () => route.params.title,
-  async (title) => {
-    if (title) {
-      currentPool.value = (window as any).mappool?.list?.find((p: any) => p.title === title) || null;
+  (title) => {
+    if (title && (window as any).mappool?.list) {
+      currentPool.value = (window as any).mappool.list.find((p: Pool) => p.title === title) || null;
     } else {
       currentPool.value = null;
     }

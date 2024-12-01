@@ -3,16 +3,16 @@ import { request } from '@/utils/request';
 export interface BeatmapAttributes {
   bid: number;
   mod: string;
-  mode: string;
+  mode: number;
 }
 
 export const beatmapApi = {
-  getBeatmapInfo(id: string) {
-    return request.get(`/bot/api/info/${id}`);
+  getBeatmapInfo(id: string, options?: { signal?: AbortSignal }) {
+    return request.get(`/bot/api/info/${id}`, { signal: options?.signal });
   },
 
-  getBeatmapAttributes(params: BeatmapAttributes) {
-    return request.get('/bot/attr/json', { params });
+  getBeatmapAttributes(params: BeatmapAttributes, options?: { signal?: AbortSignal }) {
+    return request.get('/bot/attr/json', { params, signal: options?.signal });
   },
 
   getBeatmapBg(id: string) {

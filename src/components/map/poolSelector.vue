@@ -43,7 +43,7 @@
 import { ref, onMounted, nextTick, watch } from 'vue';
 import { Empty } from 'ant-design-vue';
 import { useResizeObserver } from '@vueuse/core';
-import Map from './map.vue';
+import Map from './Map.vue';
 const data = window.mappool; // 图池配置
 const poolName = data.homeMappool;
 const emit = defineEmits(['update']);

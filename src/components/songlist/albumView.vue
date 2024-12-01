@@ -67,11 +67,14 @@
 </template>
 <script setup name="AlbumView">
 import { onMounted } from 'vue';
+import { open } from '@tauri-apps/plugin-shell';
 import { beatmapApi, userApi } from '@/api';
 import { usePlyrStore } from '@/stores/plyrStore';
+import { useApp } from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
 const usePlyr = usePlyrStore();
 const { info, songlist } = storeToRefs(usePlyr); //播放器实例
+const { isTauri } = storeToRefs(appStore);
 const props = defineProps({
   albumList: {
     type: Object,
@@ -93,7 +96,7 @@ async function getBeatMap(bid) {
   await beatmapApi
     .getBeatmapInfo(bid)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         if (res.data) {
           data = res.data.data;
           emit('update', props.albumList, data, 'map');
@@ -155,7 +158,11 @@ async function initList() {
 function jumpPage(info) {
   if (info) {
     let url = 'https://osu.ppy.sh/users/' + info.id;
-    window.open(url, '_blank');
+    if (isTauri.value) {
+      open(url);
+    } else {
+      window.open(url, '_blank');
+    }
   }
 }
 onMounted(() => {

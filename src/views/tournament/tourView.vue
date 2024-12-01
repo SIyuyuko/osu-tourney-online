@@ -9,9 +9,9 @@
 <template>
   <a-page-header :title="data.fullTitle !== '' ? data.fullTitle : data.title" :sub-title="data.fullTitle !== '' ? data.title : ''" @back="backToList" style="padding: 0 0 10px 0">
     <template #tags>
-      <a-tag v-if="data?.status" :color="tagColor">{{
-        ['active', 'concluded'].includes(data?.status) ? (data?.status === 'active' ? $t('tournament.active') : $t('tournament.concluded')) : data?.status
-      }}</a-tag>
+      <a-tag v-if="data?.status" :color="tagColor">
+        {{ ['active', 'concluded'].includes(data?.status) ? (data?.status === 'active' ? $t('tournament.active') : $t('tournament.concluded')) : data?.status }}
+      </a-tag>
     </template>
     <template #extra>
       <a-button key="1" type="primary" :disabled="data.mainSheetUrl === '' || !data.mainSheetUrl" @click="openUrl(data.mainSheetUrl)">{{ $t('tournament.website') }}</a-button>
@@ -60,7 +60,12 @@
 import { Empty } from 'ant-design-vue';
 import { CaretRightOutlined } from '@ant-design/icons-vue';
 import { onMounted, ref, onUnmounted } from 'vue';
+import { open } from '@tauri-apps/plugin-shell';
+import { storeToRefs } from 'pinia';
+import { useApp } from '@/stores/appStore';
 import { userApi } from '@/api';
+const appStore = useApp();
+const { isTauri } = storeToRefs(appStore);
 const emit = defineEmits(['showDetail']);
 const props = defineProps({
   data: {
@@ -76,8 +81,12 @@ function backToList() {
 }
 // 打开网站
 function openUrl(url) {
-  if (url !== '' && url) {
-    window.open(url, '_blank');
+  if (url && url !== '') {
+    if (isTauri.value) {
+      open(url);
+    } else {
+      window.open(url, '_blank');
+    }
   }
 }
 // 复制比赛指令
@@ -116,7 +125,8 @@ function initUser() {
       for (let e in item.player) {
         if (typeof item.player[e] === 'number') {
           let obj = {};
-          userApi.getUserInfo(item.player[e])
+          userApi
+            .getUserInfo(item.player[e])
             .then((res) => {
               if (res) {
                 obj = {

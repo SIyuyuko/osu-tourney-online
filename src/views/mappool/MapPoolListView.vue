@@ -24,8 +24,9 @@
 import { ref, computed } from 'vue';
 import { Empty } from 'ant-design-vue';
 import PoolCard from '@/components/map/PoolCard.vue';
+import type { Pool } from '@/types/mappool';
 
-const pools = ref((window as any).mappool?.list || []);
+const pools = ref<Pool[]>((window as any).mappool.list || []);
 
 const listData = computed(() => {
   return [...pools.value, { title: '新建图池' }];
@@ -36,7 +37,7 @@ const handleCreate = async () => {
   const newPool = {
     id: Date.now(), // 临时ID生成方式
     title: '空白图池',
-    // ... 其他必要字段
+    children: []
   };
 
   pools.value.push(newPool);

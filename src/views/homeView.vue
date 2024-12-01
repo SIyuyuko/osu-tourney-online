@@ -67,6 +67,9 @@ import { ref, computed, onMounted } from 'vue';
 import { EyeOutlined, ClockCircleOutlined, TrophyOutlined } from '@ant-design/icons-vue';
 import dayjs from 'dayjs';
 import { userApi } from '@/api';
+import { open } from '@tauri-apps/plugin-shell';
+import { storeToRefs } from 'pinia';
+import { useApp } from '@/stores/appStore';
 import { useTimeBasedGreeting } from '@/utils/useTimeBasedGreeting';
 import Countdown from '@/components/home/CountDown.vue';
 import Cover from '@/components/home/BannerGallery.vue';
@@ -97,6 +100,8 @@ const INFO_URL_PREFIX = 'https://osu.ppy.sh/users/';
 const CURRENT_DATE = dayjs().format('YYYY-MM-DD');
 
 // State
+const appStore = useApp();
+const { isTauri } = storeToRefs(appStore);
 const user = (window as any).user as User; // 用户配置
 const banner = (window as any).banner as Banner;
 const userInfo = ref(); // 用户api信息
@@ -115,7 +120,11 @@ const { dailyWords } = useTimeBasedGreeting(user.dailyWords);
 // Methods
 const openUrl = () => {
   if (userInfo.value) {
-    window.open(`${INFO_URL_PREFIX}${user.uid}`, '_blank');
+    if (isTauri.value) {
+      open(`${INFO_URL_PREFIX}${user.uid}`);
+    } else {
+      window.open(`${INFO_URL_PREFIX}${user.uid}`, '_blank');
+    }
   }
 };
 
@@ -287,7 +296,7 @@ onMounted(async () => {
               justify-content: center;
               opacity: 0;
               transition: opacity 0.3s ease;
-              border-radius: 4px;
+              border-radius: 0.6rem;
 
               .view-icon {
                 color: white;

@@ -69,13 +69,13 @@
       <!-- Tauri窗口控制按钮 -->
       <div class="window-controls" v-if="isTauri">
         <a-button type="link" @click="minimizeWindow">
-          <font-awesome-icon icon="fa-solid fa-minus" />
+          <font-awesome-icon class="window-controls-icon" icon="fa-solid fa-minus" />
         </a-button>
         <a-button type="link" @click="toggleMaximizeWindow">
           <font-awesome-icon :icon="maximizeIcon" />
         </a-button>
         <a-button type="link" class="close-btn" @click="closeWindow">
-          <font-awesome-icon icon="fa-solid fa-xmark" />
+          <font-awesome-icon class="window-controls-icon" icon="fa-solid fa-xmark" />
         </a-button>
       </div>
     </div>
@@ -86,10 +86,11 @@
 import { ref, onBeforeMount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
-import { useApp } from "@/stores/useApp";
+import { useApp } from "@/stores/appStore";
 import { useThemeStore } from '@/stores/themeStore';
 import { useSettingStore } from '@/stores/settingStore';
 import { globalState } from '@/utils/initApp';
+import { open } from '@tauri-apps/plugin-shell';
 import { authApi } from '@/api';
 import Menu from './Menu.vue';
 
@@ -199,17 +200,23 @@ onBeforeMount(() => {
     vertical-align: middle;
 
     .setting-button {
-      margin-right: 1rem;
+      margin-right: .8rem;
     }
 
     .window-controls {
       display: flex;
       align-items: center;
-      margin-right: 1rem;
+      margin-right: .8rem;
 
       .close-btn:hover {
         background-color: #ff4d4f;
         color: white;
+      }
+
+      .window-controls-icon {
+        height: 1.2rem;
+        width: 1.2rem;
+        margin-bottom: -.1rem;
       }
     }
   }

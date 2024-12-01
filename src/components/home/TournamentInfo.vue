@@ -48,6 +48,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
 import { message, Empty } from 'ant-design-vue';
+import { open } from '@tauri-apps/plugin-shell';
+import { storeToRefs } from 'pinia';
+import { useApp } from '@/stores/appStore';
 import { useI18n } from 'vue-i18n';
 
 // Types
@@ -84,6 +87,8 @@ const TOURNAMENT_DETAILS: TournamentDetailKey[] = ['time', 'mode', 'type'];
 const { t } = useI18n();
 
 // State
+const appStore = useApp();
+const { isTauri } = storeToRefs(appStore);
 const tournamentConfig = (window as any).tournament as TournamentConfig; // 比赛配置
 const activeTournament = ref<Tournament | null>(null);
 
@@ -93,7 +98,11 @@ const descriptionColumns = computed(() => DESCRIPTION_COLUMNS);
 // Methods
 const handleMainSheetClick = (url?: string) => {
   if (url) {
-    window.open(url, '_blank');
+    if (isTauri.value) {
+      open(url);
+    } else {
+      window.open(url, '_blank');
+    }
   } else {
     message.warning(t('tournament.setUrlWarning'));
   }

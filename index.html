@@ -1,22 +1,29 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="osu! tournament web interface" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <title>osu!tourney web</title>
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'dark';
+        if (theme === 'dark') {
+          document.documentElement.style.backgroundColor = '#141414';
+          document.documentElement.style.color = 'rgba(255, 255, 255, 0.85)';
+        }
+      })();
+    </script>
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="osu! tournament web interface" />
-  <meta http-equiv="x-ua-compatible" content="ie=edge" />
-  <title>osu!tourney web</title>
-</head>
-
-<body>
-  <div id="app"></div>
-  <script type="module" src="/src/main.ts"></script>
-  <script type="module" src="/config/user.js"></script>
-  <script type="module" src="/config/banner.js"></script>
-  <script type="module" src="/config/mappool.js"></script>
-  <script type="module" src="/config/tournament.js"></script>
-  <script type="module" src="/config/command.js"></script>
-</body>
-
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="/config/user.js"></script>
+    <script type="module" src="/config/banner.js"></script>
+    <script type="module" src="/config/mappool.js"></script>
+    <script type="module" src="/config/tournament.js"></script>
+    <script type="module" src="/config/command.js"></script>
+  </body>
 </html>

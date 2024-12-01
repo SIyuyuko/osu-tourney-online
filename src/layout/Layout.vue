@@ -30,7 +30,7 @@ import SettingDrawer from '@/components/global/SettingDrawer.vue';
 import i18n from '@/i18n';
 // import { message } from 'ant-design-vue';
 // import { EditOutlined, DeleteOutlined, CopyOutlined, ShareAltOutlined, ReloadOutlined } from '@ant-design/icons-vue';
-import { useApp } from '@/stores/useApp';
+import { useApp } from '@/stores/appStore';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 // interface MenuItem {

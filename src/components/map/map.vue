@@ -7,232 +7,235 @@
  * @Description: 谱面组件
 -->
 <template>
-  <a-card :data-theme="theme" class="map-panel" :class="isCard ? '' : 'detail'" v-if="map || loaded" size="small">
+  <a-card :data-theme="theme" class="map-panel" :class="[isCard ? '' : 'detail', { loading }]" v-if="map || loading" size="small">
+    <!-- 非裁判视图 -->
     <a-card-meta v-if="!isReferee">
       <template #description>
+        <!-- Cover Image -->
         <div class="cover">
-          <img :src="`${imgApi + item?.data?.beatmapset_id + imgApiSuffix}`" />
+          <img
+            v-show="imageStatus !== 'error'"
+            :src="coverUrl"
+            :class="[{ 'image-loaded': imageStatus !== 'loading' }]"
+            @load="imageStatus = 'loading'"
+            @error="imageStatus = 'error'"
+          />
         </div>
-        <div class="content-mask">
-          <!-- #region 谱面信息 -->
+
+        <!-- Content Mask -->
+        <div class="content-mask" v-if="map">
+          <!-- Left Content -->
           <div class="content left">
-            <span class="map-title"
-              >{{ map?.data?.beatmapset?.title }}
-              <span v-if="map?.data?.beatmapset?.title !== map?.data?.beatmapset?.title_unicode" :title="map?.data?.beatmapset?.title_unicode">
-                {{ map?.data?.beatmapset?.title_unicode }}</span
-              >
+            <span class="map-title">
+              {{ map?.data?.beatmapset?.title }}
+              <span v-if="hasUnicodeTitle" :title="map?.data?.beatmapset?.title_unicode">
+                {{ map?.data?.beatmapset?.title_unicode }}
+              </span>
             </span>
+
             <span class="map-people">{{ map?.data?.beatmapset?.artist }} // {{ map?.data?.beatmapset?.creator }}</span>
+
             <span class="map-id">{{ map?.data?.version }} - b{{ map?.data?.id }}</span>
+
             <span class="map-detail" v-if="!isCard && map?.params">
-              <span :title="`CS ${map?.data?.cs}`">CS {{ map?.data?.cs }}</span>
-              <span :title="`AR ${map?.params?.approach_rate}`">AR {{ map?.params?.approach_rate }}</span>
-              <span :title="`OD ${map?.params?.overall_difficulty}`">OD {{ map?.params?.overall_difficulty }}</span>
-              <span :title="`Combo ${map?.params?.max_combo}`">Combo {{ map?.params?.max_combo }}</span>
+              <template v-for="item in mapDetailList" :key="item.name">
+                <span v-bind:title="item.name + ' ' + item.info">{{ item.name }}&nbsp; {{ item.info }}</span>
+              </template>
             </span>
           </div>
+
+          <!-- Right Content -->
           <div class="content right">
             <div class="tag" :class="map?.mod">
-              <span>{{ map?.mod + map?.index }}</span>
+              <span>{{ map?.mod ? map.mod + map.index : '' }}</span>
             </div>
             <div class="star">
-              <span
-                ><span>{{ map?.params?.star_rating }}</span
-                >*
+              <span>
+                <span>{{ map?.params?.star_rating }}</span>
+                *
               </span>
             </div>
           </div>
-          <!-- #endregion -->
         </div>
       </template>
     </a-card-meta>
+
+    <!-- 裁判视图 -->
     <a-card-meta class="referee" v-else>
       <template #description>
         <div class="info">
-          <span>{{ props.item?.id }}</span>
-          <span class="tag" :class="props.item?.mod">{{ props.item?.mod + props.item?.index }}</span>
+          <span>{{ item?.id }}</span>
+          <span class="tag" :class="item?.mod">
+            {{ item?.mod + item?.index }}
+          </span>
         </div>
       </template>
     </a-card-meta>
-    <!-- #region 快捷按钮组 -->
+
+    <!-- 快捷按钮组 -->
     <template #actions>
-      <div class="website-btn" :title="$t('mappool.seeMapInfo')" @click="openBeatmapWebsite(map?.data?.id ?? map?.id)">
-        <font-awesome-icon icon="fa-solid fa-link"></font-awesome-icon>
-      </div>
-      <div class="copy-btn" :title="$t('mappool.getMapID')" @click="copyBeatmapID(map)">
-        <font-awesome-icon icon="fa-solid fa-copy" v-show="!map?.isCopied"></font-awesome-icon>
-        <font-awesome-icon icon="fa-solid fa-check" :class="map?.isCopied ? 'copied' : ''" v-if="map?.isCopied"></font-awesome-icon>
-      </div>
-      <div v-if="!isReferee" class="download-btn" :title="$t('mappool.downloadMap')" @click="downloadBeatmap(map?.data?.beatmapset_id)">
-        <font-awesome-icon icon="fa-solid fa-download"></font-awesome-icon>
-      </div>
-      <div v-else class="check-btn" :title="!map.checkStatus ? $t('mappool.markMap') : $t('mappool.removeMark')" @click="toggleMapStatus(map)">
-        <font-awesome-icon v-if="!map.checkStatus" icon="fa-solid fa-circle-check"></font-awesome-icon>
-        <font-awesome-icon v-if="map.checkStatus" icon="fa-solid fa-circle-minus" style="color: var(--team-red)" />
-      </div>
-      <div class="copy-btn" :title="$t('mappool.getMapCommand')" @click="copyCommand(map, 'map')">
-        <font-awesome-icon icon="fa-solid fa-map" v-show="!map?.setMap" />
-        <font-awesome-icon icon="fa-solid fa-clipboard-check" :class="map?.setMap ? 'copied' : ''" v-if="map?.setMap" />
-      </div>
-      <div class="copy-btn" :title="$t('mappool.getModCommand')" @click="copyCommand(map, 'mod')">
-        <font-awesome-icon icon="fa-solid fa-code" v-show="!map?.getCommand" />
-        <font-awesome-icon icon="fa-solid fa-clipboard-check" :class="map?.getCommand ? 'copied' : ''" v-if="map?.getCommand" />
-      </div>
+      <template v-for="action in beatmapActions" :key="action.title">
+        <div :class="action.class" :title="$t(action.title)" @click="action.handler">
+          <font-awesome-icon :icon="getActionIcon(action)" :class="getActionIconClass(action)" />
+        </div>
+      </template>
     </template>
-    <!-- #endregion -->
   </a-card>
-  <div class="loading-panel" :class="isCard ? 'small' : ''" v-else>
-    <a-spin></a-spin>
+
+  <!-- Loading State -->
+  <div v-else class="loading-panel" :class="{ small: isCard }">
+    <a-spin />
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted, nextTick, watch } from 'vue';
+<script setup lang="ts">
+import { watch, computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useBeatmapStore } from '@/stores/beatmapStore';
 import { useThemeStore } from '@/stores/themeStore';
+import { useBeatmapData } from '@/utils/useBeatmapData';
+import { useBeatmapActions } from '@/utils/useBeatmapActions';
 // import { getModDiffStar } from '@/utils/mappool';
-import { beatmapApi } from '@/api';
+import type { BeatmapInfo, BeatmapResponse } from '@/types/beatmap';
 
-const store = useThemeStore()
+const beatmapStore = useBeatmapStore();
+const store = useThemeStore();
 const { theme } = storeToRefs(store);
-let imgApi = ref('https://assets.ppy.sh/beatmaps/');
-let imgApiSuffix = ref('/covers/card.jpg');
-let beatmapUrl = ref('http://osu.ppy.sh/b/');
-let beatmapDownloadApi = ref('https://dl.sayobot.cn/beatmaps/download/');
-let props = defineProps({
-  item: {
-    type: Object,
-  },
-  isCard: {
-    type: Boolean,
-  },
-  isReferee: {
-    type: Boolean,
-  },
-});
+const imageStatus = ref('loading');
+
+const props = defineProps<{
+  item: BeatmapInfo;
+  isCard?: boolean;
+  isReferee: boolean;
+  beatmapData?: BeatmapResponse;
+}>();
+
+const isReferee = computed(() => props.isReferee ?? false);
+
 const emit = defineEmits(['update']);
-let map = ref();
-let loaded = ref(false);
-// 打开谱面官网链接
-function openBeatmapWebsite(bid) {
-  let url = beatmapUrl.value + bid;
-  window.open(url, '_blank');
-}
-// 复制谱面ID
-function copyBeatmapID(item) {
-  let input = document.createElement('input');
-  input.value = item.data?.id ?? item.id;
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand('Copy');
-  input.remove();
-  item.isCopied = true;
-  setTimeout(() => {
-    item.isCopied = false;
-  }, 1000);
-}
-// 下载谱面文件
-function downloadBeatmap(sid) {
-  let url = beatmapDownloadApi.value + sid;
-  window.open(url, '_self');
-}
-function toggleMapStatus(map) {
-  map.checkStatus = !map.checkStatus;
-  emit('update', map);
-}
-// 复制比赛指令
-function copyCommand(item, type) {
-  let input = document.createElement('input');
-  // console.log(item);
-  let mpPrefix = type === 'map' ? '!mp map' : '!mp mods';
-  let value = type === 'map' ? item.data?.id ?? item?.id : item.mod;
-  if (type === 'mod') {
-    let freeModList = ['DT', 'FM', 'TB', 'EX'];
-    let suffix = freeModList.includes(item.mod) ? 'freemod' : 'nf';
-    value = item.mod.toLowerCase() + ' ' + suffix;
-    if (freeModList.includes(item.mod) && item.mod !== 'DT') {
-      value = suffix;
-    }
-    if (item.mod === 'NM') {
-      value = suffix;
-    }
-  }
-  input.value = `${mpPrefix} ${value}`;
-  // console.log(input.value);
-  document.body.appendChild(input);
-  input.select();
-  document.execCommand('Copy');
-  input.remove();
-  let e = type === 'map' ? 'setMap' : 'getCommand';
-  item[e] = true;
-  setTimeout(() => {
-    item[e] = false;
-  }, 1000);
-}
-function initBeatmap(item) {
-  beatmapApi.getBeatmapInfo(item.id)
-    .then((res) => {
-      if (res.status === 200) {
-        nextTick(() => {
-          map.value = Object.assign(props.item, res.data);
-          // console.log(map);
-          getBeatmapParams(map.value);
-        });
+
+// Beatmap data
+const { map, loading } = useBeatmapData(props.item, props.beatmapData);
+
+const { openBeatmapWebsite, copyBeatmapId, downloadBeatmap, copyCommand, toggleMapStatus } = useBeatmapActions(emit);
+
+const { getBeatmapInfo, getBeatmapParams, getBeatmapImage } = beatmapStore;
+
+// Map detail list
+const mapDetailList = computed(() => [
+  { name: 'CS', key: 'cs', info: map.value?.data?.cs },
+  { name: 'OD', key: 'overall_difficulty', info: map.value?.params?.overall_difficulty },
+  { name: 'AR', key: 'approach_rate', info: map.value?.params?.approach_rate },
+  { name: 'Combo', key: 'max_combo', info: map.value?.params?.max_combo },
+]);
+
+const beatmapActions = computed(() => [
+  {
+    class: 'website-btn',
+    title: 'mappool.seeMapInfo',
+    handler: () => {
+      const id = map.value?.data?.id ?? map.value?.id;
+      if (id !== undefined) {
+        openBeatmapWebsite(id);
       }
-    })
-    .catch(() => {
-      setTimeout(() => {
-        initBeatmap(item);
-      }, 1000);
-    });
-}
-async function getBeatmapParams(map) {
-  let noModList = ['FM', 'TB', 'EX'];
-  let params = {
-    bid: map.id,
-    mod: noModList.includes(map.mod) ? 'NM' : map.mod,
-    mode: map.data.mode,
-  };
-  beatmapApi.getBeatmapAttributes(params).then((res) => {
-    let data = res.data;
-    for (let i in data) {
-      if (data[i].toString().indexOf('.') !== -1) {
-        if (i === 'star_rating') {
-          data[i] = data[i].toFixed(2);
-        } else {
-          data[i] = data[i].toFixed(1);
-        }
-      }
-    }
-    map.params = data;
-    loaded.value = true;
-  });
-}
-watch(
-  () => {
-    props.item;
-  },
-  () => {
-    if (!props.isReferee) {
-      loaded.value = false;
-      initBeatmap(props.item);
-    } else {
-      loaded.value = true;
-      map.value = props.item;
-    }
+    },
+    icon: 'fa-solid fa-link',
   },
   {
-    immediate: true,
-    deep: true,
-  }
+    class: 'copy-btn',
+    title: 'mappool.getMapID',
+    handler: () => map.value && copyBeatmapId(map.value),
+    icon: map.value?.isCopied ? 'fa-solid fa-check' : 'fa-solid fa-copy',
+    copied: map.value?.isCopied,
+  },
+  ...(!isReferee.value
+    ? [
+        {
+          class: 'download-btn',
+          title: 'mappool.downloadMap',
+          handler: () => {
+            const beatmapsetId = map.value?.data?.beatmapset_id;
+            if (beatmapsetId !== undefined) {
+              downloadBeatmap(beatmapsetId);
+            }
+          },
+          icon: 'fa-solid fa-download',
+          copied: false,
+        },
+      ]
+    : [
+        {
+          class: 'check-btn',
+          title: map.value?.checkStatus ? 'mappool.removeMark' : 'mappool.markMap',
+          handler: () => map.value && toggleMapStatus(map.value),
+          icon: map.value?.checkStatus ? 'fa-solid fa-circle-minus' : 'fa-solid fa-circle-check',
+          style: map.value?.checkStatus ? { color: 'var(--team-red)' } : {},
+        },
+      ]),
+  {
+    class: 'copy-btn',
+    title: 'mappool.getMapCommand',
+    handler: () => map.value && copyCommand(map.value, 'map'),
+    icon: map.value?.setMap ? 'fa-solid fa-clipboard-check' : 'fa-solid fa-map',
+    copied: map.value?.setMap,
+  },
+  {
+    class: 'copy-btn',
+    title: 'mappool.getModCommand',
+    handler: () => map.value && copyCommand(map.value, 'mod'),
+    icon: map.value?.getCommand ? 'fa-solid fa-clipboard-check' : 'fa-solid fa-code',
+    copied: map.value?.getCommand,
+  },
+]);
+
+// Computed
+const coverUrl = computed(() => `https://assets.ppy.sh/beatmaps/${map.value?.data?.beatmapset_id}/covers/card.jpg`);
+
+const hasUnicodeTitle = computed(() => map.value?.data?.beatmapset?.title !== map.value?.data?.beatmapset?.title_unicode);
+
+const getActionIcon = (action: (typeof beatmapActions.value)[number]) => {
+  return action.icon;
+};
+
+const getActionIconClass = (action: (typeof beatmapActions.value)[number]) => {
+  return { copied: action.copied };
+};
+
+watch(
+  () => props.item,
+  async () => {
+    if (!props.isReferee) {
+      loading.value = true;
+      try {
+        // 获取基本信息
+        const beatmapData = await getBeatmapInfo(props.item.id);
+        if (!beatmapData) {
+          console.error('Failed to get beatmap info');
+          return;
+        }
+
+        // 获取难度参数
+        const params = await getBeatmapParams(props.item.id, props.item.mod, beatmapData.mode);
+        // 预加载图片
+        await getBeatmapImage(beatmapData.beatmapset_id);
+
+        map.value = {
+          ...props.item,
+          data: beatmapData,
+          params: params,
+        };
+      } catch (error) {
+        console.error('Error loading beatmap:', error);
+      } finally {
+        loading.value = false;
+      }
+    } else {
+      map.value = props.item;
+      loading.value = false;
+    }
+  },
+  { immediate: true, deep: true }
 );
-onMounted(() => {
-  if (!props.isReferee) {
-    initBeatmap(props.item);
-  } else {
-    loaded.value = true;
-  }
-});
 </script>
 
 <style lang="scss" scoped>
@@ -311,17 +314,9 @@ onMounted(() => {
       }
 
       .star {
-        margin: 0 5px 5px 10px;
+        margin: .25rem 1rem .25rem .5rem;
         display: flex;
         justify-content: flex-end;
-
-        span {
-          font-size: 24px;
-
-          span {
-            font-size: 22px;
-          }
-        }
       }
     }
   }
@@ -453,6 +448,18 @@ onMounted(() => {
 ul.operate-button-menu {
   * {
     font-size: 14px;
+  }
+}
+
+[data-theme="dark"] {
+  .loading-panel {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 

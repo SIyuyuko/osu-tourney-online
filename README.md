@@ -15,7 +15,7 @@ osu!tourney web 是一个 osu! 比赛信息管理项目，通过个性化配置�
 
 #### 📥 快速开始
 
-1. 在 [Releases](https://github.com/你的用户名/仓库名/releases) 页面下载适合你系统的最新版本
+1. 在 [Releases](https://github.com/SIyuyuko/osu-tourney-online/releases) 页面下载适合你系统的最新版本
 2. 安装并运行程序
 3. 开始使用！
 
@@ -157,7 +157,7 @@ I hope that you will use this program and that it will help you in your work! uw
 
 #### 📥 Quick Start
 
-1. Download the latest version for your system on the [Releases](
+1. Download the latest version for your system on [Releases](https://github.com/SIyuyuko/osu-tourney-online/releases)
 2. Install and run the program
 3. Start using!
 

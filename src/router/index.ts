@@ -39,7 +39,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'list',
         name: 'MapPoolList',
-        component: () => import('@/views/mappool/MapPoolListView.vue'),
+        component: () => import('@/views/mappool/PoolListView.vue'),
         meta: {
           title: '图池列表',
         },

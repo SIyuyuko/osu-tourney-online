@@ -1,24 +1,18 @@
 // src/utils/tauriManager.ts
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { Window } from '@tauri-apps/api/window';
-import { UnlistenFn } from '@tauri-apps/api/event';
-import { ref } from 'vue';
-
-interface WindowCleanupOptions {
-  timeout?: number;
-  retryAttempts?: number;
-  retryDelay?: number;
-}
 
 export class WindowManager {
   private window: Window | null = null;
-  private cleanupTimeout: NodeJS.Timeout | null = null;
-  private isDestroyed = ref(false);
+  private isDestroyed = false;
   private isMaximized = false;
   private static instance: WindowManager | null = null;
-  private listeners: UnlistenFn[] = [];
+  private windowRefreshInterval: number | null = null;
 
-  private constructor() {}
+  private constructor() {
+    // 设置定期刷新窗口引用
+    this.setupWindowRefresh();
+  }
 
   static getInstance(): WindowManager {
     if (!WindowManager.instance) {
@@ -27,19 +21,53 @@ export class WindowManager {
     return WindowManager.instance;
   }
 
+  private setupWindowRefresh(): void {
+    // 每5分钟刷新一次窗口引用
+    this.windowRefreshInterval = setInterval(
+      () => {
+        if (!this.isDestroyed) {
+          this.refreshWindow();
+        }
+      },
+      5 * 60 * 1000
+    ) as unknown as number;
+  }
+
+  private async refreshWindow(): Promise<void> {
+    try {
+      const tempWindow = getCurrentWebviewWindow();
+      if (tempWindow) {
+        this.window = tempWindow;
+      }
+    } catch (error) {
+      console.error('Failed to refresh window reference:', error);
+    }
+  }
+
+  private async getWindow(): Promise<Window> {
+    try {
+      // 每次获取都刷新窗口引用
+      const currentWindow = getCurrentWebviewWindow();
+      if (!currentWindow) {
+        throw new Error('Failed to get window instance');
+      }
+      this.window = currentWindow;
+      return currentWindow;
+    } catch (error) {
+      console.error('Error getting window instance:', error);
+      throw error;
+    }
+  }
+
   async initialize(): Promise<void> {
-    if (this.isDestroyed.value) {
+    if (this.isDestroyed) {
       throw new Error('Window manager has been destroyed');
     }
 
     try {
       if (!this.window) {
-        this.window = getCurrentWebviewWindow();
+        this.window = await this.getWindow();
         this.isMaximized = await this.window.isMaximized();
-        await this.setupWindowListeners();
-
-        // 禁用浏览器默认的beforeunload行为
-        this.disableBeforeUnloadPrompt();
       }
     } catch (error) {
       console.error('Failed to initialize window manager:', error);
@@ -47,84 +75,10 @@ export class WindowManager {
     }
   }
 
-  private async setupWindowListeners(): Promise<void> {
-    if (!this.window) return;
-
-    try {
-      const unlisten = await this.window.listen('tauri://close-requested', async () => {
-        await this.cleanup();
-        this.window?.close();
-      });
-      this.listeners.push(unlisten);
-    } catch (error) {
-      console.error('Failed to setup window listeners:', error);
-    }
-  }
-
-  private disableBeforeUnloadPrompt(): void {
-    // 移除所有现有的beforeunload监听器
-    window.onbeforeunload = null;
-
-    // 阻止页面添加新的beforeunload监听器
-    const originalAddEventListener = window.addEventListener;
-    window.addEventListener = (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
-      // 忽略beforeunload事件监听器
-      if (type === 'beforeunload') return;
-      originalAddEventListener.call(window, type, listener, options);
-    };
-  }
-
-  async cleanup(options: WindowCleanupOptions = {}): Promise<void> {
-    const { timeout = 1000, retryAttempts = 3, retryDelay = 200 } = options;
-
-    if (this.isDestroyed.value) return;
-
-    this.isDestroyed.value = true;
-
-    try {
-      // 使用 Promise.race 确保清理操作不会无限阻塞
-      await Promise.race([
-        this.performCleanup(retryAttempts, retryDelay),
-        new Promise((_, reject) => {
-          this.cleanupTimeout = setTimeout(() => {
-            reject(new Error('Cleanup timeout'));
-          }, timeout);
-        }),
-      ]);
-    } catch (error) {
-      console.error('Error during cleanup:', error);
-    } finally {
-      if (this.cleanupTimeout) {
-        clearTimeout(this.cleanupTimeout);
-        this.cleanupTimeout = null;
-      }
-    }
-  }
-
-  private async performCleanup(attempts: number, delay: number): Promise<void> {
-    for (let i = 0; i < attempts; i++) {
-      try {
-        if (this.window) {
-          // 清理所有事件监听器
-          await Promise.all(this.listeners.map((unlisten) => unlisten()));
-          this.listeners = [];
-
-          // 清理窗口引用
-          this.window = null;
-          return;
-        }
-        return;
-      } catch (error) {
-        if (i === attempts - 1) throw error;
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
-    }
-  }
-
   // Window state management methods
   async toggleMaximize(): Promise<boolean> {
     try {
-      if (!this.window) return false;
+      this.window = await this.getWindow();
 
       this.isMaximized = await this.window.isMaximized();
       if (this.isMaximized) {
@@ -143,6 +97,7 @@ export class WindowManager {
 
   async minimize(): Promise<void> {
     try {
+      this.window = await this.getWindow();
       await this.window?.minimize();
     } catch (error) {
       console.error('Failed to minimize window:', error);
@@ -151,38 +106,62 @@ export class WindowManager {
 
   async close(): Promise<void> {
     try {
-      await this.window?.emit('tauri://close-requested');
+      console.log('Starting window close process...');
+      const window = await this.getWindow();
+
+      if (this.isDestroyed) {
+        console.warn('Window is already destroyed');
+        return;
+      }
+
+      // 清理定时器
+      if (this.windowRefreshInterval) {
+        clearInterval(this.windowRefreshInterval);
+        this.windowRefreshInterval = null;
+      }
+
+      // 标记为已销毁
+      this.isDestroyed = true;
+
+      // 强制关闭窗口
+      console.log('Forcing window close...');
+      await window.close();
+
+      // 清理实例
+      WindowManager.instance = null;
+      this.window = null;
     } catch (error) {
       console.error('Failed to close window:', error);
+
+      // 即使出错也尝试强制关闭
+      try {
+        if (this.window) {
+          await this.window.close();
+        }
+      } catch (finalError) {
+        console.error('Failed final attempt to close window:', finalError);
+      }
+
+      throw error;
     }
   }
 
   isInitialized(): boolean {
-    return !!this.window && !this.isDestroyed.value;
+    return !!this.window && !this.isDestroyed;
   }
 
   getIsMaximized(): boolean {
     return this.isMaximized;
   }
 
-  // 获取当前窗口实例
-  getWindow(): Window | null {
-    return this.window;
-  }
-
-  // 添加新的事件监听器
-  async addListener(event: string, callback: () => void): Promise<void> {
-    if (!this.window || this.isDestroyed.value) {
-      throw new Error('Window manager is not initialized or has been destroyed');
+  destroy(): void {
+    if (this.windowRefreshInterval) {
+      clearInterval(this.windowRefreshInterval);
+      this.windowRefreshInterval = null;
     }
-
-    try {
-      const unlisten = await this.window.listen(event, callback);
-      this.listeners.push(unlisten);
-    } catch (error) {
-      console.error(`Failed to add listener for event ${event}:`, error);
-      throw error;
-    }
+    this.isDestroyed = true;
+    this.window = null;
+    WindowManager.instance = null;
   }
 }
 
@@ -196,13 +175,6 @@ export async function initializeTauri(): Promise<void> {
   try {
     const windowManager = WindowManager.getInstance();
     await windowManager.initialize();
-    await windowManager.addListener('tauri://close-requested', async () => {
-      await windowManager.cleanup();
-      const window = windowManager.getWindow();
-      if (window) {
-        await window.close();
-      }
-    });
   } catch (error) {
     console.error('Failed to initialize Tauri:', error);
     throw error;

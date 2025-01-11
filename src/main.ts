@@ -53,8 +53,12 @@ if (appStore.isTauri) {
   appStore.initializeWindowManager().catch(console.error);
 }
 
-window.addEventListener('unload', async () => {
+window.addEventListener('beforeunload', async (event) => {
   if (appStore.isTauri) {
-    await appStore.cleanup();
+    try {
+      await appStore.cleanup();
+    } catch (error) {
+      console.error('Cleanup failed:', error);
+    }
   }
 });

@@ -1,5 +1,5 @@
 <template>
-  <div class="command-list">
+  <div class="command-list" :class="{ 'grid-mode': isGridMode }">
     <div class="nav">
       <span>{{ $t('command.list') }}</span>
       <a :href="wikiUrl" target="_blank" :title="$t('command.seeWiki')">wiki</a>
@@ -8,58 +8,62 @@
       </a-button>
     </div>
 
-    <p v-for="(item, index) in commandList" :key="index" class="command" :class="showCommand ? '' : 'hidden'">
-      <span>{{ index + 1 }}.</span>
-      <span>{{ item.name }}</span>
-      <a-typography-paragraph v-model:content="commandCopy[index].value" :editable="{ tooltip: false }" :copyable="{ tooltip: false }" keyboard>
-        <template #editableIcon>
-          <a-button class="operate-btn" type="default" size="small">
-            {{ $t('command.edit') }}
-            <template #icon>
-              <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
-            </template>
-          </a-button>
-        </template>
-        <template #copyableIcon="{ copied }">
-          <a-button class="operate-btn" type="primary" size="small">
-            {{ $t('command.copy') }}
-            <template #icon>
-              <span v-if="!copied" key="copy-icon">
-                <font-awesome-icon icon="fa-regular fa-copy" />
-              </span>
-              <span v-else key="copied-icon">
-                <font-awesome-icon icon="fa-solid fa-check" />
-              </span>
-            </template>
-          </a-button>
-        </template>
-      </a-typography-paragraph>
-    </p>
+    <div class="commands-container">
+      <div class="command-item" v-for="(item, index) in commandStore.commandList" :key="index">
+        <span>{{ index + 1 }}.</span>
+        <span>{{ item.name }}</span>
+        <a-typography-paragraph v-model:content="item.value" :editable="{ tooltip: false }" :copyable="{ tooltip: false }" keyboard @change="handleCommandChange(index, $event)">
+          <template #editableIcon>
+            <a-button class="operate-btn" type="default" size="small">
+              {{ $t('command.edit') }}
+              <template #icon>
+                <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
+              </template>
+            </a-button>
+          </template>
+          <template #copyableIcon="{ copied }">
+            <a-button class="operate-btn" type="primary" size="small">
+              {{ copied ? $t('command.copied') : $t('command.copy') }}
+              <template #icon>
+                <span>
+                  <font-awesome-icon :icon="copied ? 'fa-solid fa-check' : 'fa-regular fa-copy'" />
+                </span>
+              </template>
+            </a-button>
+          </template>
+        </a-typography-paragraph>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, PropType } from 'vue';
+import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
-import type { Command } from '@/types/config';
+import { useCommandStore } from '@/stores/commandStore';
+import { useWindowSize } from '@vueuse/core';
+
+const { width } = useWindowSize();
+const isGridMode = computed(() => width.value <= 980);
 
 const { locale } = useI18n();
+const commandStore = useCommandStore();
+
+defineProps({
+  showCommand: { type: Boolean, required: true },
+});
+
+defineEmits(['toggle-show']);
 
 const wikiUrl = computed(() => {
   return `https://osu.ppy.sh/wiki/${locale.value}/osu%21_tournament_client/osu%21tourney/Tournament_management_commands`;
 }); // 比赛指令wiki链接
 
-const commandList = computed(() => window.command.list);
-
-defineProps({
-  showCommand: { type: Boolean },
-  commandCopy: {
-    type: Array as PropType<Command[]>,
-    required: true,
-  },
-});
-
-defineEmits(['toggle-show']);
+const handleCommandChange = (index: number, newValue: string) => {
+  if (commandStore.commandList[index]) {
+    commandStore.commandList[index].value = newValue;
+  }
+};
 </script>
 
 <style lang="scss" scoped>
@@ -71,6 +75,11 @@ defineEmits(['toggle-show']);
     z-index: 2;
     align-items: center;
     display: flex;
+    background-color: #ffffff;
+
+    [data-theme='dark'] & {
+      background-color: #141414;
+    }
 
     span + a {
       margin: 0 0 0 10px;
@@ -110,45 +119,36 @@ defineEmits(['toggle-show']);
   }
 }
 
-@media (max-width: 900px) {
-  .command-list {
-    position: relative;
+// 网格布局模式
+.command-list.grid-mode {
+  .commands-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
 
-    .nav {
-      position: fixed;
-      top: auto;
-      width: 90%;
+    .command-item {
+      background: var(--background-secondary);
+      border-radius: 8px;
+      margin-bottom: 0;
 
-      .expand-btn {
-        visibility: visible;
+      :deep(.ant-typography) {
+        flex-direction: column;
+        align-items: flex-start;
+
+        .operate-btn {
+          width: 100%;
+          justify-content: center;
+        }
       }
-    }
-
-    .nav + .command {
-      margin: 30px 0 0 0;
     }
   }
 }
 
-@media (max-width: 900px) {
-  .command-list {
-    width: 100%;
-    position: relative;
-    .nav {
-      position: fixed;
-      top: auto;
-      width: 90%;
-    }
-
-    .expand-btn {
-      visibility: visible;
-      transition: ease all 0.3s;
-    }
-    .nav + .command {
-      margin: 30px 0 0 0;
-    }
-    .command.hidden {
-      display: none;
+@media (max-width: 640px) {
+  .command-list.grid-mode {
+    .commands-container {
+      grid-template-columns: 1fr;
     }
   }
 }

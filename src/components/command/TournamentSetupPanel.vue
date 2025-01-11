@@ -2,23 +2,23 @@
   <div class="config-panel">
     <!-- Prefix and Best of Settings -->
     <div class="prefix-bar">
-      <a-input v-model:value="prefix" allow-clear :placeholder="$t('command.inputTour')" style="width: 70%">
+      <a-input v-model:value="store.prefix" allow-clear :placeholder="$t('command.inputTour')" style="width: 70%" @change="handlePrefixChange">
         <template #prefix>
           <font-awesome-icon icon="fa-solid fa-chess" />
         </template>
       </a-input>
 
-      <a-input-number v-model:value="bo" addon-before="Best of" :min="1" :step="2" style="width: 30%" />
+      <a-input-number v-model:value="store.bo" addon-before="Best of" :min="1" :step="2" style="width: 30%" />
     </div>
 
     <!-- Team Names -->
-    <a-input v-model:value="redTeam" allow-clear :placeholder="$t('command.inputRedTeam')">
+    <a-input v-model:value="store.redTeam" allow-clear :placeholder="$t('command.inputRedTeam')" @change="handleTeamChange">
       <template #prefix>
         <font-awesome-icon icon="fa-solid fa-users-line" style="color: var(--team-red)" />
       </template>
     </a-input>
 
-    <a-input v-model:value="blueTeam" allow-clear :placeholder="$t('command.inputBlueTeam')">
+    <a-input v-model:value="store.blueTeam" allow-clear :placeholder="$t('command.inputBlueTeam')" @change="handleTeamChange">
       <template #prefix>
         <font-awesome-icon icon="fa-solid fa-users-line" style="color: var(--team-blue)" />
       </template>
@@ -26,84 +26,50 @@
 
     <!-- Mode Settings -->
     <div class="mode-bar">
-      <a-select v-model:value="teamMode" :options="teamOptions" style="width: calc(50% - 5px)" allowClear :placeholder="$t('command.selectTeamMode')">
+      <a-select
+        v-model:value="store.teamMode"
+        :options="teamOptions"
+        style="width: calc(50% - 5px)"
+        allowClear
+        :placeholder="$t('command.selectTeamMode')"
+        @change="handleModeChange"
+      >
         <template #suffixIcon>
           <font-awesome-icon icon="fa-solid fa-user-group" />
         </template>
       </a-select>
 
-      <a-select v-model:value="scoreMode" :options="scoreOptions" style="width: calc(50% - 5px)" allowClear :placeholder="$t('command.selectScoreMode')">
+      <a-select
+        v-model:value="store.scoreMode"
+        :options="scoreOptions"
+        style="width: calc(50% - 5px)"
+        allowClear
+        :placeholder="$t('command.selectScoreMode')"
+        @change="handleModeChange"
+      >
         <template #suffixIcon>
           <font-awesome-icon icon="fa-solid fa-ranking-star" />
         </template>
       </a-select>
 
-      <a-input-number v-model:value="ts" :addon-before="$t('command.teamsize')" :min="1" style="width: calc(50% - 5px)" />
+      <a-input-number v-model:value="store.ts" :addon-before="$t('command.teamsize')" :min="1" style="width: calc(50% - 5px)" @change="handleTeamSizeChange" />
     </div>
 
     <!-- Time Settings -->
     <div class="time-bar">
-      <div>
-        <span>{{ $t('command.timerTime') }}</span>
-        <a-radio-group v-model:value="timer">
-          <a-radio :value="60">60{{ $t('command.sec') }}</a-radio>
-          <a-radio :value="90">90{{ $t('command.sec') }}</a-radio>
-          <a-radio :value="120">120{{ $t('command.sec') }}</a-radio>
-          <a-input-number v-model:value="timer" :min="0" :addon-after="$t('command.sec')" />
-        </a-radio-group>
-      </div>
+      <TimeSetting :label="$t('command.timerTime')" v-model="store.timer" :options="[60, 90, 120]" @change="handleTimerChange" />
 
-      <div>
-        <span>{{ $t('command.startTime') }}</span>
-        <a-radio-group v-model:value="startTime">
-          <a-radio :value="10">10{{ $t('command.sec') }}</a-radio>
-          <a-radio :value="15">15{{ $t('command.sec') }}</a-radio>
-          <a-radio :value="30">30{{ $t('command.sec') }}</a-radio>
-          <a-input-number v-model:value="startTime" :min="0" :addon-after="$t('command.sec')" />
-        </a-radio-group>
-      </div>
+      <TimeSetting :label="$t('command.startTime')" v-model="store.startTime" :options="[10, 15, 30]" @change="handleStartTimeChange" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { watch } from 'vue';
-import type { Command } from '@/types/config';
+import { useCommandStore } from '@/stores/commandStore';
+import { debounce } from 'lodash';
+import TimeSetting from './TimeSetting.vue';
 
-const prefix = defineModel('prefix', {
-  type: String,
-  default: '',
-});
-const bo = defineModel('bo', {
-  type: Number,
-  default: 0,
-});
-const redTeam = defineModel('redTeam', {
-  type: String,
-  default: '',
-});
-const blueTeam = defineModel('blueTeam', {
-  type: String,
-  default: '',
-});
-const teamMode = defineModel('teamMode', {
-  type: [String, null],
-  default: null,
-});
-const scoreMode = defineModel('scoreMode', {
-  type: [String, null],
-  default: null,
-});
-const ts = defineModel('ts', {
-  type: Number,
-  default: 1,
-});
-const timer = defineModel<string | number>('timer', {
-  default: '',
-});
-const startTime = defineModel<string | number>('startTime', {
-  default: '',
-});
+const store = useCommandStore();
 
 // 内部维护的选项列表
 const teamOptions = [
@@ -120,50 +86,30 @@ const scoreOptions = [
   { label: 'Score V2', value: '3' },
 ];
 
-// 监听并更新命令
-watch([prefix, redTeam, blueTeam], () => {
-  const index = props.commandCopy.findIndex((value) => value.type === 'create');
-  if (index === -1) return;
+// Debounced handlers
+const handlePrefixChange = debounce(() => {
+  store.updateCommand('create');
+}, 300);
 
-  if (prefix.value && redTeam.value && blueTeam.value) {
-    props.commandCopy[index].value = `${props.defaultCommand[index].cmd} ${prefix.value}:(${redTeam.value})vs(${blueTeam.value})`;
-  } else {
-    props.commandCopy[index].value = props.defaultCommand[index]?.cmd ?? props.commandCopy[index].cmd;
-  }
-});
+const handleTeamChange = debounce(() => {
+  store.updateCommand('create');
+}, 300);
 
-// 比赛模式监听
-watch([scoreMode, teamMode], () => {
-  const index = props.commandCopy.findIndex((value) => value.type === 'room');
-  if (index === -1) return;
+const handleModeChange = debounce(() => {
+  store.updateCommand('room');
+}, 300);
 
-  if (teamMode.value && scoreMode.value) {
-    props.commandCopy[index].value = `${props.defaultCommand[index].cmd} ${teamMode.value} ${scoreMode.value}`;
-  } else {
-    props.commandCopy[index].value = props.defaultCommand[index]?.cmd ?? props.commandCopy[index].cmd;
-  }
-});
+const handleTeamSizeChange = debounce(() => {
+  store.updateCommand('size');
+}, 300);
 
-// 时间监听
-watch(timer, () => {
-  const timerIndex = props.commandCopy.findIndex((value) => value.type === 'timer');
-  if (timerIndex === -1) return;
+const handleTimerChange = debounce(() => {
+  store.updateCommand('timer');
+}, 300);
 
-  props.commandCopy[timerIndex].value = `${props.defaultCommand[timerIndex].cmd} ${timer.value}`;
-});
-
-watch(startTime, () => {
-  const startIndex = props.commandCopy.findIndex((value) => value.type === 'start');
-  if (startIndex === -1) return;
-
-  props.commandCopy[startIndex].value = `${props.defaultCommand[startIndex].cmd} ${startTime.value}`;
-});
-
-// 获取命令列表
-const props = defineProps<{
-  commandCopy: Command[];
-  defaultCommand: Command[];
-}>();
+const handleStartTimeChange = debounce(() => {
+  store.updateCommand('start');
+}, 300);
 </script>
 
 <style lang="scss" scoped>

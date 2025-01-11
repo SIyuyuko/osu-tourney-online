@@ -126,7 +126,7 @@ function initUser() {
         if (typeof item.player[e] === 'number') {
           let obj = {};
           userApi
-            .getUserInfo(item.player[e])
+            .getUserById(item.player[e])
             .then((res) => {
               if (res) {
                 obj = {

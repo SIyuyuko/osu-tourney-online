@@ -335,7 +335,7 @@ export const usePlyrStore = defineStore('plyr', () => {
 
   //     // 加载创建者信息
   //     if (typeof albumData.creator !== 'object' && albumData.creator) {
-  //       const creatorResponse = await userApi.getUserInfo(albumData.creator);
+  //       const creatorResponse = await userApi.getUserById(albumData.creator);
   //       if (creatorResponse.status === 200) {
   //         albumData.creator = creatorResponse.data;
   //       }

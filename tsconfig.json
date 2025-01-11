@@ -48,6 +48,5 @@
   "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"],
 
   // 排除的文件
-  "exclude": ["node_modules", "dist", "**/*.js"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "exclude": ["node_modules", "dist", "**/*.js"]
 }

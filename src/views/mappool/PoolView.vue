@@ -55,10 +55,10 @@ const loadPoolData = async (title: string) => {
   cancelPreviousRequest();
   currentController.value = new AbortController();
 
-  if (!title || !(window as any).mappool?.list) return;
+  if (!title || !window.mappool.list) return;
 
   try {
-    pool.value = (window as any).mappool.list.find((p: Pool) => p.title === title) || null;
+    pool.value = window.mappool.list.find((p: Pool) => p.title === title) || null;
     if (!pool.value) return;
 
     emit('pool-selected', pool.value);

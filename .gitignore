@@ -11,12 +11,17 @@ lerna-debug.log*
 node_modules
 .cargo/
 
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+Cargo.lock
+
 # Build outputs
 dist
 dist-ssr
 target/
 **/*.rs.bk
-Cargo.lock
 tourney-site.zip
 
 # Local files

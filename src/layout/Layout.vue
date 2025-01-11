@@ -19,19 +19,17 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeStore } from '@/stores/themeStore';
-import FloatButton from '@/components/global/FloatButton.vue';
 // import ContextMenu from '@/components/global/ContextMenu.vue';
-import Header from '@/components/nav/Header.vue';
 import Sider from '@/components/nav/Sider.vue';
+import Header from '@/components/nav/Header.vue';
+import FloatButton from '@/components/global/FloatButton.vue';
 import SettingDrawer from '@/components/global/SettingDrawer.vue';
 import i18n from '@/i18n';
 // import { message } from 'ant-design-vue';
 // import { EditOutlined, DeleteOutlined, CopyOutlined, ShareAltOutlined, ReloadOutlined } from '@ant-design/icons-vue';
-import { useApp } from '@/stores/appStore';
-import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 // interface MenuItem {
 //   key?: string;
@@ -91,24 +89,10 @@ import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 // ];
 
 const themeStore = useThemeStore();
-const { isTauri, setIsMaximized } = useApp();
 const { theme } = storeToRefs(themeStore);
 
 onBeforeMount(() => {
-  i18n.global.locale = (window as any).user?.language ?? 'zh';
-});
-
-onMounted(async () => {
-  if (isTauri) {
-    const window = getCurrentWebviewWindow();
-    const maximized = await window.isMaximized();
-    console.log('maximized:', maximized);
-    if (maximized) {
-      setIsMaximized(true);
-    } else {
-      setIsMaximized(false);
-    }
-  }
+  i18n.global.locale = window.user?.language ?? 'zh';
 });
 
 // document.addEventListener("contextmenu", function (e) {

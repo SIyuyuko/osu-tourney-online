@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import vueJsx from '@vitejs/plugin-vue-jsx';
 import VueDevTools from 'vite-plugin-vue-devtools';
 import { fileURLToPath, URL } from 'node:url';
 
@@ -9,7 +8,7 @@ export default defineConfig({
   define: {
     'import.meta.env.VITE_BASEURL': JSON.stringify("https://tourney.365246692.xyz/")
   },
-  plugins: [vue(), vueJsx(), VueDevTools()],
+  plugins: [vue(), VueDevTools()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

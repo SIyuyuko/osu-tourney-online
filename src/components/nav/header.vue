@@ -97,8 +97,9 @@ import Menu from './Menu.vue';
 const themeStore = useThemeStore();
 const { toggleTheme } = themeStore;
 const { theme } = storeToRefs(themeStore);
+
 const appStore = useApp();
-const { isTauri, maximizeIcon } = storeToRefs(appStore);
+const { isTauriApp: isTauri, currentMaximizeIcon: maximizeIcon } = storeToRefs(appStore);
 const { minimizeWindow, toggleMaximizeWindow, closeWindow } = appStore;
 const { locale } = useI18n();
 const { showSetting } = storeToRefs(useSettingStore());

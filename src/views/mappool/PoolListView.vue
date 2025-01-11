@@ -26,7 +26,7 @@ import { Empty } from 'ant-design-vue';
 import PoolCard from '@/components/map/PoolCard.vue';
 import type { Pool } from '@/types/mappool';
 
-const pools = ref<Pool[]>((window as any).mappool.list || []);
+const pools = ref<Pool[]>(window.mappool.list || []);
 
 const listData = computed(() => {
   return [...pools.value, { title: '新建图池' }];

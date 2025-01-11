@@ -108,6 +108,7 @@ router.beforeEach(async (to, from, next) => {
 
         if (response.data) {
           localStorage.setItem('userKey', JSON.stringify(response.data));
+          next(to.query.redirect?.toString() || '/home');
           return;
         }
         return;

@@ -102,8 +102,8 @@ const CURRENT_DATE = dayjs().format('YYYY-MM-DD');
 // State
 const appStore = useApp();
 const { isTauri } = storeToRefs(appStore);
-const user = (window as any).user as User; // 用户配置
-const banner = (window as any).banner as Banner;
+const user = window.user as User; // 用户配置
+const banner = window.banner as Banner;
 const userInfo = ref(); // 用户api信息
 
 // Computed
@@ -370,6 +370,7 @@ onMounted(async () => {
 
     .tournament-panel {
       display: flex;
+      justify-content: center;
       gap: 1.5rem;
       background: #ffffff;
       padding: 1.5rem;
@@ -484,7 +485,7 @@ onMounted(async () => {
   }
 }
 
-@media (max-width: 64rem) {
+@media (max-width: 48rem) {
   .page {
     padding: 1rem;
 

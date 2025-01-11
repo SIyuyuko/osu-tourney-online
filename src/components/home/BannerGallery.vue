@@ -49,7 +49,7 @@ const props = withDefaults(defineProps<Props>(), {
 });
 
 let user = computed(() => props.info);
-let banner = ref((window as any).banner);
+let banner = ref(window.banner);
 let currentCover = ref('');
 
 const carouselStyle = computed(() => ({

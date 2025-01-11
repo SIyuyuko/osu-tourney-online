@@ -1,37 +1,56 @@
 import { defineStore } from "pinia";
-import { toggleMaximizeWindow, minimizeWindow, closeWindow } from "@/utils/window";
-import { set } from "lodash";
+import { WindowManager } from "@/utils/tauriManager";
 
 export const useApp = defineStore("app", {
     state: () => ({
-        isTauri: (window as any).__TAURI__,
+        isTauri: Boolean((window as any).__TAURI__),
+        windowManager: null as WindowManager | null,
         isMaximized: false,
         maximizeIcon: 'fa-solid fa-window-maximize',
     }),
+
+    getters: {
+        isTauriApp: (state) => state.isTauri,
+        currentMaximizeIcon: (state) => state.maximizeIcon,
+    },
+
     actions: {
+        async initializeWindowManager() {
+            if (this.isTauri && !this.windowManager) {
+                this.windowManager = WindowManager.getInstance();
+                await this.windowManager.initialize();
+                this.isMaximized = this.windowManager.getIsMaximized();
+                this.updateMaximizeState(this.isMaximized);
+            }
+        },
+
         async toggleMaximizeWindow() {
-            toggleMaximizeWindow().then((maximized) => {
-                this.isMaximized = maximized;
-                this.maximizeIcon = maximized
-                    ? 'fa-solid fa-window-restore'
-                    : 'fa-solid fa-window-maximize';
-            });
+            if (!this.windowManager) return;
+            const maximized = await this.windowManager.toggleMaximize();
+            this.updateMaximizeState(maximized);
         },
-        minimizeWindow() { minimizeWindow() },
-        closeWindow() { closeWindow() },
-        getIsTauri() {
-            return this.isTauri;
+
+        async minimizeWindow() {
+            if (!this.windowManager) return;
+            await this.windowManager.minimize();
         },
-        getMaximizeIcon() {
-            return this.maximizeIcon;
+
+        async closeWindow() {
+            if (!this.windowManager) return;
+            await this.windowManager.close();
         },
-        getIsMaximized() {
-            return this.isMaximized;
+
+        updateMaximizeState(maximized: boolean) {
+            this.isMaximized = maximized;
+            this.maximizeIcon = maximized
+                ? 'fa-solid fa-window-restore'
+                : 'fa-solid fa-window-maximize';
         },
-        setIsMaximized(value: boolean) {
-            set(this, 'isMaximized', value);
-            if (value) {
-                set(this, 'maximizeIcon', 'fa-solid fa-window-restore');
+
+        async cleanup() {
+            if (this.windowManager) {
+                await this.windowManager.cleanup();
+                this.windowManager = null;
             }
         },
     },

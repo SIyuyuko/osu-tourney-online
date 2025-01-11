@@ -17,16 +17,19 @@ import { useBeatmapStore } from '@/stores/beatmapStore';
 import { initializeTauri } from '@/utils/tauriManager';
 
 library.add(fas, far, fab);
+
 const app = createApp(App);
+const pinia = createPinia();
 
-app.use(Antd)
-    .use(createPinia())
-    .use(i18n)
-    .use(router)
-    .use(initApp)
-    .component('font-awesome-icon', FontAwesomeIcon)
-    .mount('#app');
+app.use(pinia)
+  .use(Antd)
+  .use(i18n)
+  .use(router)
+  .use(initApp)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .mount('#app');
 
+const appStore = useApp();
 const beatmapStore = useBeatmapStore();
 beatmapStore.restoreCache();
 
@@ -43,5 +46,15 @@ setInterval(() => {
 const { isTauri } = useApp();
 console.log('isTauri:', isTauri);
 if (isTauri) {
-    initializeTauri();
+  initializeTauri();
 }
+
+if (appStore.isTauri) {
+  appStore.initializeWindowManager().catch(console.error);
+}
+
+window.addEventListener('unload', async () => {
+  if (appStore.isTauri) {
+    await appStore.cleanup();
+  }
+});

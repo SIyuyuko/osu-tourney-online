@@ -30,7 +30,7 @@
 
         <!-- 前置一计时器图标 -->
         <template #prefix>
-          <font-awesome-icon class="timer-icon" :icon="isFinished ? 'fa-regular fa-flag-checkered' : 'fa-regular fa-hourglass-half'" :class="{ pulse: !isFinished }" />
+          <font-awesome-icon class="timer-icon" :icon="isFinished ? 'fa-regular fa-flag' : 'fa-regular fa-hourglass-half'" :class="{ pulse: !isFinished }" />
         </template>
 
         <!-- 后置一结束提示符 -->
@@ -64,7 +64,7 @@ import { Empty } from 'ant-design-vue';
 import dayjs from 'dayjs';
 
 const { t, locale } = useI18n();
-let banner = (window as any).banner; // 横幅配置
+let banner = window.banner; // 横幅配置
 const deadline = dayjs(banner.eventTime); // 事件时间
 let isFinished = ref(false); // 倒计时是否结束
 

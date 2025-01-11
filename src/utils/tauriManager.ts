@@ -14,6 +14,7 @@ export class WindowManager {
   private window: Window | null = null;
   private cleanupTimeout: NodeJS.Timeout | null = null;
   private isDestroyed = ref(false);
+  private isMaximized = false;
   private static instance: WindowManager | null = null;
   private listeners: UnlistenFn[] = [];
 
@@ -34,6 +35,7 @@ export class WindowManager {
     try {
       if (!this.window) {
         this.window = getCurrentWebviewWindow();
+        this.isMaximized = await this.window.isMaximized();
         await this.setupWindowListeners();
 
         // 禁用浏览器默认的beforeunload行为
@@ -50,8 +52,8 @@ export class WindowManager {
 
     try {
       const unlisten = await this.window.listen('tauri://close-requested', async () => {
-        this.window?.close();
         await this.cleanup();
+        this.window?.close();
       });
       this.listeners.push(unlisten);
     } catch (error) {
@@ -66,10 +68,8 @@ export class WindowManager {
     // 阻止页面添加新的beforeunload监听器
     const originalAddEventListener = window.addEventListener;
     window.addEventListener = (type: string, listener: EventListenerOrEventListenerObject, options?: boolean | AddEventListenerOptions) => {
-      if (type === 'beforeunload') {
-        // 忽略beforeunload事件监听器
-        return;
-      }
+      // 忽略beforeunload事件监听器
+      if (type === 'beforeunload') return;
       originalAddEventListener.call(window, type, listener, options);
     };
   }
@@ -121,8 +121,53 @@ export class WindowManager {
     }
   }
 
+  // Window state management methods
+  async toggleMaximize(): Promise<boolean> {
+    try {
+      if (!this.window) return false;
+
+      this.isMaximized = await this.window.isMaximized();
+      if (this.isMaximized) {
+        await this.window.unmaximize();
+        this.isMaximized = false;
+      } else {
+        await this.window.maximize();
+        this.isMaximized = true;
+      }
+      return this.isMaximized;
+    } catch (error) {
+      console.error('Failed to toggle window state:', error);
+      return false;
+    }
+  }
+
+  async minimize(): Promise<void> {
+    try {
+      await this.window?.minimize();
+    } catch (error) {
+      console.error('Failed to minimize window:', error);
+    }
+  }
+
+  async close(): Promise<void> {
+    try {
+      await this.window?.emit('tauri://close-requested');
+    } catch (error) {
+      console.error('Failed to close window:', error);
+    }
+  }
+
   isInitialized(): boolean {
     return !!this.window && !this.isDestroyed.value;
+  }
+
+  getIsMaximized(): boolean {
+    return this.isMaximized;
+  }
+
+  // 获取当前窗口实例
+  getWindow(): Window | null {
+    return this.window;
   }
 
   // 添加新的事件监听器
@@ -139,25 +184,10 @@ export class WindowManager {
       throw error;
     }
   }
-
-  // 获取当前窗口实例
-  getWindow(): Window | null {
-    return this.window;
-  }
 }
 
 // 初始化Tauri相关功能
 let isInitializing = false;
-async function handleWindowClose() {
-  const windowManager = WindowManager.getInstance();
-  if (windowManager.isInitialized()) {
-    await windowManager.cleanup();
-    const window = windowManager.getWindow();
-    if (window) {
-      await window.close();
-    }
-  }
-}
 
 export async function initializeTauri(): Promise<void> {
   if (isInitializing) return;
@@ -166,7 +196,13 @@ export async function initializeTauri(): Promise<void> {
   try {
     const windowManager = WindowManager.getInstance();
     await windowManager.initialize();
-    await windowManager.addListener('tauri://close-requested', handleWindowClose);
+    await windowManager.addListener('tauri://close-requested', async () => {
+      await windowManager.cleanup();
+      const window = windowManager.getWindow();
+      if (window) {
+        await window.close();
+      }
+    });
   } catch (error) {
     console.error('Failed to initialize Tauri:', error);
     throw error;

@@ -89,7 +89,7 @@ const { t } = useI18n();
 // State
 const appStore = useApp();
 const { isTauri } = storeToRefs(appStore);
-const tournamentConfig = (window as any).tournament as TournamentConfig; // 比赛配置
+const tournamentConfig = window.tournament as TournamentConfig; // 比赛配置
 const activeTournament = ref<Tournament | null>(null);
 
 // Computed

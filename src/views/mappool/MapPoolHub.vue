@@ -47,8 +47,8 @@ const updateCurrentPool = (pool: Pool) => {
 watch(
   () => route.params.title,
   (title) => {
-    if (title && (window as any).mappool?.list) {
-      currentPool.value = (window as any).mappool.list.find((p: Pool) => p.title === title) || null;
+    if (title && window.mappool.list) {
+      currentPool.value = window.mappool.list.find((p: Pool) => p.title === title) || null;
     } else {
       currentPool.value = null;
     }

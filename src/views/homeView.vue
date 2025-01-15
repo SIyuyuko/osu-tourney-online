@@ -133,8 +133,7 @@ onMounted(async () => {
   // 配置uid时请求用户信息，否则以本地配置渲染
   if (typeof user.uid === 'number' && user.uid !== 0) {
     try {
-
-      const response = await userApi.getUserById(user.uid);
+      const response = await userApi.getUserInfo({ uid: String(user.uid) });
 
       // 类型断言确保响应格式正确
       if (response && typeof response === 'string') {

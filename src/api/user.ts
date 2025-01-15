@@ -1,5 +1,9 @@
 import { request } from '@/utils/request';
 
+export interface User {
+  uid: string;
+}
+
 // 游戏模式类型
 export type GameMode = 'osu' | 'taiko' | 'fruits' | 'mania';
 
@@ -12,8 +16,8 @@ export interface UserLevel {
 // 用户信息接口
 export interface UserInfo {
   id: number;
-  name: string;
-  avatar: string;
+  username: string;
+  avatar_url: string;
   cover: string;
   country: string;
   fans: number;
@@ -40,6 +44,12 @@ export interface UserRequestParams {
 }
 
 export const userApi = {
+  getUserInfo(params: User) {
+    return request.get<UserInfo>('/bot/info/json', { params });
+  },
+  getLogin(params: User) {
+    return request.get<string>('/bot/login', { params });
+  },
   /**
    * 通过用户 ID 获取用户信息
    * @param uid 用户ID

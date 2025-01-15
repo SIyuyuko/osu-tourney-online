@@ -1,28 +1,34 @@
 <template>
-  <div class="error-container">
-    <div class="error-content">
+  <div class="flex justify-center items-center min-h-screen p-5 bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900">
+    <div class="text-center bg-white/90 dark:bg-gray-800/90 p-10 rounded-2xl shadow-lg backdrop-blur-sm max-w-lg w-full">
       <!-- 错误图标 -->
-      <div class="error-icon">
-        <div class="error-number">404</div>
-        <font-awesome-icon icon="fa-solid fa-circle-question" class="question-icon" bounce />
+      <div class="relative mb-8">
+        <div class="text-[120px] md:text-[80px] font-bold leading-none bg-gradient-to-r from-red-400 to-gray-600 bg-clip-text text-transparent font-arial">404</div>
+        <div class="absolute right-12 top-5 text-4xl md:text-3xl text-red-400 opacity-80 animate-bounce">
+          <font-awesome-icon icon="fa-solid fa-circle-question" />
+        </div>
       </div>
 
       <!-- 错误信息 -->
-      <div class="error-message">
-        <h2>Page Not Found</h2>
-        <p>Sorry, the page you're looking for doesn't exist or has been moved.</p>
+      <div class="mb-8">
+        <h2 class="text-2xl md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-3">Page Not Found</h2>
+        <p class="text-base md:text-sm text-gray-600 dark:text-gray-400 leading-relaxed">Sorry, the page you're looking for doesn't exist or has been moved.</p>
       </div>
 
       <!-- 操作按钮 -->
-      <div class="error-actions">
-        <a-button type="primary" @click="goHome" class="action-button">
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a-button
+          type="primary"
+          @click="goHome"
+          class="min-w-[120px] h-10 flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+        >
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-house" />
           </template>
           Back to Home
         </a-button>
 
-        <a-button @click="goBack" class="action-button">
+        <a-button @click="goBack" class="min-w-[120px] h-10 flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-arrow-left" />
           </template>
@@ -38,157 +44,11 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-// 返回首页
 const goHome = () => {
   router.push('/');
 };
 
-// 返回上一页
 const goBack = () => {
   router.back();
 };
 </script>
-
-<style lang="scss" scoped>
-.error-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100%;
-  padding: 20px;
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-
-  .error-content {
-    text-align: center;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 40px;
-    border-radius: 16px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    max-width: 500px;
-    width: 100%;
-
-    .error-icon {
-      position: relative;
-      margin-bottom: 30px;
-
-      .error-number {
-        font-size: 120px;
-        font-weight: bold;
-        background: linear-gradient(45deg, #ff6b6b, #556270);
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-family: 'Arial', sans-serif;
-        line-height: 1;
-      }
-
-      .question-icon {
-        font-size: 40px;
-        color: #ff6b6b;
-        position: absolute;
-        right: 50px;
-        top: 20px;
-        opacity: 0.8;
-      }
-    }
-
-    .error-message {
-      margin-bottom: 30px;
-
-      h2 {
-        font-size: 28px;
-        color: #2c3e50;
-        margin-bottom: 10px;
-      }
-
-      p {
-        font-size: 16px;
-        color: #7f8c8d;
-        line-height: 1.6;
-      }
-    }
-
-    .error-actions {
-      display: flex;
-      gap: 15px;
-      justify-content: center;
-
-      .action-button {
-        min-width: 120px;
-        height: 40px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        transition: all 0.3s ease;
-
-        &:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-      }
-    }
-  }
-}
-
-// 响应式设计
-@media screen and (max-width: 768px) {
-  .error-container {
-    .error-content {
-      padding: 30px 20px;
-
-      .error-icon {
-        .error-number {
-          font-size: 80px;
-        }
-
-        .question-icon {
-          font-size: 30px;
-          right: 40px;
-          top: 15px;
-        }
-      }
-
-      .error-message {
-        h2 {
-          font-size: 24px;
-        }
-
-        p {
-          font-size: 14px;
-        }
-      }
-
-      .error-actions {
-        flex-direction: column;
-
-        .action-button {
-          width: 100%;
-        }
-      }
-    }
-  }
-}
-
-// 深色模式支持
-[data-theme='dark'] {
-  .error-container {
-    background: linear-gradient(135deg, #2d3436 0%, #2c3e50 100%);
-
-    .error-content {
-      background: rgba(30, 30, 30, 0.9);
-
-      .error-message {
-        h2 {
-          color: #ecf0f1;
-        }
-
-        p {
-          color: #bdc3c7;
-        }
-      }
-    }
-  }
-}
-</style>

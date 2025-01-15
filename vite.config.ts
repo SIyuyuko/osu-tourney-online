@@ -2,13 +2,23 @@ import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import VueDevTools from 'vite-plugin-vue-devtools';
 import { fileURLToPath, URL } from 'node:url';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  define: {
-    'import.meta.env.VITE_BASEURL': JSON.stringify("https://tourney.365246692.xyz/")
+  build: {
+    sourcemap: true, // 启用 Source Map
   },
-  plugins: [vue(), VueDevTools()],
+  define: {
+    'import.meta.env.VITE_BASEURL': JSON.stringify('https://tourney.365246692.xyz/'),
+  },
+  plugins: [
+    vue(),
+    VueDevTools(),
+    visualizer({
+      open: true, // 构建完成后自动打开报告
+    }),
+  ],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -23,44 +33,41 @@ export default defineConfig({
     port: 5173,
     open: true,
     proxy: {
-      "/sp": {
-        target: "https://sp.365246692.xyz/api/",
+      '/sp': {
+        target: 'https://sp.365246692.xyz/api/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/sp/, ''),
         secure: false,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          'Access-Control-Allow-Private-Network': 'true'
-        }
+          'Access-Control-Allow-Private-Network': 'true',
+        },
       },
-      "/bot": {
-        target: "https://bot.365246692.xyz/",
+      '/bot': {
+        target: 'https://bot.365246692.xyz/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/bot/, ''),
         secure: false,
         headers: {
           'Access-Control-Allow-Origin': '*',
           'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-          'Access-Control-Allow-Private-Network': 'true'
-        }
+          'Access-Control-Allow-Private-Network': 'true',
+        },
       },
     },
     watch: {
-    ignored: ["**/src-tauri/**"],
-  },
+      ignored: ['**/src-tauri/**'],
+    },
   },
   esbuild: {
-    pure: [
-      'console.log',
-      'console.debug',
-    ]
+    pure: ['console.log', 'console.debug'],
   },
   css: {
     preprocessorOptions: {
       scss: {
-        api: 'modern'
-      }
-    }
-  }
+        api: 'modern',
+      },
+    },
+  },
 });

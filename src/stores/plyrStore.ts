@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
-import { computed, ref, shallowRef } from 'vue';
-import { beatmapApi, userApi } from '@/api';
+import { ref, shallowRef } from 'vue';
+import { beatmapApi } from '@/api';
 import { shuffle } from 'lodash';
 import Plyr from 'plyr';
 
@@ -335,7 +335,7 @@ export const usePlyrStore = defineStore('plyr', () => {
 
   //     // 加载创建者信息
   //     if (typeof albumData.creator !== 'object' && albumData.creator) {
-  //       const creatorResponse = await userApi.getUserById(albumData.creator);
+  //       const creatorResponse = await userApi.getUserInfo(albumData.creator);
   //       if (creatorResponse.status === 200) {
   //         albumData.creator = creatorResponse.data;
   //       }

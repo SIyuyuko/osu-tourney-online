@@ -15,12 +15,11 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve",
 
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
 
     // 源码映射
@@ -42,6 +41,9 @@
 
     // 生成 ES 模块互操作性辅助函数
     "esModuleInterop": true,
+
+    // 确保函数的所有路径都有返回值
+    "noImplicitReturns": true,
   },
 
   // 包含的文件

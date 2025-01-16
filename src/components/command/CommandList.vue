@@ -1,44 +1,36 @@
 <template>
   <div class="command-list" :class="{ 'grid-mode': isGridMode }">
-    <div class="nav">
-      <span>{{ $t('command.list') }}</span>
-      <a :href="wikiUrl" target="_blank" :title="$t('command.seeWiki')">wiki</a>
-      <a-button class="expand-btn" type="link" @click="$emit('toggle-show')">
-        <font-awesome-icon :icon="showCommand ? 'fa-solid fa-compress' : 'fa-solid fa-expand'" />
-      </a-button>
+    <div class="nav flex items-center sticky top-0 z-10 mb-2 bg-white dark:bg-[#141414]">
+      <span class="text-gray-700 dark:text-gray-200">{{ $t('command.list') }}</span>
+      <a :href="wikiUrl" target="_blank" :title="$t('command.seeWiki')" class="ml-2 text-black hover:text-[#13c2c2] dark:text-white dark:hover:text-[#13c2c2]">wiki</a>
     </div>
 
     <div class="commands-container">
-      <div class="command-item" v-for="(item, index) in commandStore.commandList" :key="index">
-        <span>{{ index + 1 }}.</span>
-        <span>{{ item.name }}</span>
-        <a-typography-paragraph v-model:content="item.value" :editable="{ tooltip: false }" :copyable="{ tooltip: false }" keyboard @change="handleCommandChange(index, $event)">
-          <template #editableIcon>
-            <a-button class="operate-btn" type="default" size="small">
-              {{ $t('command.edit') }}
-              <template #icon>
-                <span><font-awesome-icon icon="fa-solid fa-pencil" /></span>
-              </template>
-            </a-button>
-          </template>
-          <template #copyableIcon="{ copied }">
-            <a-button class="operate-btn" type="primary" size="small">
-              {{ copied ? $t('command.copied') : $t('command.copy') }}
-              <template #icon>
-                <span>
-                  <font-awesome-icon :icon="copied ? 'fa-solid fa-check' : 'fa-regular fa-copy'" />
-                </span>
-              </template>
-            </a-button>
-          </template>
-        </a-typography-paragraph>
+      <div class="command-item mb-2" v-for="(item, index) in commandStore.commandList" :key="index">
+        <span class="text-gray-700 dark:text-gray-200 mr-2">{{ index + 1 }}.</span>
+        <span class="text-gray-700 dark:text-gray-200 font-medium">{{ item.name }}</span>
+        <div class="flex items-center">
+          <button
+            class="operate-btn h-7 bg-[#13c2c2] hover:bg-[#11b3b3] text-white px-2 flex items-center rounded-l-lg focus:outline-none"
+            @click="copyToClipboard(item.value || '', index)"
+          >
+            <font-awesome-icon :icon="copiedIndex === index ? 'fa-solid fa-check' : 'fa-regular fa-copy'" />
+          </button>
+          <input
+            type="text"
+            :value="item.value"
+            @input="handleInputChange(index, $event)"
+            :ref="(el) => (inputRef[index] = el as HTMLInputElement)"
+            class="h-7 px-2 border border-gray-300 dark:border-gray-600 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700/50 dark:text-gray-200"
+          />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCommandStore } from '@/stores/commandStore';
 import { useWindowSize } from '@vueuse/core';
@@ -49,107 +41,67 @@ const isGridMode = computed(() => width.value <= 980);
 const { locale } = useI18n();
 const commandStore = useCommandStore();
 
-defineProps({
-  showCommand: { type: Boolean, required: true },
-});
-
-defineEmits(['toggle-show']);
+const inputRef = ref<HTMLInputElement[]>([]); // 改为数组类型
+const copiedIndex = ref<number | null>(null); // 复制状态
 
 const wikiUrl = computed(() => {
   return `https://osu.ppy.sh/wiki/${locale.value}/osu%21_tournament_client/osu%21tourney/Tournament_management_commands`;
-}); // 比赛指令wiki链接
+});
 
-const handleCommandChange = (index: number, newValue: string) => {
+// 复制到剪贴板
+const copyToClipboard = async (text: string, index: number) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    copiedIndex.value = index;
+    setTimeout(() => (copiedIndex.value = null), 2000); // 2秒后重置复制状态
+  } catch (err) {
+    console.error('复制失败:', err);
+  }
+};
+
+// 计算输入框内容的宽度
+const calculateInputWidth = () => {
+  inputRef.value.forEach((input) => {
+    if (input) {
+      const span = document.createElement('span');
+      span.style.visibility = 'hidden'; // 隐藏 span
+      span.style.whiteSpace = 'pre'; // 保留空格和换行
+      span.style.fontSize = window.getComputedStyle(input).fontSize; // 字体大小一致
+      span.style.fontFamily = window.getComputedStyle(input).fontFamily; // 字体一致
+      span.textContent = input.value || input.placeholder || ''; // 内容或占位符
+      document.body.appendChild(span);
+      const width = span.offsetWidth + 20; // 加上 padding 的宽度
+      document.body.removeChild(span);
+      input.style.width = `${Math.max(width, 90)}px`; // 直接设置 input 的宽度
+    }
+  });
+};
+
+// 处理输入事件
+const handleInputChange = (index: number, event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const newValue = target.value;
+
+  // 直接更新 commandStore 中的数据
   if (commandStore.commandList[index]) {
     commandStore.commandList[index].value = newValue;
   }
+
+  calculateInputWidth(); // 更新宽度
 };
+
+// 初始化时计算宽度
+onMounted(() => {
+  commandStore.initCommands();
+  calculateInputWidth();
+});
+
+watch(
+  () => commandStore.commandList,
+  async () => {
+    await nextTick(); // 等待 DOM 更新
+    calculateInputWidth();
+  },
+  { deep: true }
+);
 </script>
-
-<style lang="scss" scoped>
-.command-list {
-  .nav {
-    margin: 0 0 10px 0;
-    position: sticky;
-    top: 0;
-    z-index: 2;
-    align-items: center;
-    display: flex;
-    background-color: #ffffff;
-
-    [data-theme='dark'] & {
-      background-color: #141414;
-    }
-
-    span + a {
-      margin: 0 0 0 10px;
-    }
-
-    .expand-btn {
-      visibility: hidden;
-      transition: ease all 0.3s;
-    }
-  }
-
-  .command {
-    :deep(.ant-typography) {
-      word-break: break-all;
-      align-items: center;
-      display: flex;
-    }
-
-    :deep(.ant-typography-edit-content) {
-      inset-inline-start: 2px;
-      margin: 0;
-    }
-
-    .operate-btn {
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-
-      :deep(span + span) {
-        margin-inline-start: 4px;
-      }
-    }
-
-    &.hidden {
-      display: none;
-    }
-  }
-}
-
-// 网格布局模式
-.command-list.grid-mode {
-  .commands-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-
-    .command-item {
-      background: var(--background-secondary);
-      border-radius: 8px;
-      margin-bottom: 0;
-
-      :deep(.ant-typography) {
-        flex-direction: column;
-        align-items: flex-start;
-
-        .operate-btn {
-          width: 100%;
-          justify-content: center;
-        }
-      }
-    }
-  }
-}
-
-@media (max-width: 640px) {
-  .command-list.grid-mode {
-    .commands-container {
-      grid-template-columns: 1fr;
-    }
-  }
-}
-</style>

@@ -96,7 +96,7 @@ export const router = createRouter({
 });
 
 // 路由守卫
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   // 处理登录逻辑
   if (to.query.code) {
     try {

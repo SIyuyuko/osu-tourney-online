@@ -1,9 +1,10 @@
 # osu!tourney web
 
-## 🌐 Language 语言
+## 🌐 链接
 
 - [中文](#中文)
 - [English](#english)
+- [TODO](#todo)
 
 ---
 
@@ -292,3 +293,16 @@ following ways:
 If you find a bug or have a new feature suggestion, please submit an issue.
 
 ---
+
+### TODO
+
+- [ ] 重构ing
+  - [ ] 转至新后端接口
+  - [ ] 统一Clipboard工具
+  - [ ] 修复CommandList收起
+  - [ ] TourView
+    - [ ] public中默认头像获取需18秒，不清楚原因
+    - [ ] 新后端用户信息接口速度不如旧后端，不清楚原因
+  - [ ] 性能优化
+    - [ ] 考虑脱离Antd
+    - [ ] scss转至Tailwind实现

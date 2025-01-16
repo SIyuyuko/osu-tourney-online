@@ -55,6 +55,15 @@ export default defineConfig({
           'Access-Control-Allow-Private-Network': 'true',
         },
       },
+      '/api': {
+        target: 'http://127.0.0.1:8080',
+        changeOrigin: true,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+          'Access-Control-Allow-Private-Network': 'true',
+        },
+      },
     },
     watch: {
       ignored: ['**/src-tauri/**'],

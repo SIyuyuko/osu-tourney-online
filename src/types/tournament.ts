@@ -20,6 +20,7 @@ export interface Player {
   username: string | null;
   avatar: string | null;
   showCopied: boolean;
+  isLoading: boolean;
 }
 
 export interface ProcessedTeam {

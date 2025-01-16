@@ -20,7 +20,7 @@
           <font-awesome-icon icon="fa-solid fa-arrows-rotate" />
         </div>
         <div class="star-btn">
-          <font-awesome-icon :icon="mappool?.isDefault ? 'fa-solid fa-star' : 'fa-regular fa-star'" />
+          <font-awesome-icon :icon="currentMappool?.isDefault ? 'fa-solid fa-star' : 'fa-regular fa-star'" />
         </div>
         <div class="copy-btn" :title="$t('mappool.switch')">
           <a-dropdown placement="bottomRight">
@@ -37,7 +37,7 @@
       </div>
     </template>
     <div class="pool-content" ref="poolRef">
-      <Map :class="{ wrap: isWrap }" v-for="(map, index) in mappool?.map" :key="index" :item="map" :isCard="true" :isReferee="isReferee" @update="updateMap"></Map>
+      <Map :class="{ wrap: isWrap }" v-for="(map, index) in currentMappool?.map" :key="index" :item="map" :isCard="true" :isReferee="isReferee" @update="handleMapUpdate"></Map>
     </div>
   </a-card>
   <a-empty v-else :description="$t('mappool.emptyActive')" :image="Empty.PRESENTED_IMAGE_SIMPLE" style="width: 100%" />
@@ -50,10 +50,6 @@ import { useResizeObserver } from '@vueuse/core';
 import type { MapInfo, Pool } from '@/types/mappool';
 import Map from './Map.vue';
 
-interface Props {
-  isReferee?: boolean;
-}
-
 interface Mappool {
   title: string;
   map: MapInfo[];
@@ -61,54 +57,45 @@ interface Mappool {
 }
 
 // Props
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<{ isReferee: boolean }>(), {
   isReferee: false
 });
-
-// Emits
-const emit = defineEmits<{
-  (e: 'update', value: Mappool): void;
-}>();
 
 // Refs
 const poolRef = ref<HTMLElement | null>(null);
 const poolData = ref<Pool>();
-const mappool = ref<Mappool>();
+const currentMappool = ref<Mappool>();
 const elementSize = ref<{ width: number; height: number }>();
 
 // Computed
 const isWrap = computed(() => elementSize.value?.width ? elementSize.value.width < 400 : false);
-const mappoolTitle = computed(() => `${poolData.value?.title} ${mappool.value?.title} Mappool`);
-const hasMappool = computed(() => !!mappool.value);
-
-// Data
-const data = window.mappool; // 图池配置
-const poolName = data.homeMappool;
+const mappoolTitle = computed(() => `${poolData.value?.title} ${currentMappool.value?.title} Mappool`);
+const hasMappool = computed(() => !!currentMappool.value?.map?.length);
 
 // 切换图池轮次
 const changeMappool = async (pool: Mappool) => {
   await nextTick();
-  mappool.value = pool;
-  updateMap();
+  currentMappool.value = pool;
 };
 
-// 更新谱面
-const updateMap = () => {
-  if (mappool.value) {
-    emit('update', mappool.value);
-  }
+// 处理单个地图的更新
+const handleMapUpdate = (updatedMap: MapInfo) => {
+  if (!currentMappool.value?.map) return;
+
+  const updatedMaps = currentMappool.value.map.map((map) =>
+    map.id === updatedMap.id ? updatedMap : map
+  );
+  currentMappool.value.map = updatedMaps;
 };
 
 // 重置谱面标记状态
 const resetMapStatus = () => {
-  if (!mappool.value?.map) return;
+  if (!currentMappool.value?.map) return;
 
-  mappool.value.map = mappool.value.map.map((item) => ({
+  currentMappool.value.map = currentMappool.value.map.map((item) => ({
     ...item,
     checkStatus: false,
   }));
-
-  updateMap();
 };
 
 useResizeObserver(poolRef, (entries) => {
@@ -118,9 +105,10 @@ useResizeObserver(poolRef, (entries) => {
 });
 
 onMounted(() => {
-  if (!data?.list) return;
+  const data = window.mappool;
+  if (!data.list) return;
 
-  const targetPool = data.list.find((pool) => pool.title === poolName);
+  const targetPool = data.list.find((pool) => pool.title === data.homeMappool);
   if (!targetPool) return;
 
   poolData.value = targetPool;
@@ -129,8 +117,7 @@ onMounted(() => {
   const defaultPool = targetPool.children.find((child) => child.isDefault || targetPool.children.length === 1);
 
   if (defaultPool) {
-    mappool.value = defaultPool;
-    updateMap();
+    currentMappool.value = defaultPool;
   }
 });
 </script>

@@ -21,49 +21,56 @@
     </a-page-header>
 
     <div class="tournament-content">
-      <a-spin :spinning="loading">
-        <template v-if="teams.length">
-          <a-collapse v-model:activeKey="activeKeys" :bordered="false">
-            <a-collapse-panel v-for="team in teams" :key="team.id" :header="team.name">
-              <div class="player-list">
-                <div v-for="player in team.players" :key="player.uid" class="player-list__item">
-                  <a-avatar :size="32" :src="player.avatar">
-                    <template v-if="!player.avatar">
-                      <font-awesome-icon icon="fa-solid fa-user-large-slash" />
-                    </template>
-                  </a-avatar>
+      <template v-if="teams.length">
+        <a-collapse v-model:activeKey="activeKeys" :bordered="false">
+          <a-collapse-panel v-for="team in teams" :key="team.id" :header="team.name">
+            <div class="player-list">
+              <div v-for="player in team.players" :key="player.uid" class="player-list__item">
+                <!-- 玩家头像 -->
+                <a-avatar :size="32" :src="player.isLoading ? '/config/image/user/avatar.png' : player.avatar" style="border: 1px solid #ccc;">
+                  <template v-if="!player.avatar && !player.isLoading">
+                    <font-awesome-icon icon="fa-solid fa-user-large-slash" />
+                  </template>
+                </a-avatar>
 
-                  <span class="player-list__name">
-                    <template v-if="player.username !== null">
-                      {{ player.username || 'Loading...' }}
+                <!-- 玩家用户名 -->
+                <span class="player-list__name">
+                  <template v-if="player.isLoading">Loading...</template>
+                  <template v-else-if="player.username !== null">
+                    {{ player.username }}
+                  </template>
+                  <template v-else>
+                    {{ $t('tournament.ban') }}
+                  </template>
+                </span>
+
+                <!-- 操作按钮 -->
+                <div class="player-list__actions">
+                  <a-button size="small" type="primary" @click="handleOpenUrl(`https://osu.ppy.sh/users/${player.uid}`)">
+                    <font-awesome-icon icon="fa-solid fa-circle-info" />
+                    {{ $t('tournament.playerInfo') }}
+                  </a-button>
+                  <a-button
+                    size="small"
+                    :disabled="!player.username || player.isLoading"
+                    @click="handleInvitePlayer(player)"
+                    :class="['invite-button', { 'is-zh': $i18n.locale === 'zh' }]"
+                  >
+                    <template v-if="!player.showCopied">
+                      <font-awesome-icon icon="fa-solid fa-at" />
+                      {{ $t('tournament.invite') }}
                     </template>
                     <template v-else>
-                      {{ $t('tournament.ban') }}
+                      {{ $t('tournament.copied') }}
                     </template>
-                  </span>
-
-                  <div class="player-list__actions">
-                    <a-button size="small" type="primary" @click="handleOpenUrl(`https://osu.ppy.sh/users/${player.uid}`)">
-                      <font-awesome-icon icon="fa-solid fa-circle-info" />
-                      {{ $t('tournament.playerInfo') }}
-                    </a-button>
-                    <a-button size="small" :disabled="!player.username" @click="handleInvitePlayer(player)" :class="['invite-button', { 'is-zh': $i18n.locale === 'zh' }]">
-                      <template v-if="!player.showCopied">
-                        <font-awesome-icon icon="fa-solid fa-at" />
-                        {{ $t('tournament.invite') }}
-                      </template>
-                      <template v-else>
-                        {{ $t('tournament.copied') }}
-                      </template>
-                    </a-button>
-                  </div>
+                  </a-button>
                 </div>
               </div>
-            </a-collapse-panel>
-          </a-collapse>
-        </template>
-        <a-empty v-else :description="loading ? undefined : 'No Data'" :image="Empty.PRESENTED_IMAGE_SIMPLE" />
-      </a-spin>
+            </div>
+          </a-collapse-panel>
+        </a-collapse>
+      </template>
+      <a-empty v-else description="No Data" :image="Empty.PRESENTED_IMAGE_SIMPLE" />
     </div>
   </div>
 </template>
@@ -91,7 +98,6 @@ const { isTauri } = storeToRefs(useApp());
 const { t } = useI18n();
 
 // Reactive State
-const loading = ref(false);
 const activeKeys = ref<(string | number)[]>([]);
 const teams = ref<ProcessedTeam[]>([]);
 
@@ -177,47 +183,53 @@ const handleInvitePlayer = async (player: Player) => {
   }
 };
 
-const fetchPlayerData = async (playerId: number): Promise<Player> => {
-  try {
-    const user = { uid: String(playerId) };
-    const response = await userApi.getUserInfo(user);
-
-    return {
-      uid: playerId,
-      username: response.username,
-      avatar: response.avatar_url,
-      showCopied: false,
-    };
-  } catch (error) {
-    console.error(`Failed to fetch player ${playerId}:`, error);
-    return {
-      uid: playerId,
-      username: null,
-      avatar: null,
-      showCopied: false,
-    };
-  }
-};
-
-const initializeTeams = async () => {
+const initializeTeams = () => {
   if (!props.data.team) return;
 
-  loading.value = true;
-  try {
-    const teamsWithPlayers = await Promise.all(
-      props.data.team.map(async (team) => ({
-        id: team.id,
-        name: team.name,
-        players: await Promise.all(team.player.map((player) => (typeof player === 'number' ? fetchPlayerData(player) : { ...player, showCopied: false }))),
-      }))
-    );
+  // 初始化基础数据结构
+  teams.value = props.data.team.map((team) => ({
+    id: team.id,
+    name: team.name,
+    players: team.player.map((player) => ({
+      uid: typeof player === 'number' ? player : player.uid,
+      username: typeof player === 'number' ? null : player.username,
+      avatar: typeof player === 'number' ? null : player.avatar,
+      showCopied: false,
+      isLoading: typeof player === 'number',
+    })),
+  }));
 
-    teams.value = teamsWithPlayers;
-  } catch (error) {
-    console.error('Failed to initialize teams:', error);
-  } finally {
-    loading.value = false;
-  }
+  // 逐个加载玩家数据
+  teams.value.forEach((team) => {
+    team.players.forEach((player) => {
+      if (player.isLoading) {
+        userApi
+          // .getUserInfo({ uid: String(player.uid) })
+          // .then((response) => {
+          //   if (response) {
+          //     console.log(`Fetched player ${player.uid}:`, response);
+          //     player.username = response.username;
+          //     player.avatar = response.avatar_url;
+          //   }
+          // })
+          .getUserById(player.uid)
+          .then((response) => {
+            if (response.data) {
+              console.log(`Fetched player ${player.uid}:`, response);
+              player.username = response.data.name;
+              player.avatar = response.data.avatar;
+            }
+          })
+          .catch((error) => {
+            console.error(`Failed to fetch player ${player.uid}:`, error);
+            player.username = null;
+          })
+          .finally(() => {
+            player.isLoading = false;
+          });
+      }
+    });
+  });
 };
 
 // Lifecycle

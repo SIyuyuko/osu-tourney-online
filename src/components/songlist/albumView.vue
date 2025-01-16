@@ -148,7 +148,7 @@ async function initList() {
     }
   }
   if (typeof props.albumList.creator !== 'object' && props.albumList.creator) {
-    userApi.getUserInfo(props.albumList.creator).then((res) => {
+    userApi.getUserById(props.albumList.creator).then((res) => {
       let data = res.data;
       emit('update', props.albumList, data, 'user');
     });

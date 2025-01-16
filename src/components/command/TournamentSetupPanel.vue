@@ -2,7 +2,7 @@
   <div class="config-panel">
     <!-- Prefix and Best of Settings -->
     <div class="prefix-bar">
-      <a-input v-model:value="store.prefix" allow-clear :placeholder="$t('command.inputTour')" style="width: 70%" @change="handlePrefixChange">
+      <a-input v-model:value="store.prefix" allow-clear :placeholder="$t('command.inputTour')" style="width: 70%">
         <template #prefix>
           <font-awesome-icon icon="fa-solid fa-chess" />
         </template>
@@ -12,13 +12,13 @@
     </div>
 
     <!-- Team Names -->
-    <a-input v-model:value="store.redTeam" allow-clear :placeholder="$t('command.inputRedTeam')" @change="handleTeamChange">
+    <a-input v-model:value="store.redTeam" allow-clear :placeholder="$t('command.inputRedTeam')">
       <template #prefix>
         <font-awesome-icon icon="fa-solid fa-users-line" style="color: var(--team-red)" />
       </template>
     </a-input>
 
-    <a-input v-model:value="store.blueTeam" allow-clear :placeholder="$t('command.inputBlueTeam')" @change="handleTeamChange">
+    <a-input v-model:value="store.blueTeam" allow-clear :placeholder="$t('command.inputBlueTeam')">
       <template #prefix>
         <font-awesome-icon icon="fa-solid fa-users-line" style="color: var(--team-blue)" />
       </template>
@@ -32,7 +32,6 @@
         style="width: calc(50% - 5px)"
         allowClear
         :placeholder="$t('command.selectTeamMode')"
-        @change="handleModeChange"
       >
         <template #suffixIcon>
           <font-awesome-icon icon="fa-solid fa-user-group" />
@@ -45,28 +44,27 @@
         style="width: calc(50% - 5px)"
         allowClear
         :placeholder="$t('command.selectScoreMode')"
-        @change="handleModeChange"
       >
         <template #suffixIcon>
           <font-awesome-icon icon="fa-solid fa-ranking-star" />
         </template>
       </a-select>
 
-      <a-input-number v-model:value="store.ts" :addon-before="$t('command.teamsize')" :min="1" style="width: calc(50% - 5px)" @change="handleTeamSizeChange" />
+      <a-input-number v-model:value="store.ts" :addon-before="$t('command.teamsize')" :min="1" style="width: calc(50% - 5px)" />
     </div>
 
     <!-- Time Settings -->
     <div class="time-bar">
-      <TimeSetting :label="$t('command.timerTime')" v-model="store.timer" :options="[60, 90, 120]" @change="handleTimerChange" />
+      <TimeSetting :label="$t('command.timerTime')" v-model="store.timer" :options="[60, 90, 120]" />
 
-      <TimeSetting :label="$t('command.startTime')" v-model="store.startTime" :options="[10, 15, 30]" @change="handleStartTimeChange" />
+      <TimeSetting :label="$t('command.startTime')" v-model="store.startTime" :options="[10, 15, 30]" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { useCommandStore } from '@/stores/commandStore';
-import { debounce } from 'lodash';
+import { watch } from 'vue';
 import TimeSetting from './TimeSetting.vue';
 
 const store = useCommandStore();
@@ -86,58 +84,49 @@ const scoreOptions = [
   { label: 'Score V2', value: '3' },
 ];
 
-// Debounced handlers
-const handlePrefixChange = debounce(() => {
+// 监听 prefix、redTeam、blueTeam 的变化
+watch([() => store.prefix, () => store.redTeam, () => store.blueTeam], () => {
   store.updateCommand('create');
-}, 300);
+});
 
-const handleTeamChange = debounce(() => {
-  store.updateCommand('create');
-}, 300);
-
-const handleModeChange = debounce(() => {
+// 监听 teamMode、scoreMode 的变化
+watch([() => store.teamMode, () => store.scoreMode], () => {
   store.updateCommand('room');
-}, 300);
+});
 
-const handleTeamSizeChange = debounce(() => {
-  store.updateCommand('size');
-}, 300);
-
-const handleTimerChange = debounce(() => {
+// 监听 timer 的变化
+watch(() => store.timer, () => {
   store.updateCommand('timer');
-}, 300);
+});
 
-const handleStartTimeChange = debounce(() => {
+// 监听 startTime 的变化
+watch(() => store.startTime, () => {
   store.updateCommand('start');
-}, 300);
+});
+
+// 监听 ts 的变化
+watch(() => store.ts, () => {
+  store.updateCommand('size');
+});
 </script>
 
 <style lang="scss" scoped>
 .config-panel {
   display: flex;
   flex-direction: column;
-  row-gap: 10px;
+  gap: 10px;
 
   .prefix-bar,
   .mode-bar {
     display: flex;
-    flex-wrap: nowrap;
-    column-gap: 10px;
+    gap: 10px;
     align-items: center;
   }
 
   .time-bar {
     display: flex;
     flex-direction: column;
-    row-gap: 10px;
-
-    div {
-      display: flex;
-      flex-wrap: nowrap;
-      column-gap: 10px;
-      align-items: center;
-      text-wrap: nowrap;
-    }
+    gap: 10px;
   }
 }
 </style>

@@ -132,7 +132,7 @@ export const useCommandStore = defineStore('command', () => {
 
   function updateMappool(value: { title: string; map: MapInfo[] }) {
     if (value) {
-      mappool.value = value.map.filter((item) => item.checkStatus === false || !item.checkStatus).map((item) => item.mod + item.index);
+      mappool.value = value.map.filter((item) => !item.checkStatus).map((item) => item.mod + item.index);
     }
   }
 

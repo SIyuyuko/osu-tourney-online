@@ -1,5 +1,6 @@
 import './assets/css/main.css';
 import 'ant-design-vue/dist/reset.css';
+import './index.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import Antd from 'ant-design-vue';

@@ -7,7 +7,7 @@
  * @Description: 歌单页面组件
 -->
 <template>
-  <div class="page no-scroll">
+  <div class="page flex flex-col overflow-x-hidden overflow-y-auto h-full ml-[-1px] no-scroll gap-x-2.5">
     <div class="nav">{{ $t('songlist.header') }}</div>
     <div class="view">
       <div>
@@ -27,14 +27,6 @@ import Album from '@/components/songlist/album.vue';
 
 <style lang="scss" scoped>
 .page {
-  display: flex;
-  flex-direction: column;
-  row-gap: 10px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  height: 100%;
-  margin: -1px 0 0 0;
-
   .nav {
     padding: 0 10px;
   }

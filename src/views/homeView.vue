@@ -7,11 +7,11 @@
  * @Description: 主页页面组件
 -->
 <template>
-  <div class="page">
+  <div class="page flex flex-col p-8 mx-0 my-auto max-w-[1200px] gap-8">
     <div class="overview">
-      <div class="welcome-panel">
-        <div class="user-state">
-          <div class="state-words">
+      <div class="welcome-panel grow flex flex-col gap-6">
+        <div class="user-state flex items-center justify-between gap-8">
+          <div class="state-words grow">
             <h1 class="welcome-text">
               Welcome,
               <span class="username">{{ userInfo ? userInfo.username : user.name }}</span>
@@ -27,14 +27,14 @@
               </template>
               <div class="avatar-wrapper" @click="openUrl">
                 <a-avatar class="avatar-img" shape="square" :size="86" :src="userInfo ? userInfo.avatar_url : user.avatar" />
-                <div class="avatar-overlay">
-                  <eye-outlined class="view-icon" />
+                <div class="avatar-overlay absolute inset-0 flex items-center justify-center opacity-0 rounded-[0.6rem]">
+                  <eye-outlined class="view-icon text-white text-2xl" />
                 </div>
               </div>
             </a-tooltip>
           </div>
         </div>
-        <p class="time-words">
+        <p class="time-words flex items-center gap-2">
           <clock-circle-outlined class="time-icon" />
           {{ dailyWords }}
         </p>
@@ -150,13 +150,6 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .page {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-
   .overview {
     position: relative;
     display: flex;
@@ -200,20 +193,8 @@ onMounted(async () => {
     }
 
     .welcome-panel {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-
       .user-state {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 2rem;
-
         .state-words {
-          flex: 1;
-
           .welcome-text {
             font-size: 2rem;
             font-weight: 600;
@@ -277,32 +258,14 @@ onMounted(async () => {
             }
 
             .avatar-overlay {
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
-              bottom: 0;
               background: rgba(0, 0, 0, 0.5);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              opacity: 0;
               transition: opacity 0.3s ease;
-              border-radius: 0.6rem;
-
-              .view-icon {
-                color: white;
-                font-size: 1.5rem;
-              }
             }
           }
         }
       }
 
       .time-words {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
         font-size: 1.1rem;
         color: #34495e;
         padding: 0.75rem 1rem;

@@ -1,9 +1,9 @@
 <template>
-  <div class="flex justify-center items-center min-h-screen p-5 bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900">
-    <div class="text-center bg-white/90 dark:bg-gray-800/90 p-10 rounded-2xl shadow-lg backdrop-blur-sm max-w-lg w-full">
+  <div class="flex justify-center items-center min-h-screen p-5 bg-linear-to-br from-gray-100 to-gray-300 dark:from-gray-800 dark:to-gray-900">
+    <div class="text-center bg-white/90 dark:bg-gray-800/90 p-10 rounded-2xl shadow-lg backdrop-blur-xs max-w-lg w-full">
       <!-- 错误图标 -->
       <div class="relative mb-8">
-        <div class="text-[120px] md:text-[80px] font-bold leading-none bg-gradient-to-r from-red-400 to-gray-600 bg-clip-text text-transparent font-arial">404</div>
+        <div class="text-[120px] md:text-[80px] font-bold leading-none bg-linear-to-r from-red-400 to-gray-600 bg-clip-text text-transparent font-arial">404</div>
         <div class="absolute right-12 top-5 text-4xl md:text-3xl text-red-400 opacity-80 animate-bounce">
           <font-awesome-icon icon="fa-solid fa-circle-question" />
         </div>
@@ -44,11 +44,6 @@ import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
-const goHome = () => {
-  router.push('/');
-};
-
-const goBack = () => {
-  router.back();
-};
+const goHome = () => router.push('/');
+const goBack = () => router.back();
 </script>

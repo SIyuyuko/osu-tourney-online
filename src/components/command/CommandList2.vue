@@ -21,24 +21,24 @@
             <input
               v-model="commandCopy[index].value"
               type="text"
-              class="flex-1 px-2 py-1 border rounded focus:ring-2 focus:ring-blue-500 outline-none"
+              class="flex-1 px-2 py-1 border rounded-sm focus:ring-2 focus:ring-blue-500 outline-hidden"
               @blur="handleEditComplete(index)"
               @keyup.enter="handleEditComplete(index)"
               ref="editInput"
             />
           </div>
           <div v-else class="flex-1 flex items-center justify-between">
-            <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+            <span class="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-sm">
               {{ commandCopy[index].value }}
             </span>
             <div class="flex space-x-2">
-              <button @click="handleEdit(index)" class="px-3 py-1 text-sm border rounded hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center space-x-1">
+              <button @click="handleEdit(index)" class="px-3 py-1 text-sm border rounded-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors flex items-center space-x-1">
                 <font-awesome-icon icon="fa-solid fa-pencil" />
                 <span class="ml-1">{{ $t('command.edit') }}</span>
               </button>
               <button
                 @click="handleCopy(commandCopy[index].value ?? '', index)"
-                class="px-3 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors flex items-center space-x-1"
+                class="px-3 py-1 text-sm bg-blue-500 text-white rounded-sm hover:bg-blue-600 transition-colors flex items-center space-x-1"
               >
                 <font-awesome-icon :icon="copyStatus[index] ? 'fa-solid fa-check' : 'fa-regular fa-copy'" />
                 <span class="ml-1">{{ $t('command.copy') }}</span>

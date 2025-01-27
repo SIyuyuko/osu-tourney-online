@@ -24,7 +24,6 @@ target/
 **/*.rs.bk
 tourney-site.zip
 stats.html
-output.css
 
 # Local files
 *.local

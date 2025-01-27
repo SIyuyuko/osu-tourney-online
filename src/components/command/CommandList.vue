@@ -11,7 +11,7 @@
         <span class="text-gray-700 dark:text-gray-200 font-medium">{{ item.name }}</span>
         <div class="flex items-center">
           <button
-            class="operate-btn h-7 bg-[#13c2c2] hover:bg-[#11b3b3] text-white px-2 flex items-center rounded-l-lg focus:outline-none"
+            class="operate-btn h-7 bg-[#13c2c2] hover:bg-[#11b3b3] text-white px-2 flex items-center rounded-l-lg focus:outline-hidden"
             @click="copyToClipboard(item.value || '', index)"
           >
             <font-awesome-icon :icon="copiedIndex === index ? 'fa-solid fa-check' : 'fa-regular fa-copy'" />
@@ -21,7 +21,7 @@
             :value="item.value"
             @input="handleInputChange(index, $event)"
             :ref="(el) => (inputRef[index] = el as HTMLInputElement)"
-            class="h-7 px-2 border border-gray-300 dark:border-gray-600 rounded-r-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700/50 dark:text-gray-200"
+            class="h-7 px-2 border border-gray-300 dark:border-gray-600 rounded-r-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 dark:bg-gray-700/50 dark:text-gray-200"
           />
         </div>
       </div>

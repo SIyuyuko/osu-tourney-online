@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-// 用户信息配置
+ // 用户信息配置
 window.user = {
   // 用户名
   name: 'Guest',

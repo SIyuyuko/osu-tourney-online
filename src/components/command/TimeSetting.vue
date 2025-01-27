@@ -22,7 +22,7 @@
         :value="modelValue"
         :min="0"
         @input="handleInputChange($event)"
-        class="w-24 border bg-transparent border-[#d9d9d9] dark:border-[#424242] text-gray-700 dark:text-gray-200 rounded-l-[0.6rem] pl-3 text-left focus:outline-none"
+        class="w-24 border bg-transparent border-[#d9d9d9] dark:border-[#424242] text-gray-700 dark:text-gray-200 rounded-l-[0.6rem] pl-3 text-left focus:outline-hidden"
       />
       <span class="w-16 border border-[#d9d9d9] dark:border-[#424242] border-l-0 rounded-r-[0.6rem] bg-[#fafafa] dark:bg-[#1d1d1d] flex justify-center items-center text-gray-700 dark:text-gray-200">
         {{ $t('command.sec') }}

@@ -17,7 +17,7 @@
     </template>
     <template v-else>
       <div>
-        <font-awesome-icon icon="fa-solid fa-folder-plus" />
+        <font-awesome-icon :icon="faFolderPlusSolid" />
         <span class="add-title">新建图池</span>
       </div>
     </template>
@@ -25,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import { faFolderPlus as faFolderPlusSolid } from '@fortawesome/free-solid-svg-icons';
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import type { Pool } from '@/types/mappool';

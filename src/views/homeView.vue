@@ -28,14 +28,14 @@
               <div class="avatar-wrapper" @click="openUrl">
                 <a-avatar class="avatar-img" shape="square" :size="86" :src="userInfo ? userInfo.avatar_url : user.avatar" />
                 <div class="avatar-overlay absolute inset-0 flex items-center justify-center opacity-0 rounded-[0.6rem]">
-                  <eye-outlined class="view-icon text-white text-2xl" />
+                  <font-awesome-icon :icon="faEyeSolid" />
                 </div>
               </div>
             </a-tooltip>
           </div>
         </div>
         <p class="time-words flex items-center gap-2">
-          <clock-circle-outlined class="time-icon" />
+          <font-awesome-icon :icon="faClockSolid" class="time-icon" />
           {{ dailyWords }}
         </p>
       </div>
@@ -51,7 +51,7 @@
     <!-- Tournament Section -->
     <div class="tour-view">
       <h2 class="section-title">
-        <TrophyOutlined class="title-icon" />
+        <font-awesome-icon :icon="faTrophySolid" class="title-icon" />
         {{ $t('home.tourTitle') }}
       </h2>
       <div class="tournament-panel">
@@ -64,7 +64,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { EyeOutlined, ClockCircleOutlined, TrophyOutlined } from '@ant-design/icons-vue';
+import { faEye as faEyeSolid, faClock as faClockSolid, faTrophy as faTrophySolid } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 import { userApi } from '@/api';
 import { open } from '@tauri-apps/plugin-shell';

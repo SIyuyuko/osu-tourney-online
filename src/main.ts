@@ -5,10 +5,6 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import Antd from 'ant-design-vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { far } from '@fortawesome/free-regular-svg-icons';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-import { fas } from '@fortawesome/free-solid-svg-icons';
 import { useApp } from "@/stores/appStore";
 import { router } from '@/router';
 import initApp from '@/utils/initApp';
@@ -16,8 +12,6 @@ import i18n from '@/i18n';
 import App from '@/App.vue';
 import { useBeatmapStore } from '@/stores/beatmapStore';
 import { initializeTauri } from '@/utils/tauriManager';
-
-library.add(fas, far, fab);
 
 const app = createApp(App);
 const pinia = createPinia();

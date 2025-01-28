@@ -1,3 +1,4 @@
+import { faWindowMaximize as faWindowMaximizeSolid, faWindowRestore as faWindowRestoreSolid } from '@fortawesome/free-solid-svg-icons';
 import { defineStore } from 'pinia';
 import { WindowManager } from '@/utils/tauriManager';
 
@@ -6,7 +7,7 @@ export const useApp = defineStore('app', {
     isTauri: Boolean((window as any).__TAURI__),
     windowManager: null as WindowManager | null,
     isMaximized: false,
-    maximizeIcon: 'fa-solid fa-window-maximize',
+    maximizeIcon: faWindowMaximizeSolid,
   }),
 
   getters: {
@@ -47,7 +48,7 @@ export const useApp = defineStore('app', {
 
     updateMaximizeState(maximized: boolean) {
       this.isMaximized = maximized;
-      this.maximizeIcon = maximized ? 'fa-solid fa-window-restore' : 'fa-solid fa-window-maximize';
+      this.maximizeIcon = maximized ? faWindowRestoreSolid : faWindowMaximizeSolid;
     },
   },
 });

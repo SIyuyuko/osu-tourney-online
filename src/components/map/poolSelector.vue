@@ -17,15 +17,15 @@
     <template #extra>
       <div class="controls">
         <div class="reset-btn" v-if="isReferee" :title="$t('mappool.reset')" @click="resetMapStatus()">
-          <font-awesome-icon icon="fa-solid fa-arrows-rotate" />
+          <font-awesome-icon :icon="faArrowsRotateSolid" />
         </div>
         <div class="star-btn">
-          <font-awesome-icon :icon="currentMappool?.isDefault ? 'fa-solid fa-star' : 'fa-regular fa-star'" />
+          <font-awesome-icon :icon="currentMappool?.isDefault ? faStarSolid : faStarRegular" />
         </div>
         <div class="copy-btn" :title="$t('mappool.switch')">
           <a-dropdown placement="bottomRight">
             <div>
-              <font-awesome-icon icon="fa-solid fa-angle-down" />
+              <font-awesome-icon :icon="faAngleDownSolid" />
             </div>
             <template #overlay>
               <a-menu class="operate-button-menu">
@@ -44,6 +44,8 @@
 </template>
 
 <script setup lang="ts">
+import { faArrowsRotate as faArrowsRotateSolid, faStar as faStarSolid, faAngleDown as faAngleDownSolid } from '@fortawesome/free-solid-svg-icons';
+import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { ref, onMounted, nextTick, computed } from 'vue';
 import { Empty } from 'ant-design-vue';
 import { useResizeObserver } from '@vueuse/core';

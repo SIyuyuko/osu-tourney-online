@@ -50,10 +50,10 @@
         {{ bracketWords }}
         <template #copyableIcon="{ copied }">
           <span v-if="!copied" key="copy-icon">
-            <font-awesome-icon icon="fa-regular fa-copy" />
+            <font-awesome-icon :icon="faCopyRegular" />
           </span>
           <span v-else key="copied-icon">
-            <font-awesome-icon icon="fa-solid fa-check" />
+            <font-awesome-icon :icon="faCheckSolid" />
           </span>
         </template>
         <template #copyableTooltip="{ copied }">
@@ -73,10 +73,10 @@
       {{ narratorText }}
       <template #copyableIcon="{ copied }">
         <span v-if="!copied" key="copy-icon">
-          <font-awesome-icon icon="fa-regular fa-copy" />
+          <font-awesome-icon :icon="faCopyRegular" />
         </span>
         <span v-else key="copied-icon">
-          <font-awesome-icon icon="fa-solid fa-check" />
+          <font-awesome-icon :icon="faCheckSolid" />
         </span>
       </template>
       <template #copyableTooltip="{ copied }">
@@ -88,6 +88,8 @@
 </template>
 
 <script setup lang="ts">
+import { faCopy as faCopyRegular } from '@fortawesome/free-regular-svg-icons';
+import { faCheck as faCheckSolid, faCrown as faCrownSolid, faUsersLine as faUsersLineSolid } from '@fortawesome/free-solid-svg-icons';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCommandStore } from '@/stores/commandStore';
@@ -166,7 +168,7 @@ const updateNarratorSetting = (value: string[]) => {
 };
 
 // Helper Functions
-const winnerIcon = (team: string) => (store.winner === team ? 'fa-solid fa-crown' : 'fa-solid fa-users-line');
+const winnerIcon = (team: string) => (store.winner === team ? faCrownSolid : faUsersLineSolid);
 
 const iconColor = (team: string) => (store.winner === team ? 'var(--team-winner)' : team === store.redTeam ? 'var(--team-red)' : 'var(--team-blue)');
 </script>

@@ -37,7 +37,7 @@
 
       <!-- 自定义操作 -->
       <template #actions>
-        <font-awesome-icon icon="fa-solid fa-table" :title="t('tournament.mainSheet')" @click="handleMainSheetClick(activeTournament.mainSheetUrl)" />
+        <font-awesome-icon :icon="faTableSolid" :title="t('tournament.mainSheet')" @click="handleMainSheetClick(activeTournament.mainSheetUrl)" />
       </template>
     </a-card>
   </div>
@@ -46,6 +46,7 @@
 </template>
 
 <script setup lang="ts">
+import { faTable as faTableSolid } from '@fortawesome/free-solid-svg-icons';
 import { computed, onMounted, ref } from 'vue';
 import { message, Empty } from 'ant-design-vue';
 import { open } from '@tauri-apps/plugin-shell';

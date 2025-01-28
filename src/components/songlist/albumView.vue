@@ -19,7 +19,7 @@
     <div class="album-info">
       <a-image class="cover" :width="100" :height="100" :src="albumList.cover" :placeholder="true" :preview="albumList.cover ? true : false">
         <template #previewMask>
-          <span><font-awesome-icon icon="fa-solid fa-magnifying-glass-plus" /></span>
+          <font-awesome-icon :icon="faMagnifyingGlassPlusSolid" />
         </template>
       </a-image>
 
@@ -36,12 +36,12 @@
           <a-button-group>
             <a-button type="primary" shape="round" @click="playMusic(albumList.content, 'playAll')">
               <template #icon>
-                <font-awesome-icon icon="fa-regular fa-circle-play" />
+                <font-awesome-icon :icon="faCirclePlaySolid" />
               </template>
               <span>{{ $t('songlist.playAll') }}</span>
             </a-button>
             <a-button type="primary" shape="round" @click="playMusic(albumList.content, 'addAll')">
-              <template #icon><font-awesome-icon icon="fa-solid fa-plus" /></template>
+              <template #icon><font-awesome-icon :icon="faPlusSolid" /></template>
             </a-button>
           </a-button-group>
         </span>
@@ -51,8 +51,8 @@
       <template #renderItem="{ item }">
         <a-list-item class="songlist" ref="listItemRef">
           <template #actions>
-            <a @click="playMusic(item, 'add')"><font-awesome-icon icon="fa-solid fa-plus" /></a>
-            <a @click="playMusic(item, 'play')"><font-awesome-icon icon="fa-solid fa-circle-play" /></a>
+            <a @click="playMusic(item, 'add')"><font-awesome-icon :icon="faPlusSolid" /></a>
+            <a @click="playMusic(item, 'play')"><font-awesome-icon :icon="faCirclePlaySolid" /></a>
           </template>
           <a-list-item-meta>
             <template #title>
@@ -66,6 +66,7 @@
   </div>
 </template>
 <script setup name="AlbumView">
+import { faMagnifyingGlassPlus as faMagnifyingGlassPlusSolid, faPlus as faPlusSolid, faCirclePlay as faCirclePlaySolid } from '@fortawesome/free-solid-svg-icons';
 import { onMounted } from 'vue';
 import { open } from '@tauri-apps/plugin-shell';
 import { beatmapApi, userApi } from '@/api';

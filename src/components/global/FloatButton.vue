@@ -11,12 +11,12 @@
   <div class="beatmap-player" :style="playerStyle">
     <div class="beatmap-info" :style="backgroundStyle">
       <div class="beatmap-title">
-        <font-awesome-icon icon="fa-solid fa-backward-step" @click="store.skipTrack('prev')" />
+        <font-awesome-icon :icon="faBackwardStepSolid" @click="store.skipTrack('prev')" />
         <font-awesome-icon :icon="playbackIcon" @click="store.togglePlayback" />
-        <font-awesome-icon icon="fa-solid fa-forward-step" @click="store.skipTrack('next')" />
+        <font-awesome-icon :icon="faForwardStepSolid" @click="store.skipTrack('next')" />
         <font-awesome-icon v-if="!currentPlayModeConfig.isSvg" :icon="currentPlayModeConfig.icon" :fade="currentPlayModeConfig.fade" @click="store.togglePlayMode()" />
         <span v-else v-html="currentPlayModeConfig.icon" class="svg-icon" :fade="currentPlayModeConfig.fade" @click="store.togglePlayMode()" />
-        <font-awesome-icon icon="fa-solid fa-share-nodes" @click="openBeatmapPage" />
+        <font-awesome-icon :icon="faShareNodesSolid" @click="openBeatmapPage" />
       </div>
       <!-- <div v-else class="beatmap-title">
         <a-spin :spinning="spinning" tip="Loading..." size="small" style="color: inherit"></a-spin>
@@ -33,13 +33,21 @@
   <a-float-button-group>
     <a-float-button class="music-btn" :tooltip="$t('songlist.floatButton')" @click="toggleExpanded()">
       <template #icon>
-        <font-awesome-icon icon="fa-solid fa-compact-disc" :spin="playbackState.isPlaying" />
+        <font-awesome-icon :icon="faCompactDiscSolid" :spin="playbackState.isPlaying" />
       </template>
     </a-float-button>
   </a-float-button-group>
 </template>
 
 <script setup lang="ts" name="FloatButtons">
+import {
+  faBackwardStep as faBackwardStepSolid,
+  faForwardStep as faForwardStepSolid,
+  faPlay as faPlaySolid,
+  faPause as faPauseSolid,
+  faShareNodes as faShareNodesSolid,
+  faCompactDisc as faCompactDiscSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
 import { usePlyrStore } from '@/stores/plyrStore';
 import { open } from '@tauri-apps/plugin-shell';
@@ -66,7 +74,7 @@ const backgroundStyle = computed(() => ({
   // "visibility": "visible",
 })); // 歌曲背景样式
 
-const playbackIcon = computed(() => (playbackState.value.isPlaying ? 'fa-solid fa-pause' : 'fa-solid fa-play')); // 播放/暂停图标
+const playbackIcon = computed(() => (playbackState.value.isPlaying ? faPauseSolid : faPlaySolid)); // 播放/暂停图标
 
 const currentPlayModeConfig = computed(() => store.playModeConfig[playbackState.value.playMode]);
 
@@ -76,7 +84,7 @@ const toggleExpanded = () => {
 };
 
 // 谱面信息官网跳转
-const openBeatmapPage = async() => {
+const openBeatmapPage = async () => {
   if (currentTrack.value.info) {
     if (isTauri.value) {
       await open(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`);

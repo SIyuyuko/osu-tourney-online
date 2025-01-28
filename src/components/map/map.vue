@@ -89,6 +89,17 @@
 </template>
 
 <script setup lang="ts">
+import {
+  faLink as faLinkSolid,
+  faCheck as faCheckSolid,
+  faCopy as faCopySolid,
+  faDownload as faDownloadSolid,
+  faCircleCheck as faCircleCheckSolid,
+  faCircleMinus as faCircleMinusSolid,
+  faClipboardCheck as faClipboardCheckSolid,
+  faMap as faMapSolid,
+  faCode as faCodeSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { watch, computed, ref } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useBeatmapStore } from '@/stores/beatmapStore';
@@ -139,13 +150,13 @@ const beatmapActions = computed(() => [
         openBeatmapWebsite(id);
       }
     },
-    icon: 'fa-solid fa-link',
+    icon: faLinkSolid,
   },
   {
     class: 'copy-btn',
     title: 'mappool.getMapID',
     handler: () => map.value && copyBeatmapId(map.value),
-    icon: map.value?.isCopied ? 'fa-solid fa-check' : 'fa-solid fa-copy',
+    icon: map.value?.isCopied ? faCheckSolid : faCopySolid,
     copied: map.value?.isCopied,
   },
   ...(!isReferee.value
@@ -159,7 +170,7 @@ const beatmapActions = computed(() => [
               downloadBeatmap(beatmapsetId);
             }
           },
-          icon: 'fa-solid fa-download',
+          icon: faDownloadSolid,
           copied: false,
         },
       ]
@@ -168,7 +179,7 @@ const beatmapActions = computed(() => [
           class: 'check-btn',
           title: map.value?.checkStatus ? 'mappool.removeMark' : 'mappool.markMap',
           handler: () => map.value && toggleMapStatus(map.value),
-          icon: map.value?.checkStatus ? 'fa-solid fa-circle-minus' : 'fa-solid fa-circle-check',
+          icon: map.value?.checkStatus ? faCircleMinusSolid : faCircleCheckSolid,
           style: map.value?.checkStatus ? { color: 'var(--team-red)' } : {},
         },
       ]),
@@ -176,14 +187,14 @@ const beatmapActions = computed(() => [
     class: 'copy-btn',
     title: 'mappool.getMapCommand',
     handler: () => map.value && copyCommand(map.value, 'map'),
-    icon: map.value?.setMap ? 'fa-solid fa-clipboard-check' : 'fa-solid fa-map',
+    icon: map.value?.setMap ? faClipboardCheckSolid : faMapSolid,
     copied: map.value?.setMap,
   },
   {
     class: 'copy-btn',
     title: 'mappool.getModCommand',
     handler: () => map.value && copyCommand(map.value, 'mod'),
-    icon: map.value?.getCommand ? 'fa-solid fa-clipboard-check' : 'fa-solid fa-code',
+    icon: map.value?.getCommand ? faClipboardCheckSolid : faCodeSolid,
     copied: map.value?.getCommand,
   },
 ]);
@@ -314,7 +325,7 @@ watch(
       }
 
       .star {
-        margin: .25rem 1rem .25rem .5rem;
+        margin: 0.25rem 1rem 0.25rem 0.5rem;
         display: flex;
         justify-content: flex-end;
       }
@@ -451,7 +462,7 @@ ul.operate-button-menu {
   }
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   .loading-panel {
     background-color: rgba(0, 0, 0, 0.3);
   }

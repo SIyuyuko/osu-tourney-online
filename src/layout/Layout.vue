@@ -29,7 +29,7 @@ import FloatButton from '@/components/global/FloatButton.vue';
 import SettingDrawer from '@/components/global/SettingDrawer.vue';
 import i18n from '@/i18n';
 // import { message } from 'ant-design-vue';
-// import { EditOutlined, DeleteOutlined, CopyOutlined, ShareAltOutlined, ReloadOutlined } from '@ant-design/icons-vue';
+// import { faPenToSquare, faDeleteLeft, faCopy, faShare, faRotateRight } from '@fortawesome/free-solid-svg-icons';
 
 // interface MenuItem {
 //   key?: string;

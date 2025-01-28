@@ -11,10 +11,10 @@
         <span class="text-gray-700 dark:text-gray-200 font-medium">{{ item.name }}</span>
         <div class="flex items-center">
           <button
-            class="operate-btn h-7 bg-[#13c2c2] hover:bg-[#11b3b3] text-white px-2 flex items-center rounded-l-lg focus:outline-hidden"
+            class="operate-btn h-7 bg-[#13c2c2] hover:bg-[#11b3b3] px-2 flex items-center rounded-l-lg focus:outline-hidden"
             @click="copyToClipboard(item.value || '', index)"
           >
-            <font-awesome-icon :icon="copiedIndex === index ? 'fa-solid fa-check' : 'fa-regular fa-copy'" />
+            <font-awesome-icon :icon="copiedIndex === index ? faCheckSolid : faCopyRegular" class="text-white" />
           </button>
           <input
             type="text"
@@ -31,6 +31,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch, onMounted, nextTick } from 'vue';
+import { faCheck as faCheckSolid } from '@fortawesome/free-solid-svg-icons';
+import { faCopy as faCopyRegular } from '@fortawesome/free-regular-svg-icons';
 import { useI18n } from 'vue-i18n';
 import { useCommandStore } from '@/stores/commandStore';
 import { useWindowSize } from '@vueuse/core';

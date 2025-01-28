@@ -27,9 +27,9 @@
             <div class="player-list">
               <div v-for="player in team.players" :key="player.uid" class="player-list__item">
                 <!-- 玩家头像 -->
-                <a-avatar :size="32" :src="player.isLoading ? '/config/image/user/avatar.png' : player.avatar" style="border: 1px solid #ccc;">
+                <a-avatar :size="32" :src="player.isLoading ? '/config/image/user/avatar.png' : player.avatar" style="border: 1px solid #ccc">
                   <template v-if="!player.avatar && !player.isLoading">
-                    <font-awesome-icon icon="fa-solid fa-user-large-slash" />
+                    <font-awesome-icon :icon="faUserLargeSlashSolid" />
                   </template>
                 </a-avatar>
 
@@ -47,7 +47,7 @@
                 <!-- 操作按钮 -->
                 <div class="player-list__actions">
                   <a-button size="small" type="primary" @click="handleOpenUrl(`https://osu.ppy.sh/users/${player.uid}`)">
-                    <font-awesome-icon icon="fa-solid fa-circle-info" />
+                    <font-awesome-icon :icon="faCircleInfoSolid" />
                     {{ $t('tournament.playerInfo') }}
                   </a-button>
                   <a-button
@@ -57,7 +57,7 @@
                     :class="['invite-button', { 'is-zh': $i18n.locale === 'zh' }]"
                   >
                     <template v-if="!player.showCopied">
-                      <font-awesome-icon icon="fa-solid fa-at" />
+                      <font-awesome-icon :icon="faAtSolid" />
                       {{ $t('tournament.invite') }}
                     </template>
                     <template v-else>
@@ -76,6 +76,7 @@
 </template>
 
 <script setup lang="ts">
+import { faCircleInfo as faCircleInfoSolid, faAt as faAtSolid, faUserLargeSlash as faUserLargeSlashSolid } from '@fortawesome/free-solid-svg-icons';
 import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';

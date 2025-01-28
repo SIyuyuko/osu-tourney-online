@@ -11,13 +11,13 @@
     <a-carousel v-if="banner?.coverList?.length > 0" arrows class="cover-carousel" :autoplay="banner.autoPlayCover" :style="carouselStyle" @afterChange="setCurrent">
       <template #prevArrow>
         <div class="custom-slick-arrow left">
-          <font-awesome-icon class="arrow-icon" icon="fa-solid fa-circle-chevron-left" />
+          <font-awesome-icon class="arrow-icon" :icon="faCircleChevronLeftSolid" />
         </div>
       </template>
 
       <template #nextArrow>
         <div class="custom-slick-arrow right">
-          <font-awesome-icon class="arrow-icon" icon="fa-solid fa-circle-chevron-right" />
+          <font-awesome-icon class="arrow-icon" :icon="faCircleChevronRightSolid" />
         </div>
       </template>
 
@@ -34,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { faCircleChevronRight as faCircleChevronRightSolid, faCircleChevronLeft as faCircleChevronLeftSolid } from '@fortawesome/free-solid-svg-icons';
 import { ref, onMounted, watch, computed } from 'vue';
 import { Empty } from 'ant-design-vue';
 

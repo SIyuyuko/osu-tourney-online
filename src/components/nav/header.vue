@@ -12,13 +12,13 @@
     <div class="operate-button-group">
       <!-- 桌面端折叠按钮 -->
       <a-button class="collapse-btn" type="link" @click="toggleSidebar">
-        <font-awesome-icon :icon="collapsed ? 'fa-solid fa-indent' : 'fa-solid fa-outdent'" />
+        <font-awesome-icon :icon="collapsed ? faIndentSolid : faOutdentSolid" />
       </a-button>
 
       <!-- 移动端折叠按钮 -->
       <a-dropdown v-model:open="mobileCollapsed" :trigger="['click']">
         <a-button class="collapse-btn-mobile" type="link" @click="mobileCollapsed = !mobileCollapsed">
-          <font-awesome-icon icon="fa-solid fa-bars" :fade="mobileCollapsed" />
+          <font-awesome-icon :icon="faBarsSolid" :fade="mobileCollapsed" />
         </a-button>
         <template #overlay>
           <div>
@@ -29,14 +29,14 @@
 
       <!-- 主题切换按钮 -->
       <a-button class="theme-btn" type="link" @click="toggleTheme()">
-        <font-awesome-icon :icon="theme === 'light' ? 'fa-solid fa-moon' : 'fa-solid fa-sun'" />
+        <font-awesome-icon :icon="theme === 'light' ? faMoonSolid : faSunSolid" />
       </a-button>
 
       <!-- 多语言切换按钮 -->
       <a-button class="lang-btn" type="link" v-if="$i18n.locale">
         <a-dropdown placement="bottomLeft">
           <div>
-            <font-awesome-icon icon="fa-solid fa-language" />
+            <font-awesome-icon :icon="faLanguageSolid" />
           </div>
           <template #overlay>
             <a-menu class="operate-button-menu">
@@ -53,29 +53,29 @@
     <div class="user-header">
       <!-- 登录/登出按钮 -->
       <a-button type="link" @click="handleAuth">
-        <font-awesome-icon :icon="isLoggedIn ? 'fa-solid fa-right-from-bracket' : 'fa-solid fa-right-to-bracket'" />
+        <font-awesome-icon :icon="isLoggedIn ? faRightFromBracketSolid : faRightToBracketSolid" />
       </a-button>
 
       <!-- GitHub链接 -->
       <a-button type="link" @click="openExternalLink(REPO_URL)">
-        <font-awesome-icon icon="fa-brands fa-github" />
+        <font-awesome-icon :icon="faGithubBrands" />
       </a-button>
 
       <!-- 设置按钮 -->
       <a-button class="setting-button" type="link" @click="showSetting = true">
-        <font-awesome-icon icon="fa-solid fa-gear" />
+        <font-awesome-icon :icon="faGearSolid" />
       </a-button>
 
       <!-- Tauri窗口控制按钮 -->
       <div class="window-controls" v-if="isTauri">
         <a-button type="link" @click="minimizeWindow">
-          <font-awesome-icon class="window-controls-icon" icon="fa-solid fa-minus" />
+          <font-awesome-icon class="window-controls-icon" :icon="faMinusSolid" />
         </a-button>
         <a-button type="link" @click="toggleMaximizeWindow">
           <font-awesome-icon :icon="maximizeIcon" />
         </a-button>
         <a-button type="link" class="close-btn" @click="closeWindow">
-          <font-awesome-icon class="window-controls-icon" icon="fa-solid fa-xmark" />
+          <font-awesome-icon class="window-controls-icon" :icon="faXmarkSolid" />
         </a-button>
       </div>
     </div>
@@ -83,10 +83,24 @@
 </template>
 
 <script setup lang="ts">
+import {
+  faIndent as faIndentSolid,
+  faOutdent as faOutdentSolid,
+  faBars as faBarsSolid,
+  faMoon as faMoonSolid,
+  faSun as faSunSolid,
+  faLanguage as faLanguageSolid,
+  faRightFromBracket as faRightFromBracketSolid,
+  faRightToBracket as faRightToBracketSolid,
+  faGear as faGearSolid,
+  faMinus as faMinusSolid,
+  faXmark as faXmarkSolid,
+} from '@fortawesome/free-solid-svg-icons';
+import { faGithub as faGithubBrands } from '@fortawesome/free-brands-svg-icons';
 import { ref, onBeforeMount, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
-import { useApp } from "@/stores/appStore";
+import { useApp } from '@/stores/appStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { useSettingStore } from '@/stores/settingStore';
 import { globalState } from '@/utils/initApp';
@@ -150,22 +164,22 @@ const handleAuth = async () => {
   //     console.error('Failed to handle auth:', error);
   //   }
   // } else {
-    // if (isLoggedIn.value) {
-    //   // 处理登出逻辑
-    //   localStorage.removeItem('userKey')
-    //   isLoggedIn.value = false
-    //   router.push('/')
-    // } else {
-    // 处理登录逻辑
-    try {
-      const response = await authApi.getOauthUrl();
-      if (response.code === 200 && response.message) {
-        window.location.href = response.message;
-      }
-    } catch (error) {
-      console.error('Failed to get OAuth URL:', error);
+  // if (isLoggedIn.value) {
+  //   // 处理登出逻辑
+  //   localStorage.removeItem('userKey')
+  //   isLoggedIn.value = false
+  //   router.push('/')
+  // } else {
+  // 处理登录逻辑
+  try {
+    const response = await authApi.getOauthUrl();
+    if (response.code === 200 && response.message) {
+      window.location.href = response.message;
     }
-    // }
+  } catch (error) {
+    console.error('Failed to get OAuth URL:', error);
+  }
+  // }
   // }
 };
 
@@ -201,13 +215,13 @@ onBeforeMount(() => {
     vertical-align: middle;
 
     .setting-button {
-      margin-right: .8rem;
+      margin-right: 0.8rem;
     }
 
     .window-controls {
       display: flex;
       align-items: center;
-      margin-right: .8rem;
+      margin-right: 0.8rem;
 
       .close-btn:hover {
         background-color: #ff4d4f;
@@ -217,7 +231,7 @@ onBeforeMount(() => {
       .window-controls-icon {
         height: 1.2rem;
         width: 1.2rem;
-        margin-bottom: -.1rem;
+        margin-bottom: -0.1rem;
       }
     }
   }

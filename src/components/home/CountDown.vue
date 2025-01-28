@@ -16,13 +16,13 @@
           <a-tooltip placement="bottomLeft">
             <template #title>
               <span class="tooltip-time">
-                <font-awesome-icon icon="fa-regular fa-clock" />
+                <font-awesome-icon :icon="faClockRegular" />
                 {{ banner.eventTime }}
               </span>
             </template>
 
             <span class="event-title" :title="banner.event">
-              <font-awesome-icon class="calendar-icon" icon="fa-solid fa-calendar-days" />
+              <font-awesome-icon class="calendar-icon" :icon="faCalendarDaysSolid" />
               <span>{{ banner.event }}</span>
             </span>
           </a-tooltip>
@@ -30,7 +30,7 @@
 
         <!-- 前置一计时器图标 -->
         <template #prefix>
-          <font-awesome-icon class="timer-icon" :icon="isFinished ? 'fa-regular fa-flag' : 'fa-regular fa-hourglass-half'" :class="{ pulse: !isFinished }" />
+          <font-awesome-icon class="timer-icon" :icon="isFinished ? faFlagRegular : faHourglassHalfRegular" :class="{ pulse: !isFinished }" />
         </template>
 
         <!-- 后置一结束提示符 -->
@@ -43,13 +43,13 @@
     </div>
     <!-- <div class="operate-button-group">
       <a-button type="text" title="配置事件">
-        <font-awesome-icon icon="fa-solid fa-wrench" rotation="270" />
+        <font-awesome-icon :icon="faWrenchSolid" rotation="270" />
       </a-button>
       <a-button type="text" title="编辑事件">
-        <font-awesome-icon icon="fa-solid fa-pen-to-square" />
+        <font-awesome-icon :icon="faPenToSquareSolid" />
       </a-button>
       <a-button type="text" title="删除事件">
-        <font-awesome-icon icon="fa-solid fa-eraser" />
+        <font-awesome-icon :icon="faEraserSolid" />
       </a-button>
     </div> -->
   </div>
@@ -58,6 +58,13 @@
 </template>
 
 <script setup lang="ts">
+import {
+  faCalendarDays as faCalendarDaysSolid,
+  // faWrench as faWrenchSolid,
+  // faPenToSquare as faPenToSquareSolid,
+  // faEraser as faEraserSolid,
+} from '@fortawesome/free-solid-svg-icons';
+import { faClock as faClockRegular, faFlag as faFlagRegular, faHourglassHalf as faHourglassHalfRegular } from '@fortawesome/free-regular-svg-icons';
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Empty } from 'ant-design-vue';

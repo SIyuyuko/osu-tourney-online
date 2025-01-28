@@ -22,7 +22,7 @@
           <div class="status-bar" v-else>
             <a-tooltip v-for="{ icon, value } in item?.statusList" :key="icon" placement="bottom">
               <template #title>
-                <span v-if="icon === 'fa-solid fa-users'">{{ value === '' ? '--' : value + $t('tournament.people') }}</span>
+                <span v-if="icon === faUsersSolid">{{ value === '' ? '--' : value + $t('tournament.people') }}</span>
                 <span v-else>{{ value === '' ? '--' : ['active', 'concluded'].includes(value) ? $t(`tournament.${value}`) : value }}</span>
               </template>
               <span>
@@ -47,6 +47,7 @@
   <TourView v-if="showDetail" :data="tourData" @showDetail="showDetail = false" />
 </template>
 <script setup name="Tournament">
+import { faUsers as faUsersSolid, faClock as faClockSolid, faSquarePollVertical as faSquarePollVerticalSolid } from '@fortawesome/free-solid-svg-icons';
 import { Empty } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 import { useResizeObserver } from '@vueuse/core';
@@ -81,16 +82,16 @@ function initStatusList() {
         param.type = e;
         switch (e) {
           case 'status':
-            param.icon = 'fa-solid fa-square-poll-vertical';
+            param.icon = faSquarePollVerticalSolid;
             param.index = 0;
             break;
           case 'players':
-            param.icon = 'fa-solid fa-users';
+            param.icon = faUsersSolid;
             param.value = `${item[e]}`;
             param.index = 1;
             break;
           case 'time':
-            param.icon = 'fa-solid fa-clock';
+            param.icon = faClockSolid;
             param.index = 2;
             break;
         }

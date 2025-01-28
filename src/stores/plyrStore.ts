@@ -1,3 +1,4 @@
+import { faRepeat as faRepeatSolid, faShuffle as faShuffleSolid } from '@fortawesome/free-solid-svg-icons';
 import { defineStore } from 'pinia';
 import { ref, shallowRef } from 'vue';
 import { beatmapApi } from '@/api';
@@ -57,13 +58,13 @@ export const usePlyrStore = defineStore('plyr', () => {
 
   const playModeConfig = {
     orderby: {
-      icon: 'fa-solid fa-repeat',
+      icon: faRepeatSolid,
       isSvg: false,
       fade: false,
       next: 'random',
     },
     random: {
-      icon: 'fa-solid fa-shuffle',
+      icon: faShuffleSolid,
       isSvg: false,
       fade: false,
       next: 'single',

@@ -5,7 +5,7 @@
       <div class="relative mb-8">
         <div class="text-[120px] md:text-[80px] font-bold leading-none bg-linear-to-r from-red-400 to-gray-600 bg-clip-text text-transparent font-arial">404</div>
         <div class="absolute right-12 top-5 text-4xl md:text-3xl text-red-400 opacity-80 animate-bounce">
-          <font-awesome-icon icon="fa-solid fa-circle-question" />
+          <font-awesome-icon :icon="faCircleQuestionSolid" />
         </div>
       </div>
 
@@ -23,14 +23,14 @@
           class="min-w-[120px] h-10 flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
         >
           <template #icon>
-            <font-awesome-icon icon="fa-solid fa-house" />
+            <font-awesome-icon :icon="faHouseSolid" />
           </template>
           Back to Home
         </a-button>
 
         <a-button @click="goBack" class="min-w-[120px] h-10 flex items-center justify-center gap-2 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
           <template #icon>
-            <font-awesome-icon icon="fa-solid fa-arrow-left" />
+            <font-awesome-icon :icon="faArrowLeftSolid" />
           </template>
           Go Back
         </a-button>
@@ -40,6 +40,7 @@
 </template>
 
 <script setup lang="ts">
+import { faCircleQuestion as faCircleQuestionSolid, faHouse as faHouseSolid, faArrowLeft as faArrowLeftSolid } from '@fortawesome/free-solid-svg-icons';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

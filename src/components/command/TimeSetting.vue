@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-row space-x-4">
+  <div class="flex flex-row gap-4">
     <!-- 标签 -->
     <span class="text-gray-700 dark:text-gray-200 font-medium">{{ label }}</span>
 
     <!-- 单选按钮组 -->
     <div class="flex flex-row gap-4">
-      <label v-for="option in options" :key="option" class="flex items-center space-x-2 cursor-pointer">
+      <label v-for="option in options" :key="option" class="flex items-center gap-1 cursor-pointer">
         <div class="relative flex items-center justify-center w-4 h-4">
           <div class="absolute w-4 h-4 border border-[#13c2c2] rounded-full transition-all" :class="{ 'border-[#13c2c2]': modelValue === option }"></div>
           <div v-if="modelValue === option" class="absolute w-2.5 h-2.5 bg-[#13c2c2] rounded-full"></div>

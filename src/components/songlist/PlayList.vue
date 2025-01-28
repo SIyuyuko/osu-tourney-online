@@ -47,10 +47,10 @@
           <template #actions>
             <MusicBar v-if="currentTrack.info?.id === item?.id && playbackState.isPlaying" />
             <a v-else @click="store.playTrack(item)">
-              <font-awesome-icon icon="fa-solid fa-circle-play" />
+              <font-awesome-icon :icon="faCirclePlaySolid" />
             </a>
             <a @click="store.removeFromPlaylist(item.id)">
-              <font-awesome-icon icon="fa-solid fa-trash" />
+              <font-awesome-icon :icon="faTrashSolid" />
             </a>
           </template>
           <a-list-item-meta>
@@ -65,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+import { faCirclePlay as faCirclePlaySolid, faTrash as faTrashSolid } from '@fortawesome/free-solid-svg-icons';
 import { onMounted, ref, watch, computed, nextTick } from 'vue';
 import { storeToRefs } from 'pinia';
 import { usePlyrStore } from '@/stores/plyrStore';

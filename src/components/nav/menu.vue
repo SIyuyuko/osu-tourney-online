@@ -34,6 +34,13 @@
 </template>
 
 <script setup lang="ts">
+import {
+  faHouseUser as faHouseUserSolid,
+  faChess as faChessSolid,
+  faMap as faMapSolid,
+  faCompactDisc as faCompactDiscSolid,
+  faTerminal as faTerminalSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -44,31 +51,31 @@ const route = useRoute();
 const menuItems = [
   {
     key: 'Home',
-    icon: 'fa-solid fa-house-user',
+    icon: faHouseUserSolid,
     i18nKey: 'menu.home',
     path: '/home',
   },
   {
     key: 'Tournament',
-    icon: 'fa-solid fa-chess',
+    icon: faChessSolid,
     i18nKey: 'menu.tournament',
     path: '/tournament',
   },
   {
     key: 'Mappool',
-    icon: 'fa-solid fa-map',
+    icon: faMapSolid,
     i18nKey: 'menu.mappool',
     path: '/mappool/list',
   },
   {
     key: 'Songlist',
-    icon: 'fa-solid fa-compact-disc',
+    icon: faCompactDiscSolid,
     i18nKey: 'menu.songlist',
     path: '/songlist',
   },
   {
     key: 'Command',
-    icon: 'fa-solid fa-terminal',
+    icon: faTerminalSolid,
     i18nKey: 'menu.command',
     path: '/command',
   },

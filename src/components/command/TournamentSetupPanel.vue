@@ -4,7 +4,7 @@
     <div class="prefix-bar">
       <a-input v-model:value="store.prefix" allow-clear :placeholder="$t('command.inputTour')" style="width: 70%">
         <template #prefix>
-          <font-awesome-icon icon="fa-solid fa-chess" />
+          <font-awesome-icon :icon="faChessSolid" />
         </template>
       </a-input>
 
@@ -14,13 +14,13 @@
     <!-- Team Names -->
     <a-input v-model:value="store.redTeam" allow-clear :placeholder="$t('command.inputRedTeam')">
       <template #prefix>
-        <font-awesome-icon icon="fa-solid fa-users-line" style="color: var(--team-red)" />
+        <font-awesome-icon :icon="faUsersLineSolid" style="color: var(--team-red)" />
       </template>
     </a-input>
 
     <a-input v-model:value="store.blueTeam" allow-clear :placeholder="$t('command.inputBlueTeam')">
       <template #prefix>
-        <font-awesome-icon icon="fa-solid fa-users-line" style="color: var(--team-blue)" />
+        <font-awesome-icon :icon="faUsersLineSolid" style="color: var(--team-blue)" />
       </template>
     </a-input>
 
@@ -34,7 +34,7 @@
         :placeholder="$t('command.selectTeamMode')"
       >
         <template #suffixIcon>
-          <font-awesome-icon icon="fa-solid fa-user-group" />
+          <font-awesome-icon :icon="faUserGroupSolid" />
         </template>
       </a-select>
 
@@ -46,7 +46,7 @@
         :placeholder="$t('command.selectScoreMode')"
       >
         <template #suffixIcon>
-          <font-awesome-icon icon="fa-solid fa-ranking-star" />
+          <font-awesome-icon :icon="faRankingStarSolid" />
         </template>
       </a-select>
 
@@ -63,6 +63,7 @@
 </template>
 
 <script setup lang="ts">
+import { faChess as faChessSolid, faUsersLine as faUsersLineSolid, faUserGroup as faUserGroupSolid, faRankingStar as faRankingStarSolid } from '@fortawesome/free-solid-svg-icons';
 import { useCommandStore } from '@/stores/commandStore';
 import { watch } from 'vue';
 import TimeSetting from './TimeSetting.vue';

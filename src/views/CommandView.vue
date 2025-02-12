@@ -7,14 +7,8 @@
 
       <template #right>
         <a-collapse class="referee-list h-full" v-model:activeKey="activeKey" :bordered="false" ghost>
-          <a-collapse-panel key="1" :header="$t('command.refereeTitle')">
-            <TournamentSetupPanel />
-          </a-collapse-panel>
-          <a-collapse-panel key="2" :header="$t('command.scoreBoard')">
-            <ScoreboardPanel />
-          </a-collapse-panel>
-          <a-collapse-panel key="3" :header="$t('command.mappool')">
-            <PoolSelector class="pool-selector max-w-[100%]" :isReferee="true" />
+          <a-collapse-panel v-for="panel in panels" :key="panel.key" :header="panel.header">
+            <component :is="panel.component" v-bind="panel.props || {}" />
           </a-collapse-panel>
         </a-collapse>
       </template>
@@ -23,12 +17,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineAsyncComponent } from 'vue';
+import { useI18n } from 'vue-i18n';
 import DragPanel from '@/components/ui/DragPanel.vue';
 import CommandList from '@/components/command/CommandList.vue';
-import ScoreboardPanel from '@/components/command/ScoreboardPanel.vue';
-import TournamentSetupPanel from '@/components/command/TournamentSetupPanel.vue';
-import PoolSelector from '@/components/map/poolSelector.vue';
 
+const { t } = useI18n();
 const activeKey = ref([1, 2]);
+
+const panels = [
+  {
+    key: '1',
+    header: t('command.refereeTitle'),
+    component: defineAsyncComponent(() => import('@/components/command/TournamentSetupPanel.vue')),
+  },
+  {
+    key: '2',
+    header: t('command.scoreBoard'),
+    component: defineAsyncComponent(() => import('@/components/command/ScoreboardPanel.vue')),
+  },
+  {
+    key: '3',
+    header: t('command.mappool'),
+    component: defineAsyncComponent(() => import('@/components/map/poolSelector.vue')),
+    props: { class: 'max-w-[100%]', isReferee: true },
+  },
+];
 </script>

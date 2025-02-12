@@ -18,7 +18,7 @@ export const useThemeStore = defineStore('theme', () => {
     theme.value = newTheme;
     localStorage.setItem('theme', newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
-    document.documentElement.classList.toggle("dark");
+    document.documentElement.classList.toggle('dark');
   };
 
   const toggleTheme = () => {

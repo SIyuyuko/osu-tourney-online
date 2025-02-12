@@ -18,7 +18,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 
-const props = defineProps({ leftWidth: { type: Number, default: 350 }, rightMinWidth: { type: Number, default: 500 }, leftMinWidth: { type: Number, default: 200 } });
+const props = defineProps({
+  leftWidth: { type: Number, default: 350 },
+  rightMinWidth: { type: Number, default: 500 },
+  leftMinWidth: { type: Number, default: 200 },
+});
 
 const emit = defineEmits(['update:leftWidth']);
 

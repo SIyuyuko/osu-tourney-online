@@ -33,7 +33,7 @@ const log = () => {
       router.push('/');
     }
   });
-}
+};
 
 onMounted(() => {
   log();

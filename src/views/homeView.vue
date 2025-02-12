@@ -17,7 +17,10 @@
               <span class="username">{{ userInfo ? userInfo.username : user.name }}</span>
               !
             </h1>
-            <p v-if="user.character">{{ $t('home.rulePrefix') }} {{ user.character }} {{ $t('home.ruleMid') }} {{ duringTime }} {{ $t('home.ruleSuffix') }}</p>
+            <p v-if="user.character">
+              {{ $t('home.rulePrefix') }} {{ user.character }} {{ $t('home.ruleMid') }} {{ duringTime }}
+              {{ $t('home.ruleSuffix') }}
+            </p>
           </div>
 
           <div class="avatar">
@@ -26,8 +29,15 @@
                 <span>{{ $t('home.viewProfile') }}</span>
               </template>
               <div class="avatar-wrapper" @click="openUrl">
-                <a-avatar class="avatar-img" shape="square" :size="86" :src="userInfo ? userInfo.avatar_url : user.avatar" />
-                <div class="avatar-overlay absolute inset-0 flex items-center justify-center opacity-0 rounded-[0.6rem]">
+                <a-avatar
+                  class="avatar-img"
+                  shape="square"
+                  :size="86"
+                  :src="userInfo ? userInfo.avatar_url : user.avatar"
+                />
+                <div
+                  class="avatar-overlay absolute inset-0 flex items-center justify-center opacity-0 rounded-[0.6rem]"
+                >
                   <font-awesome-icon :icon="faEyeSolid" />
                 </div>
               </div>
@@ -43,7 +53,11 @@
       <a-divider class="divider" type="vertical" />
       <a-divider class="divider-mobile" />
 
-      <component :is="bannerComponents[banner.bannerType]" v-if="bannerComponents[banner.bannerType]" :info="userInfo" />
+      <component
+        :is="bannerComponents[banner.bannerType]"
+        v-if="bannerComponents[banner.bannerType]"
+        :info="userInfo"
+      />
     </div>
 
     <a-divider class="section-divider" />
@@ -64,7 +78,11 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
-import { faEye as faEyeSolid, faClock as faClockSolid, faTrophy as faTrophySolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faEye as faEyeSolid,
+  faClock as faClockSolid,
+  faTrophy as faTrophySolid,
+} from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 import { userApi } from '@/api';
 import { open } from '@tauri-apps/plugin-shell';

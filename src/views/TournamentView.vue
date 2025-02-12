@@ -7,7 +7,14 @@
  * @Description: 比赛列表页面组件
 -->
 <template>
-  <a-list item-layout="vertical" size="small" :data-source="listData" :loading="!visible" :split="false" v-if="!showDetail">
+  <a-list
+    item-layout="vertical"
+    size="small"
+    :data-source="listData"
+    :loading="!visible"
+    :split="false"
+    v-if="!showDetail"
+  >
     <template #header>
       <span>{{ $t('tournament.list') }}</span>
     </template>
@@ -16,14 +23,21 @@
         <template #actions>
           <div class="status-bar" v-if="element?.width > 260">
             <span v-for="{ icon, value } in item?.statusList" :key="icon">
-              <font-awesome-icon :icon="icon" /> {{ value === '' ? '--' : ['active', 'concluded'].includes(value) ? $t(`tournament.${value}`) : value }}
+              <font-awesome-icon :icon="icon" />
+              {{ value === '' ? '--' : ['active', 'concluded'].includes(value) ? $t(`tournament.${value}`) : value }}
             </span>
           </div>
           <div class="status-bar" v-else>
             <a-tooltip v-for="{ icon, value } in item?.statusList" :key="icon" placement="bottom">
               <template #title>
-                <span v-if="icon === faUsersSolid">{{ value === '' ? '--' : value + $t('tournament.people') }}</span>
-                <span v-else>{{ value === '' ? '--' : ['active', 'concluded'].includes(value) ? $t(`tournament.${value}`) : value }}</span>
+                <span v-if="icon === faUsersSolid">
+                  {{ value === '' ? '--' : value + $t('tournament.people') }}
+                </span>
+                <span v-else>
+                  {{
+                    value === '' ? '--' : ['active', 'concluded'].includes(value) ? $t(`tournament.${value}`) : value
+                  }}
+                </span>
               </template>
               <span>
                 <font-awesome-icon :icon="icon" />
@@ -32,14 +46,26 @@
           </div>
         </template>
         <template #extra>
-          <img width="250" height="140" alt="poster" :src="item.poster" style="object-fit: cover; border-radius: 10px" />
+          <img
+            width="250"
+            height="140"
+            alt="poster"
+            :src="item.poster"
+            style="object-fit: cover; border-radius: 10px"
+          />
         </template>
-        <a-list-item-meta ref="tourRef" :description="item.mode + ' | ' + item.type" style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis">
+        <a-list-item-meta
+          ref="tourRef"
+          :description="item.mode + ' | ' + item.type"
+          style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis"
+        >
           <template #title>
             <a class="tour-title" @click="showTourView(item)">{{ item.title }}</a>
           </template>
         </a-list-item-meta>
-        <a :href="item.mainSheetUrl" target="_blank" :style="item.mainSheetUrl === '' ? disableStyle : ''">{{ $t('tournament.website') }}</a>
+        <a :href="item.mainSheetUrl" target="_blank" :style="item.mainSheetUrl === '' ? disableStyle : ''">
+          {{ $t('tournament.website') }}
+        </a>
       </a-list-item>
       <a-empty v-else :description="$t('tournament.empty')" :image="Empty.PRESENTED_IMAGE_SIMPLE" style="width: 100%" />
     </template>
@@ -47,7 +73,11 @@
   <TourView v-if="showDetail" :data="tourData" @showDetail="showDetail = false" />
 </template>
 <script setup name="Tournament">
-import { faUsers as faUsersSolid, faClock as faClockSolid, faSquarePollVertical as faSquarePollVerticalSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faUsers as faUsersSolid,
+  faClock as faClockSolid,
+  faSquarePollVertical as faSquarePollVerticalSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { Empty } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 import { useResizeObserver } from '@vueuse/core';

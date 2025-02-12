@@ -37,7 +37,7 @@ const handleCreate = async () => {
   const newPool = {
     id: Date.now(), // 临时ID生成方式
     title: '空白图池',
-    children: []
+    children: [],
   };
 
   pools.value.push(newPool);

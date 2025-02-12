@@ -20,17 +20,16 @@
       },
       algorithm: skin,
     }"
-  >
-  </a-config-provider>
+  ></a-config-provider>
 </template>
 
 <script setup lang="ts">
-import { useThemeStore } from '@/stores/themeStore'
-import { theme as antTheme } from 'ant-design-vue'
-import { onBeforeMount, watch, ref } from 'vue'
+import { useThemeStore } from '@/stores/themeStore';
+import { theme as antTheme } from 'ant-design-vue';
+import { onBeforeMount, watch, ref } from 'vue';
 
-const themeStore = useThemeStore()
-const { initTheme } = themeStore
+const themeStore = useThemeStore();
+const { initTheme } = themeStore;
 
 let skin = ref();
 

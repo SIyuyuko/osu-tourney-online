@@ -17,7 +17,14 @@
 <template>
   <div class="view">
     <div class="album-info">
-      <a-image class="cover" :width="100" :height="100" :src="albumList.cover" :placeholder="true" :preview="albumList.cover ? true : false">
+      <a-image
+        class="cover"
+        :width="100"
+        :height="100"
+        :src="albumList.cover"
+        :placeholder="true"
+        :preview="albumList.cover ? true : false"
+      >
         <template #previewMask>
           <font-awesome-icon :icon="faMagnifyingGlassPlusSolid" />
         </template>
@@ -27,7 +34,12 @@
         <span class="title">{{ albumList.title }}</span>
 
         <span class="creator" v-if="typeof albumList.creator === 'object'">
-          <a-avatar class="avatar" :size="24" :src="albumList.creator?.avatar_url" @click="jumpPage(albumList.creator)"></a-avatar>
+          <a-avatar
+            class="avatar"
+            :size="24"
+            :src="albumList.creator?.avatar_url"
+            @click="jumpPage(albumList.creator)"
+          ></a-avatar>
           {{ albumList.creator?.username }}
           {{ $t('songlist.create') }}
         </span>
@@ -51,8 +63,12 @@
       <template #renderItem="{ item }">
         <a-list-item class="songlist" ref="listItemRef">
           <template #actions>
-            <a @click="playMusic(item, 'add')"><font-awesome-icon :icon="faPlusSolid" /></a>
-            <a @click="playMusic(item, 'play')"><font-awesome-icon :icon="faCirclePlaySolid" /></a>
+            <a @click="playMusic(item, 'add')">
+              <font-awesome-icon :icon="faPlusSolid" />
+            </a>
+            <a @click="playMusic(item, 'play')">
+              <font-awesome-icon :icon="faCirclePlaySolid" />
+            </a>
           </template>
           <a-list-item-meta>
             <template #title>
@@ -66,7 +82,11 @@
   </div>
 </template>
 <script setup name="AlbumView">
-import { faMagnifyingGlassPlus as faMagnifyingGlassPlusSolid, faPlus as faPlusSolid, faCirclePlay as faCirclePlaySolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faMagnifyingGlassPlus as faMagnifyingGlassPlusSolid,
+  faPlus as faPlusSolid,
+  faCirclePlay as faCirclePlaySolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { onMounted } from 'vue';
 import { open } from '@tauri-apps/plugin-shell';
 import { beatmapApi, userApi } from '@/api';

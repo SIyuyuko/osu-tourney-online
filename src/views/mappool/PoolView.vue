@@ -10,7 +10,14 @@
   <div v-for="(pool, index) in poolSections" :key="index">
     <span class="pool-title">{{ pool?.title }}</span>
     <div class="pool-content">
-      <MapComponent v-for="(map, mapIndex) in pool?.map" :key="mapIndex" :item="map" :isCard="false" :isReferee="false" :beatmap-data="beatmapDataMap.get(map.id)" />
+      <MapComponent
+        v-for="(map, mapIndex) in pool?.map"
+        :key="mapIndex"
+        :item="map"
+        :isCard="false"
+        :isReferee="false"
+        :beatmap-data="beatmapDataMap.get(map.id)"
+      />
     </div>
     <a-divider dashed />
   </div>

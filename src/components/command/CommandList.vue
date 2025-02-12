@@ -2,7 +2,14 @@
   <div class="command-list" :class="{ 'grid-mode': isGridMode }">
     <div class="nav flex items-center sticky top-0 z-10 mb-2 bg-white dark:bg-[#141414]">
       <span class="text-gray-700 dark:text-gray-200">{{ $t('command.list') }}</span>
-      <a :href="wikiUrl" target="_blank" :title="$t('command.seeWiki')" class="ml-2 text-black hover:text-[#13c2c2] dark:text-white dark:hover:text-[#13c2c2]">wiki</a>
+      <a
+        :href="wikiUrl"
+        target="_blank"
+        :title="$t('command.seeWiki')"
+        class="ml-2 text-black hover:text-[#13c2c2] dark:text-white dark:hover:text-[#13c2c2]"
+      >
+        wiki
+      </a>
     </div>
 
     <div class="commands-container">

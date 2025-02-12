@@ -1,16 +1,15 @@
 [data-theme='dark'] {
+  .ant-layout-header,
+  .ant-layout-content {
+    background: var(--theme-black);
+    filter: brightness(calc(2 - var(--theme-brightness-shift)));
+  }
 
-	.ant-layout-header,
-	.ant-layout-content {
-		background: var(--theme-black);
-		filter: brightness(calc(2 - var(--theme-brightness-shift)));
-	}
+  .logo {
+    border-inline-end: 1px solid rgba(253, 253, 253, 0.12);
+  }
 
-	.logo {
-		border-inline-end: 1px solid rgba(253, 253, 253, 0.12);
-	}
-
-	* {
-		scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
-	}
+  * {
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+  }
 }

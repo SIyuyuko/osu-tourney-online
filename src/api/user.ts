@@ -181,7 +181,10 @@ export const userApi = {
    * @param params 可选参数
    */
   getUserById(uid: number, params?: UserRequestParams) {
-    return request.get<ApiResponse<UserInfo>>(`api/osu/user/${uid}`, { baseURL: '', params });
+    return request.get<ApiResponse<UserInfo>>(`api/osu/user/${uid}`, {
+      baseURL: '',
+      params,
+    });
   },
 
   /**

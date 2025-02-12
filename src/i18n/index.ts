@@ -1,11 +1,11 @@
-import { createI18n } from 'vue-i18n'
-import { zh, en } from './locales'
+import { createI18n } from 'vue-i18n';
+import { zh, en } from './locales';
 
 const i18n = createI18n({
   legacy: false,
   locale: 'zh', // 默认显示语言
   fallbackLocale: 'zh',
-  messages: { zh, en }
-})
+  messages: { zh, en },
+});
 
-export default i18n
+export default i18n;

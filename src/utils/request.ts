@@ -1,4 +1,11 @@
-import axios, { AxiosInstance, AxiosRequestConfig, InternalAxiosRequestConfig, AxiosResponse, AxiosHeaders, RawAxiosRequestHeaders } from 'axios';
+import axios, {
+  AxiosInstance,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+  AxiosResponse,
+  AxiosHeaders,
+  RawAxiosRequestHeaders,
+} from 'axios';
 import { message } from 'ant-design-vue';
 
 // 自定义配置接口

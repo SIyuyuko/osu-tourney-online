@@ -65,42 +65,42 @@ const getUserInfo = (params) => {
   });
 };
 /**
-* @description 获取谱面信息
-* @param {Number} params 谱面ID
-* @return void
-*/
+ * @description 获取谱面信息
+ * @param {Number} params 谱面ID
+ * @return void
+ */
 const getBeatmapInfo = (params) => {
   return axios({
-    method: "get",
+    method: 'get',
     url: `/bot/api/info/${params}`,
   });
 };
 /**
-* @description 获取谱面附加信息
-* @param {Object} params 谱面ID
-* @return void
-*/
+ * @description 获取谱面附加信息
+ * @param {Object} params 谱面ID
+ * @return void
+ */
 const getBeatmapAttributes = (params) => {
   return axios({
-    method: "get",
+    method: 'get',
     url: `/bot/attr/json?bid=${params.bid}&mods=${params.mod}&mode=${params.mode}`,
   });
 };
 // 获取谱面bg
 const getBeatmapBg = (params) => {
   return axios({
-    method: "get",
+    method: 'get',
     url: `/bot/api/background/${params}`,
     headers: {
-      'Cache-Control': 'max-age=604800000'
+      'Cache-Control': 'max-age=604800000',
     },
     responseType: 'blob',
   });
 };
 // 获取谱面文件
-const getBeatmapFile = params => {
+const getBeatmapFile = (params) => {
   return axios({
-    method: "get",
+    method: 'get',
     url: `/sp/file/map/fileName/song/${params}`,
     baseURL: window.location.href,
   });
@@ -122,4 +122,4 @@ export {
   getBeatmapAttributes,
   getBeatmapBg,
   getBeatmapFile,
-}
+};

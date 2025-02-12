@@ -1,4 +1,7 @@
-import { faWindowMaximize as faWindowMaximizeSolid, faWindowRestore as faWindowRestoreSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faWindowMaximize as faWindowMaximizeSolid,
+  faWindowRestore as faWindowRestoreSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { defineStore } from 'pinia';
 import { WindowManager } from '@/utils/tauriManager';
 

@@ -7,11 +7,7 @@
  * @Description: 图池列表卡片组件
 -->
 <template>
-  <a-card
-    :class="['pool-card', { 'add-card': isNewPool }]"
-    @click="handleClick"
-    hoverable
-  >
+  <a-card :class="['pool-card', { 'add-card': isNewPool }]" @click="handleClick" hoverable>
     <template v-if="!isNewPool">
       <span :title="item.title">{{ item.title }}</span>
     </template>
@@ -45,7 +41,7 @@ const handleClick = () => {
   } else {
     router.push({
       name: 'MappoolDetail',
-      params: { title: props.item.title }
+      params: { title: props.item.title },
     });
   }
 };

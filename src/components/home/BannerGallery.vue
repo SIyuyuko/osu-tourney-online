@@ -8,7 +8,14 @@
 -->
 <template>
   <div class="cover-panel">
-    <a-carousel v-if="banner?.coverList?.length > 0" arrows class="cover-carousel" :autoplay="banner.autoPlayCover" :style="carouselStyle" @afterChange="setCurrent">
+    <a-carousel
+      v-if="banner?.coverList?.length > 0"
+      arrows
+      class="cover-carousel"
+      :autoplay="banner.autoPlayCover"
+      :style="carouselStyle"
+      @afterChange="setCurrent"
+    >
       <template #prevArrow>
         <div class="custom-slick-arrow left">
           <font-awesome-icon class="arrow-icon" :icon="faCircleChevronLeftSolid" />
@@ -29,12 +36,20 @@
       </div>
     </a-carousel>
 
-    <a-empty v-else :description="$t('banner.emptyCover')" class="empty-state" :image="Empty.PRESENTED_IMAGE_SIMPLE"></a-empty>
+    <a-empty
+      v-else
+      :description="$t('banner.emptyCover')"
+      class="empty-state"
+      :image="Empty.PRESENTED_IMAGE_SIMPLE"
+    ></a-empty>
   </div>
 </template>
 
 <script setup lang="ts">
-import { faCircleChevronRight as faCircleChevronRightSolid, faCircleChevronLeft as faCircleChevronLeftSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircleChevronRight as faCircleChevronRightSolid,
+  faCircleChevronLeft as faCircleChevronLeftSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { ref, onMounted, watch, computed } from 'vue';
 import { Empty } from 'ant-design-vue';
 

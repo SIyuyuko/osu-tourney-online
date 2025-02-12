@@ -3,7 +3,7 @@ export const en = {
     home: 'Home',
     tournament: 'Tournament',
     mappool: 'Mappool',
-    songlist:"Song List",
+    songlist: 'Song List',
     command: 'Command',
   },
   home: {
@@ -50,14 +50,14 @@ export const en = {
     empty: 'no mappool',
   },
   songlist: {
-    header: "Beatmap Song List",
-    floatButton: "Music Player",
-    playAll:"Play",
-    create:"created",
-    albumList:"Album List"
+    header: 'Beatmap Song List',
+    floatButton: 'Music Player',
+    playAll: 'Play',
+    create: 'created',
+    albumList: 'Album List',
   },
   element: {
-    mapInput: "input beatmap ID here"
+    mapInput: 'input beatmap ID here',
   },
   command: {
     list: 'Commands List',
@@ -81,7 +81,7 @@ export const en = {
     scoreBoard: 'Score Board',
     narratorTitle: 'Narrator Setting',
     bracketTitle: 'Bracket Info',
-    teamsize:"Team Size",
+    teamsize: 'Team Size',
     slot: 'slots',
     score: 'score',
     pick: 'pick',

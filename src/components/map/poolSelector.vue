@@ -29,7 +29,9 @@
             </div>
             <template #overlay>
               <a-menu class="operate-button-menu">
-                <a-menu-item v-for="(pool, index) in poolData?.children" :key="index" @click="changeMappool(pool)">{{ pool?.title }}</a-menu-item>
+                <a-menu-item v-for="(pool, index) in poolData?.children" :key="index" @click="changeMappool(pool)">
+                  {{ pool?.title }}
+                </a-menu-item>
               </a-menu>
             </template>
           </a-dropdown>
@@ -37,14 +39,26 @@
       </div>
     </template>
     <div class="pool-content" ref="poolRef">
-      <Map :class="{ wrap: isWrap }" v-for="(map, index) in currentMappool?.map" :key="index" :item="map" :isCard="true" :isReferee="isReferee" @update="handleMapUpdate"></Map>
+      <Map
+        :class="{ wrap: isWrap }"
+        v-for="(map, index) in currentMappool?.map"
+        :key="index"
+        :item="map"
+        :isCard="true"
+        :isReferee="isReferee"
+        @update="handleMapUpdate"
+      ></Map>
     </div>
   </a-card>
   <a-empty v-else :description="$t('mappool.emptyActive')" :image="Empty.PRESENTED_IMAGE_SIMPLE" style="width: 100%" />
 </template>
 
 <script setup lang="ts">
-import { faArrowsRotate as faArrowsRotateSolid, faStar as faStarSolid, faAngleDown as faAngleDownSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowsRotate as faArrowsRotateSolid,
+  faStar as faStarSolid,
+  faAngleDown as faAngleDownSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { faStar as faStarRegular } from '@fortawesome/free-regular-svg-icons';
 import { ref, onMounted, nextTick, computed } from 'vue';
 import { Empty } from 'ant-design-vue';
@@ -60,7 +74,7 @@ interface Mappool {
 
 // Props
 withDefaults(defineProps<{ isReferee: boolean }>(), {
-  isReferee: false
+  isReferee: false,
 });
 
 // Refs
@@ -70,7 +84,7 @@ const currentMappool = ref<Mappool>();
 const elementSize = ref<{ width: number; height: number }>();
 
 // Computed
-const isWrap = computed(() => elementSize.value?.width ? elementSize.value.width < 400 : false);
+const isWrap = computed(() => (elementSize.value?.width ? elementSize.value.width < 400 : false));
 const mappoolTitle = computed(() => `${poolData.value?.title} ${currentMappool.value?.title} Mappool`);
 const hasMappool = computed(() => !!currentMappool.value?.map?.length);
 
@@ -84,9 +98,7 @@ const changeMappool = async (pool: Mappool) => {
 const handleMapUpdate = (updatedMap: MapInfo) => {
   if (!currentMappool.value?.map) return;
 
-  const updatedMaps = currentMappool.value.map.map((map) =>
-    map.id === updatedMap.id ? updatedMap : map
-  );
+  const updatedMaps = currentMappool.value.map.map((map) => (map.id === updatedMap.id ? updatedMap : map));
   currentMappool.value.map = updatedMaps;
 };
 

@@ -3,7 +3,20 @@ import type { WritableComputedRef } from 'vue';
 // Command
 export interface Command {
   name: string;
-  type: 'create' | 'password' | 'invite' | 'ref' | 'room' | 'map' | 'mod' | 'start' | 'timer' | 'abort' | 'timerabort' | 'pick' | 'ban';
+  type:
+    | 'create'
+    | 'password'
+    | 'invite'
+    | 'ref'
+    | 'room'
+    | 'map'
+    | 'mod'
+    | 'start'
+    | 'timer'
+    | 'abort'
+    | 'timerabort'
+    | 'pick'
+    | 'ban';
   cmd: string;
   value?: string; // 这是在运行时添加的属性
 }
@@ -81,7 +94,7 @@ export interface User {
   activeDate: string;
   character: string;
   dailyWords: DailyWords;
-  language: WritableComputedRef<"zh" | "en", "zh" | "en">;
+  language: WritableComputedRef<'zh' | 'en', 'zh' | 'en'>;
   theme: 'light' | 'dark';
 }
 

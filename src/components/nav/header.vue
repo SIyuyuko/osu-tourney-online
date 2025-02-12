@@ -40,7 +40,12 @@
           </div>
           <template #overlay>
             <a-menu class="operate-button-menu">
-              <a-menu-item v-for="locale in availableLocales" :key="locale.code" :style="currentLocale === locale.code ? selectedLangStyle : {}" @click="changeLocale(locale.code)">
+              <a-menu-item
+                v-for="locale in availableLocales"
+                :key="locale.code"
+                :style="currentLocale === locale.code ? selectedLangStyle : {}"
+                @click="changeLocale(locale.code)"
+              >
                 {{ locale.label }}
               </a-menu-item>
             </a-menu>

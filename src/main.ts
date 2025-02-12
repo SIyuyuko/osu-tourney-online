@@ -5,7 +5,7 @@ import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import Antd from 'ant-design-vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { useApp } from "@/stores/appStore";
+import { useApp } from '@/stores/appStore';
 import { router } from '@/router';
 import initApp from '@/utils/initApp';
 import i18n from '@/i18n';
@@ -16,7 +16,8 @@ import { initializeTauri } from '@/utils/tauriManager';
 const app = createApp(App);
 const pinia = createPinia();
 
-app.use(pinia)
+app
+  .use(pinia)
   .use(Antd)
   .use(i18n)
   .use(router)
@@ -29,14 +30,20 @@ const beatmapStore = useBeatmapStore();
 beatmapStore.restoreCache();
 
 // 定期清理过期缓存
-setInterval(() => {
-  beatmapStore.clearExpiredCache();
-}, 60 * 60 * 1000); // 每小时清理一次
+setInterval(
+  () => {
+    beatmapStore.clearExpiredCache();
+  },
+  60 * 60 * 1000
+); // 每小时清理一次
 
 // 定期保存缓存
-setInterval(() => {
-  beatmapStore.persistCache();
-}, 5 * 60 * 1000);
+setInterval(
+  () => {
+    beatmapStore.persistCache();
+  },
+  5 * 60 * 1000
+);
 
 const { isTauri } = useApp();
 console.log('isTauri:', isTauri);

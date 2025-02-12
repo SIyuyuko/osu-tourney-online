@@ -7,7 +7,16 @@
  * @Description: 侧边导航栏
 -->
 <template>
-  <a-layout-sider class="sider" v-model:collapsed="collapsed" :trigger="null" collapsible breakpoint="xl" theme="light" :width="150" :collapsedWidth="80">
+  <a-layout-sider
+    class="sider"
+    v-model:collapsed="collapsed"
+    :trigger="null"
+    collapsible
+    breakpoint="xl"
+    theme="light"
+    :width="150"
+    :collapsedWidth="80"
+  >
     <Menu />
   </a-layout-sider>
 </template>

@@ -1,19 +1,19 @@
 import { request } from '@/utils/request';
 
 export interface LoginResult {
-  code: number,
-  message: string,
+  code: number;
+  message: string;
   data: {
-    name: string,
-    uid: number,
-    token: string,
-    admin: boolean
-  }
+    name: string;
+    uid: number;
+    token: string;
+    admin: boolean;
+  };
 }
 
 export interface OauthUrlResult {
-    code: number,
-    message: string,
+  code: number;
+  message: string;
 }
 
 export const authApi = {

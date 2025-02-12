@@ -7,7 +7,13 @@
           <font-awesome-icon :icon="winnerIcon(store.redTeam)" :style="{ color: iconColor(store.redTeam) }" />
           {{ store.redTeam }}
         </span>
-        <a-input-number :value="store.redTeamScore" :min="0" :max="store.maxWinRound || 100" :bordered="false" @update:value="updateRedScore" />
+        <a-input-number
+          :value="store.redTeamScore"
+          :min="0"
+          :max="store.maxWinRound || 100"
+          :bordered="false"
+          @update:value="updateRedScore"
+        />
       </div>
 
       <div class="vs">
@@ -20,7 +26,13 @@
           <font-awesome-icon :icon="winnerIcon(store.blueTeam)" :style="{ color: iconColor(store.blueTeam) }" />
           {{ store.blueTeam }}
         </span>
-        <a-input-number :value="store.blueTeamScore" :min="0" :max="store.maxWinRound || 100" :bordered="false" @update:value="updateBlueScore" />
+        <a-input-number
+          :value="store.blueTeamScore"
+          :min="0"
+          :max="store.maxWinRound || 100"
+          :bordered="false"
+          @update:value="updateBlueScore"
+        />
       </div>
     </div>
 
@@ -46,7 +58,12 @@
     <!-- Bracket Info -->
     <div class="narrator-bar">
       <span>{{ $t('command.bracketTitle') }}</span>
-      <a-typography-text v-if="bracketWords" copyable style="white-space: pre-line; display: flex; align-items: center" code>
+      <a-typography-text
+        v-if="bracketWords"
+        copyable
+        style="white-space: pre-line; display: flex; align-items: center"
+        code
+      >
         {{ bracketWords }}
         <template #copyableIcon="{ copied }">
           <span v-if="!copied" key="copy-icon">
@@ -66,10 +83,19 @@
     <!-- Narrator Settings -->
     <div class="narrator-bar">
       <span>{{ $t('command.narratorTitle') }}</span>
-      <a-checkbox-group v-model="store.narratorSetting" :options="narratorOptions" @update:value="updateNarratorSetting" />
+      <a-checkbox-group
+        v-model="store.narratorSetting"
+        :options="narratorOptions"
+        @update:value="updateNarratorSetting"
+      />
     </div>
 
-    <a-typography-text v-if="narratorText" copyable style="white-space: pre-line; display: flex; align-items: center" code>
+    <a-typography-text
+      v-if="narratorText"
+      copyable
+      style="white-space: pre-line; display: flex; align-items: center"
+      code
+    >
       {{ narratorText }}
       <template #copyableIcon="{ copied }">
         <span v-if="!copied" key="copy-icon">
@@ -89,7 +115,11 @@
 
 <script setup lang="ts">
 import { faCopy as faCopyRegular } from '@fortawesome/free-regular-svg-icons';
-import { faCheck as faCheckSolid, faCrown as faCrownSolid, faUsersLine as faUsersLineSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCheck as faCheckSolid,
+  faCrown as faCrownSolid,
+  faUsersLine as faUsersLineSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCommandStore } from '@/stores/commandStore';
@@ -170,7 +200,8 @@ const updateNarratorSetting = (value: string[]) => {
 // Helper Functions
 const winnerIcon = (team: string) => (store.winner === team ? faCrownSolid : faUsersLineSolid);
 
-const iconColor = (team: string) => (store.winner === team ? 'var(--team-winner)' : team === store.redTeam ? 'var(--team-red)' : 'var(--team-blue)');
+const iconColor = (team: string) =>
+  store.winner === team ? 'var(--team-winner)' : team === store.redTeam ? 'var(--team-red)' : 'var(--team-blue)';
 </script>
 
 <style lang="scss" scoped>

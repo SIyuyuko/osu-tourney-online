@@ -7,7 +7,15 @@
  * @Description: 歌单列表组件
 -->
 <template>
-  <a-tabs ref="paneRef" class="album-panel" v-model:activeKey="activeKey" hide-add type="editable-card" @edit="onEdit" :style="{ '--view-height': viewHeight + 'px' }">
+  <a-tabs
+    ref="paneRef"
+    class="album-panel"
+    v-model:activeKey="activeKey"
+    hide-add
+    type="editable-card"
+    @edit="onEdit"
+    :style="{ '--view-height': viewHeight + 'px' }"
+  >
     <a-tab-pane v-for="pane in panes" :key="pane.key" :tab="pane.title" :closable="pane.closable">
       <div class="page home" v-if="pane.key === 'home'">
         <a-list item-layout="vertical" size="small" :data-source="listData" style="overflow: auto">
@@ -23,7 +31,9 @@
                   <!-- <a @click="deleteData(item)">删除</a> -->
                 </template>
                 <template #description>
-                  <span class="description" :title="item?.description">{{ item?.description }}</span>
+                  <span class="description" :title="item?.description">
+                    {{ item?.description }}
+                  </span>
                 </template>
               </a-list-item-meta>
             </a-list-item>

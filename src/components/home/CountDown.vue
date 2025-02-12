@@ -9,7 +9,13 @@
 <template>
   <div class="event-timer">
     <div class="timer-content">
-      <a-statistic-countdown v-if="hasEvent" :value="deadline" :format="timerFormat" @finish="handleTimerFinish" :class="{ finished: isFinished }">
+      <a-statistic-countdown
+        v-if="hasEvent"
+        :value="deadline"
+        :format="timerFormat"
+        @finish="handleTimerFinish"
+        :class="{ finished: isFinished }"
+      >
         <!-- 事件标题 -->
         <template #title>
           <span class="event-label">Next Event:</span>
@@ -30,7 +36,11 @@
 
         <!-- 前置一计时器图标 -->
         <template #prefix>
-          <font-awesome-icon class="timer-icon" :icon="isFinished ? faFlagRegular : faHourglassHalfRegular" :class="{ pulse: !isFinished }" />
+          <font-awesome-icon
+            class="timer-icon"
+            :icon="isFinished ? faFlagRegular : faHourglassHalfRegular"
+            :class="{ pulse: !isFinished }"
+          />
         </template>
 
         <!-- 后置一结束提示符 -->
@@ -64,7 +74,11 @@ import {
   // faPenToSquare as faPenToSquareSolid,
   // faEraser as faEraserSolid,
 } from '@fortawesome/free-solid-svg-icons';
-import { faClock as faClockRegular, faFlag as faFlagRegular, faHourglassHalf as faHourglassHalfRegular } from '@fortawesome/free-regular-svg-icons';
+import {
+  faClock as faClockRegular,
+  faFlag as faFlagRegular,
+  faHourglassHalf as faHourglassHalfRegular,
+} from '@fortawesome/free-regular-svg-icons';
 import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { Empty } from 'ant-design-vue';
@@ -78,7 +92,11 @@ let isFinished = ref(false); // 倒计时是否结束
 // Computed
 const hasEvent = computed(() => banner.eventTime && banner.event);
 const timerFormat = computed(() => {
-  return isFinished.value ? '' : locale.value === 'zh' ? 'D 天 H 时 m 分 s 秒' : `D day H hour m [min] s [second] ${t('banner.countdownSuffix')}`;
+  return isFinished.value
+    ? ''
+    : locale.value === 'zh'
+      ? 'D 天 H 时 m 分 s 秒'
+      : `D day H hour m [min] s [second] ${t('banner.countdownSuffix')}`;
 });
 
 // Methods

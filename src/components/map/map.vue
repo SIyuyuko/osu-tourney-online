@@ -7,7 +7,13 @@
  * @Description: 谱面组件
 -->
 <template>
-  <a-card :data-theme="theme" class="map-panel" :class="[isCard ? '' : 'detail', { loading }]" v-if="map || loading" size="small">
+  <a-card
+    :data-theme="theme"
+    class="map-panel"
+    :class="[isCard ? '' : 'detail', { loading }]"
+    v-if="map || loading"
+    size="small"
+  >
     <!-- 非裁判视图 -->
     <a-card-meta v-if="!isReferee">
       <template #description>
@@ -202,7 +208,9 @@ const beatmapActions = computed(() => [
 // Computed
 const coverUrl = computed(() => `https://assets.ppy.sh/beatmaps/${map.value?.data?.beatmapset_id}/covers/card.jpg`);
 
-const hasUnicodeTitle = computed(() => map.value?.data?.beatmapset?.title !== map.value?.data?.beatmapset?.title_unicode);
+const hasUnicodeTitle = computed(
+  () => map.value?.data?.beatmapset?.title !== map.value?.data?.beatmapset?.title_unicode
+);
 
 const getActionIcon = (action: (typeof beatmapActions.value)[number]) => {
   return action.icon;

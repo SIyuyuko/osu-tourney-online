@@ -1,5 +1,11 @@
 <template>
-  <a-drawer v-model:open="showSetting" :title="$t('setting.title')" :width="drawerWidth" :data-theme="theme" :z-index="1001">
+  <a-drawer
+    v-model:open="showSetting"
+    :title="$t('setting.title')"
+    :width="drawerWidth"
+    :data-theme="theme"
+    :z-index="1001"
+  >
     <div class="setting-container">
       <a-alert class="mb-4" :message="$t('setting.tip') + 'config/'" type="info" />
 

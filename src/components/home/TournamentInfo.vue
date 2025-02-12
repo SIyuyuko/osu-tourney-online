@@ -37,12 +37,21 @@
 
       <!-- 自定义操作 -->
       <template #actions>
-        <font-awesome-icon :icon="faTableSolid" :title="t('tournament.mainSheet')" @click="handleMainSheetClick(activeTournament.mainSheetUrl)" />
+        <font-awesome-icon
+          :icon="faTableSolid"
+          :title="t('tournament.mainSheet')"
+          @click="handleMainSheetClick(activeTournament.mainSheetUrl)"
+        />
       </template>
     </a-card>
   </div>
 
-  <a-empty v-else :description="$t('tournament.emptyActive')" :image="Empty.PRESENTED_IMAGE_SIMPLE" class="empty-state" />
+  <a-empty
+    v-else
+    :description="$t('tournament.emptyActive')"
+    :image="Empty.PRESENTED_IMAGE_SIMPLE"
+    class="empty-state"
+  />
 </template>
 
 <script setup lang="ts">

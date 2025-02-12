@@ -50,7 +50,12 @@
         </template>
       </a-select>
 
-      <a-input-number v-model:value="store.ts" :addon-before="$t('command.teamsize')" :min="1" style="width: calc(50% - 5px)" />
+      <a-input-number
+        v-model:value="store.ts"
+        :addon-before="$t('command.teamsize')"
+        :min="1"
+        style="width: calc(50% - 5px)"
+      />
     </div>
 
     <!-- Time Settings -->
@@ -63,7 +68,12 @@
 </template>
 
 <script setup lang="ts">
-import { faChess as faChessSolid, faUsersLine as faUsersLineSolid, faUserGroup as faUserGroupSolid, faRankingStar as faRankingStarSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChess as faChessSolid,
+  faUsersLine as faUsersLineSolid,
+  faUserGroup as faUserGroupSolid,
+  faRankingStar as faRankingStarSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { useCommandStore } from '@/stores/commandStore';
 import { watch } from 'vue';
 import TimeSetting from './TimeSetting.vue';
@@ -96,19 +106,28 @@ watch([() => store.teamMode, () => store.scoreMode], () => {
 });
 
 // 监听 timer 的变化
-watch(() => store.timer, () => {
-  store.updateCommand('timer');
-});
+watch(
+  () => store.timer,
+  () => {
+    store.updateCommand('timer');
+  }
+);
 
 // 监听 startTime 的变化
-watch(() => store.startTime, () => {
-  store.updateCommand('start');
-});
+watch(
+  () => store.startTime,
+  () => {
+    store.updateCommand('start');
+  }
+);
 
 // 监听 ts 的变化
-watch(() => store.ts, () => {
-  store.updateCommand('size');
-});
+watch(
+  () => store.ts,
+  () => {
+    store.updateCommand('size');
+  }
+);
 </script>
 
 <style lang="scss" scoped>

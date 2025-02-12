@@ -3,7 +3,7 @@ export const zh = {
     home: '主页',
     tournament: '比赛',
     mappool: '图池',
-    songlist: "歌单",
+    songlist: '歌单',
     command: '指令',
   },
   home: {
@@ -50,14 +50,14 @@ export const zh = {
     empty: '暂无图池',
   },
   songlist: {
-    header: "谱面歌单",
-    floatButton:"听音乐",
-    playAll:"播放全部",
-    create:"创建",
-    albumList:"歌单列表"
+    header: '谱面歌单',
+    floatButton: '听音乐',
+    playAll: '播放全部',
+    create: '创建',
+    albumList: '歌单列表',
   },
   element: {
-    mapInput:"请输入谱面ID"
+    mapInput: '请输入谱面ID',
   },
   command: {
     list: '指令列表',

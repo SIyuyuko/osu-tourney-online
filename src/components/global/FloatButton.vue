@@ -14,8 +14,19 @@
         <font-awesome-icon :icon="faBackwardStepSolid" @click="store.skipTrack('prev')" />
         <font-awesome-icon :icon="playbackIcon" @click="store.togglePlayback" />
         <font-awesome-icon :icon="faForwardStepSolid" @click="store.skipTrack('next')" />
-        <font-awesome-icon v-if="!currentPlayModeConfig.isSvg" :icon="currentPlayModeConfig.icon" :fade="currentPlayModeConfig.fade" @click="store.togglePlayMode()" />
-        <span v-else v-html="currentPlayModeConfig.icon" class="svg-icon" :fade="currentPlayModeConfig.fade" @click="store.togglePlayMode()" />
+        <font-awesome-icon
+          v-if="!currentPlayModeConfig.isSvg"
+          :icon="currentPlayModeConfig.icon"
+          :fade="currentPlayModeConfig.fade"
+          @click="store.togglePlayMode()"
+        />
+        <span
+          v-else
+          v-html="currentPlayModeConfig.icon"
+          class="svg-icon"
+          :fade="currentPlayModeConfig.fade"
+          @click="store.togglePlayMode()"
+        />
         <font-awesome-icon :icon="faShareNodesSolid" @click="openBeatmapPage" />
       </div>
       <!-- <div v-else class="beatmap-title">

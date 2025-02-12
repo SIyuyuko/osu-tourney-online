@@ -41,7 +41,14 @@
     </div>
 
     <!-- 播放列表区域 -->
-    <a-list ref="listRef" size="small" bordered :data-source="playlist" v-bind="listProps" style="overflow: auto; height: 100%">
+    <a-list
+      ref="listRef"
+      size="small"
+      bordered
+      :data-source="playlist"
+      v-bind="listProps"
+      style="overflow: auto; height: 100%"
+    >
       <template #renderItem="{ item }">
         <a-list-item class="songlist" ref="listItemRef">
           <template #actions>

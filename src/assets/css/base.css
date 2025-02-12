@@ -2,7 +2,9 @@
 
 *,
 *::before,
-*::after ,.ant-input,.ant-typography>*{
+*::after,
+.ant-input,
+.ant-typography > * {
   box-sizing: border-box;
   margin: 0;
   font-weight: 500;
@@ -47,8 +49,7 @@ body,
 
 body {
   min-height: 100vh;
-  transition:
-    background-color 0.5s;
+  transition: background-color 0.5s;
   line-height: 1.6;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

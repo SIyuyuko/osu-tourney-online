@@ -1,6 +1,11 @@
 <template>
   <div class="tournament-view">
-    <a-page-header :title="tournamentData.displayTitle" :sub-title="tournamentData.subTitle" @back="handleBack" class="tournament-header">
+    <a-page-header
+      :title="tournamentData.displayTitle"
+      :sub-title="tournamentData.subTitle"
+      @back="handleBack"
+      class="tournament-header"
+    >
       <template #tags>
         <a-tag :color="getStatusColor(tournamentData.status)">
           {{ getStatusText(tournamentData.status) }}
@@ -8,7 +13,11 @@
       </template>
 
       <template #extra>
-        <a-button type="primary" :disabled="!tournamentData.mainSheetUrl" @click="handleOpenUrl(tournamentData.mainSheetUrl)">
+        <a-button
+          type="primary"
+          :disabled="!tournamentData.mainSheetUrl"
+          @click="handleOpenUrl(tournamentData.mainSheetUrl)"
+        >
           {{ $t('tournament.website') }}
         </a-button>
       </template>
@@ -27,7 +36,11 @@
             <div class="player-list">
               <div v-for="player in team.players" :key="player.uid" class="player-list__item">
                 <!-- 玩家头像 -->
-                <a-avatar :size="32" :src="player.isLoading ? '/config/image/user/avatar.png' : player.avatar" style="border: 1px solid #ccc">
+                <a-avatar
+                  :size="32"
+                  :src="player.isLoading ? '/config/image/user/avatar.png' : player.avatar"
+                  style="border: 1px solid #ccc"
+                >
                   <template v-if="!player.avatar && !player.isLoading">
                     <font-awesome-icon :icon="faUserLargeSlashSolid" />
                   </template>
@@ -46,7 +59,11 @@
 
                 <!-- 操作按钮 -->
                 <div class="player-list__actions">
-                  <a-button size="small" type="primary" @click="handleOpenUrl(`https://osu.ppy.sh/users/${player.uid}`)">
+                  <a-button
+                    size="small"
+                    type="primary"
+                    @click="handleOpenUrl(`https://osu.ppy.sh/users/${player.uid}`)"
+                  >
                     <font-awesome-icon :icon="faCircleInfoSolid" />
                     {{ $t('tournament.playerInfo') }}
                   </a-button>
@@ -76,7 +93,11 @@
 </template>
 
 <script setup lang="ts">
-import { faCircleInfo as faCircleInfoSolid, faAt as faAtSolid, faUserLargeSlash as faUserLargeSlashSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCircleInfo as faCircleInfoSolid,
+  faAt as faAtSolid,
+  faUserLargeSlash as faUserLargeSlashSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { ref, computed, onMounted } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';

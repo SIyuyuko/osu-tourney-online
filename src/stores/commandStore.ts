@@ -78,7 +78,8 @@ export const useCommandStore = defineStore('command', () => {
     switch (type) {
       case 'create':
         if (prefix.value && redTeam.value && blueTeam.value) {
-          commandList.value[index].value = `${defaultCommand.value[index].cmd} ${prefix.value}:(${redTeam.value})vs(${blueTeam.value})`;
+          commandList.value[index].value =
+            `${defaultCommand.value[index].cmd} ${prefix.value}:(${redTeam.value})vs(${blueTeam.value})`;
         } else {
           commandList.value[index].value = defaultCommand.value[index]?.cmd ?? commandList.value[index].cmd;
         }

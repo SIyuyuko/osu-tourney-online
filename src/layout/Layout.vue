@@ -11,7 +11,9 @@
             </ContextMenu>
           </template>
           <template v-else>
+            <!-- <ContextMenu> -->
               <RouterView />
+            <!-- </ContextMenu> -->
           </template>
         </a-layout-content>
       </a-layout>
@@ -39,9 +41,9 @@ const { theme } = storeToRefs(themeStore);
 
 const isProd = computed(() => import.meta.env.PROD);
 
-document.addEventListener("contextmenu", function (e) {
-    e.preventDefault();
-    console.log('contextmenu');
+document.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+  console.log('contextmenu');
 });
 
 onBeforeMount(() => {

@@ -19,20 +19,16 @@
 
 <script setup lang="ts">
 import { Dropdown, message } from 'ant-design-vue';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faPenToSquare as faPenToSquareSolid, faDeleteLeft as faDeleteLeftSolid, faCopy as faCopySolid, faShare as faShareSolid, faRotateRight as faRotateRightSolid } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPenToSquare as faPenToSquareSolid,
+  faDeleteLeft as faDeleteLeftSolid,
+  faCopy as faCopySolid,
+  faShare as faShareSolid,
+  faRotateRight as faRotateRightSolid,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-interface MenuItem {
-  key?: string;
-  label?: string;
-  icon?: IconDefinition;
-  type?: 'divider';
-  onClick?: () => void;
-}
-
-
-const menuItems: MenuItem[] = [
+const menuItems = [
   {
     key: 'edit',
     label: '编辑',
@@ -76,13 +72,3 @@ const menuItems: MenuItem[] = [
   },
 ];
 </script>
-
-<style lang="scss">
-.custom-context-menu {
-  .ant-dropdown-menu-item {
-    &:hover {
-      background-color: #f5f5f5;
-    }
-  }
-}
-</style>

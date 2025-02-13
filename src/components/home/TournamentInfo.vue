@@ -40,7 +40,7 @@
         <font-awesome-icon
           :icon="faTableSolid"
           :title="t('tournament.mainSheet')"
-          @click="handleMainSheetClick(activeTournament.mainSheetUrl)"
+          @click="handleMainSheetClick()"
         />
       </template>
     </a-card>
@@ -58,10 +58,8 @@
 import { faTable as faTableSolid } from '@fortawesome/free-solid-svg-icons';
 import { computed, onMounted, ref } from 'vue';
 import { message, Empty } from 'ant-design-vue';
-import { open } from '@tauri-apps/plugin-shell';
-import { storeToRefs } from 'pinia';
-import { useApp } from '@/stores/appStore';
 import { useI18n } from 'vue-i18n';
+import { openExternalLink } from '@/utils/helpers';
 
 // Types
 interface Tournament {
@@ -97,8 +95,6 @@ const TOURNAMENT_DETAILS: TournamentDetailKey[] = ['time', 'mode', 'type'];
 const { t } = useI18n();
 
 // State
-const appStore = useApp();
-const { isTauri } = storeToRefs(appStore);
 const tournamentConfig = window.tournament as TournamentConfig; // 比赛配置
 const activeTournament = ref<Tournament | null>(null);
 
@@ -106,13 +102,9 @@ const activeTournament = ref<Tournament | null>(null);
 const descriptionColumns = computed(() => DESCRIPTION_COLUMNS);
 
 // Methods
-const handleMainSheetClick = (url?: string) => {
-  if (url) {
-    if (isTauri.value) {
-      open(url);
-    } else {
-      window.open(url, '_blank');
-    }
+const handleMainSheetClick = () => {
+  if (activeTournament.value) {
+    openExternalLink(activeTournament.value.mainSheetUrl);
   } else {
     message.warning(t('tournament.setUrlWarning'));
   }

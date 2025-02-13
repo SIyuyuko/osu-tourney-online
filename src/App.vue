@@ -5,7 +5,7 @@
 
 <script setup lang="ts">
 import ThemeConfigurator from '@/components/global/ThemeConfigurator.vue';
-import Layout from '@/layout/Layout.vue';
+import Layout from '@/layout/LayoutHub.vue';
 </script>
 
 <style lang="scss">

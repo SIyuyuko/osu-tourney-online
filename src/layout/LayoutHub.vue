@@ -1,7 +1,7 @@
 <template>
   <div style="height: 100%; display: flex" :data-theme="theme">
     <a-layout>
-      <Sider />
+      <SiderLayout />
       <a-layout>
         <Header data-tauri-drag-region />
         <a-layout-content>
@@ -12,7 +12,7 @@
           </template>
           <template v-else>
             <!-- <ContextMenu> -->
-              <RouterView />
+            <RouterView />
             <!-- </ContextMenu> -->
           </template>
         </a-layout-content>
@@ -30,8 +30,8 @@ import { onBeforeMount, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeStore } from '@/stores/themeStore';
 import ContextMenu from '@/components/global/ContextMenu.vue';
-import Sider from '@/components/nav/Sider.vue';
-import Header from '@/components/nav/Header.vue';
+import SiderLayout from '@/layout/SiderLayout.vue';
+import Header from '@/layout/HeaderLayout.vue';
 import FloatButton from '@/components/global/FloatButton.vue';
 import SettingDrawer from '@/components/global/SettingDrawer.vue';
 import i18n from '@/i18n';
@@ -41,10 +41,12 @@ const { theme } = storeToRefs(themeStore);
 
 const isProd = computed(() => import.meta.env.PROD);
 
-document.addEventListener('contextmenu', function (e) {
-  e.preventDefault();
-  console.log('contextmenu');
-});
+if (isProd.value) {
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+    console.log('contextmenu');
+  });
+}
 
 onBeforeMount(() => {
   i18n.global.locale = window.user?.language ?? 'zh';

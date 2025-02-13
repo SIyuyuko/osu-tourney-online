@@ -1,19 +1,9 @@
 import type { BeatmapInfo } from '@/types/beatmap';
-import { storeToRefs } from 'pinia';
-import { open } from '@tauri-apps/plugin-shell';
-import { useApp } from '@/stores/appStore';
+import { openExternalLink } from '@/utils/helpers';
 
 export function useBeatmapActions(emit: any) {
-  const appStore = useApp();
-  const { isTauri } = storeToRefs(appStore);
-
   const openBeatmapWebsite = (bid: number) => {
-    const url = `http://osu.ppy.sh/b/${bid}`;
-    if (isTauri) {
-      open(url);
-    } else {
-      window.open(url, '_blank');
-    }
+    openExternalLink(`http://osu.ppy.sh/b/${bid}`);
   };
 
   const copyToClipboard = (text: string) => {
@@ -37,12 +27,7 @@ export function useBeatmapActions(emit: any) {
   };
 
   const downloadBeatmap = (setId: number) => {
-    if (isTauri) {
-      open(`'https://dl.sayobot.cn/beatmaps/download/'${setId}`);
-      return;
-    } else {
-      window.open(`'https://dl.sayobot.cn/beatmaps/download/'${setId}`, '_self');
-    }
+    openExternalLink(`https://osu.ppy.sh/beatmapsets/${setId}`);
   };
 
   const toggleMapStatus = (map: any) => {

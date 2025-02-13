@@ -8,7 +8,7 @@
 -->
 <template>
   <a-layout-sider
-    class="sider"
+    class="sider hidden lg:block bg-white dark:bg-[#141414]"
     v-model:collapsed="collapsed"
     :trigger="null"
     collapsible
@@ -23,7 +23,7 @@
 
 <script setup lang="ts">
 import { inject } from 'vue';
-import Menu from './Menu.vue';
+import Menu from '@/components/nav/Menu.vue';
 
 let collapsed = inject('collapsed');
 </script>
@@ -33,10 +33,5 @@ let collapsed = inject('collapsed');
   display: flex;
   flex-direction: column;
   background: transparent;
-}
-@media (max-width: 1024px) {
-  .sider {
-    display: none;
-  }
 }
 </style>

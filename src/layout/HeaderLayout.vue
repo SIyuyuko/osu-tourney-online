@@ -7,9 +7,9 @@
  * @Description: 页头导航栏
 -->
 <template>
-  <a-layout-header>
-    <!-- 左侧操作按钮组 -->
-    <div class="operate-button-group">
+  <a-layout-header class="bg-white dark:bg-[#141414] flex flex-row items-center justify-between">
+    <!-- 左侧样式设置组 -->
+    <div class="flex flex-row items-center">
       <!-- 桌面端折叠按钮 -->
       <a-button class="collapse-btn" type="link" @click="toggleSidebar">
         <font-awesome-icon :icon="collapsed ? faIndentSolid : faOutdentSolid" />
@@ -55,24 +55,26 @@
     </div>
 
     <!-- 右侧用户操作按钮组 -->
-    <div class="user-header">
-      <!-- 登录/登出按钮 -->
-      <a-button type="link" @click="handleAuth">
-        <font-awesome-icon :icon="isLoggedIn ? faRightFromBracketSolid : faRightToBracketSolid" />
-      </a-button>
+    <div class="user-header flex flex-row items-center gap-3">
+      <div class="flex flex-row items-center">
+        <!-- 登录/登出按钮 -->
+        <a-button type="link" @click="handleAuth">
+          <font-awesome-icon :icon="isLoggedIn ? faRightFromBracketSolid : faRightToBracketSolid" />
+        </a-button>
 
-      <!-- GitHub链接 -->
-      <a-button type="link" @click="openExternalLink(REPO_URL)">
-        <font-awesome-icon :icon="faGithubBrands" />
-      </a-button>
+        <!-- GitHub链接 -->
+        <a-button type="link" @click="openExternalLink(REPO_URL)">
+          <font-awesome-icon :icon="faGithubBrands" />
+        </a-button>
 
-      <!-- 设置按钮 -->
-      <a-button class="setting-button" type="link" @click="showSetting = true">
-        <font-awesome-icon :icon="faGearSolid" />
-      </a-button>
+        <!-- 设置按钮 -->
+        <a-button class="setting-button" type="link" @click="showSetting = true">
+          <font-awesome-icon :icon="faGearSolid" />
+        </a-button>
+      </div>
 
       <!-- Tauri窗口控制按钮 -->
-      <div class="window-controls" v-if="isTauri">
+      <div class="window-controls flex flex-row items-center" v-if="isTauri">
         <a-button type="link" @click="minimizeWindow">
           <font-awesome-icon class="window-controls-icon" :icon="faMinusSolid" />
         </a-button>
@@ -109,9 +111,9 @@ import { useApp } from '@/stores/appStore';
 import { useThemeStore } from '@/stores/themeStore';
 import { useSettingStore } from '@/stores/settingStore';
 import { globalState } from '@/utils/initApp';
-import { open } from '@tauri-apps/plugin-shell';
+import { openExternalLink } from '@/utils/helpers';
 import { authApi } from '@/api';
-import Menu from './Menu.vue';
+import Menu from '@/components/nav/Menu.vue';
 
 const themeStore = useThemeStore();
 const { toggleTheme } = themeStore;
@@ -147,15 +149,6 @@ const toggleSidebar = () => {
 const changeLocale = (newLocale: string) => {
   locale.value = newLocale;
   localStorage.setItem('locale', newLocale);
-};
-
-// 网页跳转
-const openExternalLink = async (url: string) => {
-  if (isTauri.value) {
-    await open(url);
-  } else {
-    window.open(url, '_blank');
-  }
 };
 
 // 登录/登出
@@ -201,33 +194,10 @@ onBeforeMount(() => {
 
 <style lang="scss" scoped>
 .ant-layout-header {
-  padding: 0;
-  display: flex;
-
-  .collapse-btn {
-    margin-left: 0.7rem;
-  }
-
-  .operate-button-group {
-    display: flex;
-    margin: auto 0;
-  }
+  padding-inline: 0.8rem;
 
   .user-header {
-    display: flex;
-    margin: 0 0 0 auto;
-    align-items: center;
-    vertical-align: middle;
-
-    .setting-button {
-      margin-right: 0.8rem;
-    }
-
     .window-controls {
-      display: flex;
-      align-items: center;
-      margin-right: 0.8rem;
-
       .close-btn:hover {
         background-color: #ff4d4f;
         color: white;
@@ -247,13 +217,6 @@ onBeforeMount(() => {
 }
 
 @media (max-width: 1024px) {
-  .ant-layout-header {
-    position: sticky;
-    width: 100%;
-    top: 0;
-    z-index: 1;
-  }
-
   .collapse-btn {
     display: none;
   }

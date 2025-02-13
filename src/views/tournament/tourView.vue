@@ -16,7 +16,7 @@
         <a-button
           type="primary"
           :disabled="!tournamentData.mainSheetUrl"
-          @click="handleOpenUrl(tournamentData.mainSheetUrl)"
+          @click="openExternalLink(tournamentData.mainSheetUrl)"
         >
           {{ $t('tournament.website') }}
         </a-button>
@@ -62,7 +62,7 @@
                   <a-button
                     size="small"
                     type="primary"
-                    @click="handleOpenUrl(`https://osu.ppy.sh/users/${player.uid}`)"
+                    @click="openExternalLink(`https://osu.ppy.sh/users/${player.uid}`)"
                   >
                     <font-awesome-icon :icon="faCircleInfoSolid" />
                     {{ $t('tournament.playerInfo') }}
@@ -99,12 +99,10 @@ import {
   faUserLargeSlash as faUserLargeSlashSolid,
 } from '@fortawesome/free-solid-svg-icons';
 import { ref, computed, onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
 import { useI18n } from 'vue-i18n';
-import { useApp } from '@/stores/appStore';
 import { userApi } from '@/api';
 import { Empty } from 'ant-design-vue';
-import { open } from '@tauri-apps/plugin-shell';
+import { openExternalLink } from '@/utils/helpers';
 import type { TournamentData, Player, ProcessedTeam } from '@/types/tournament';
 
 const props = defineProps<{
@@ -116,7 +114,6 @@ const emit = defineEmits<{
 }>();
 
 // Store & Composables
-const { isTauri } = storeToRefs(useApp());
 const { t } = useI18n();
 
 // Reactive State
@@ -156,11 +153,6 @@ const getStatusText = (status: string) => {
 };
 
 const handleBack = () => emit('showDetail');
-
-const handleOpenUrl = (url: string) => {
-  if (!url) return;
-  isTauri.value ? open(url) : window.open(url, '_blank');
-};
 
 const copyToClipboard = async (text: string, prefix = ''): Promise<boolean> => {
   const finalText = prefix ? `${prefix} ${text}`.trim() : text;

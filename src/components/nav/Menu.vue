@@ -13,7 +13,7 @@
     v-model:selectedKeys="selectedKeys"
     theme="light"
     mode="inline"
-    @click="handleMenuClick"
+    @click="router.push({ name: $event.key })"
     :forceSubMenuRender="true"
     triggerSubMenuAction="click"
   >
@@ -23,12 +23,12 @@
           <span class="anticon">
             <font-awesome-icon :icon="item.icon" />
           </span>
-          <span>{{ $t(item.i18nKey) }}</span>
+          <span class="menu-title">{{ $t(item.i18nKey) }}</span>
         </router-link>
       </a-menu-item>
     </template>
   </a-menu>
-  <div class="logo">
+  <div class="logo text-center mx-auto mt-0 pb-2">
     <span>Tourney Web</span>
   </div>
 </template>
@@ -41,9 +41,10 @@ import {
   faCompactDisc as faCompactDiscSolid,
   faTerminal as faTerminalSolid,
 } from '@fortawesome/free-solid-svg-icons';
-import { ref, watch } from 'vue';
+import { ref, watch, inject } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
+let collapsed = inject('collapsed');
 const router = useRouter();
 const route = useRoute();
 
@@ -82,76 +83,64 @@ const menuItems = [
 ];
 
 // 当前选中的菜单项
-const selectedKeys = ref<string[]>([route.name as string]);
-
-// 处理菜单点击
-const handleMenuClick = ({ key }: { key: string }) => {
-  router.push({ name: key });
-};
+const selectedKeys = ref<string[]>([String(route.name)]);
 
 // 监听路由变化更新选中项
 watch(
   () => route.name,
   (newRouteName) => {
     if (newRouteName) {
-      selectedKeys.value = [newRouteName as string];
+      selectedKeys.value = [String(newRouteName)];
     }
   }
 );
 </script>
 
 <style lang="scss" scoped>
+
 .menu {
   padding: 9px 0 0 0;
   height: 100%;
   padding-left: 0.3rem;
   padding-right: 0.3rem;
-  background: #fff; // 亮色主题背景
-  transition: background var(--theme-transition-duration) var(--theme-transition-timing);
-}
 
-.logo {
-  text-align: center;
-  margin: auto 0 0 0;
-  padding: 0 0 0.5rem 0;
-  background: #fff; // 亮色主题背景
-  transition: background var(--theme-transition-duration) var(--theme-transition-timing);
+  :deep(.ant-menu-title-content) {
+    display: flex;
+    align-items: center;
+    height: 100%;
 
-  span {
-    font-weight: 600;
-    transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-  }
-}
-
-[data-theme='dark'] {
-  .menu {
-    background: var(--theme-black, #141414);
-  }
-
-  .logo {
-    background: var(--theme-black, #141414);
-    span {
-      color: #fff;
+    a {
+      display: flex;
+      align-items: center;
+      height: 1.5rem;
     }
   }
 }
 
 // 处理折叠状态
 :deep(.ant-menu-inline-collapsed) {
-  .menu-title {
-    display: none;
+  .ant-menu-title-content {
+    display: flex;
+    align-items: center;
+    height: 100%;
+
+    a {
+      display: flex;
+      align-items: center;
+      height: 1.5rem;
+    }
   }
 
-  .anticon {
-    margin-right: 0;
-  }
-
-  .ant-menu-item {
-    padding: 0 calc(50% - 16px / 2);
+  .ant-menu-title-content {
+    margin-left: auto;
+    margin-right: auto;
   }
 }
 
 @media (max-width: 1024px) {
+  .menu {
+    translate: 0.4rem;
+  }
   .logo {
     display: none;
   }

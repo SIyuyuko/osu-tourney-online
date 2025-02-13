@@ -61,14 +61,11 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { onBeforeUnmount, onMounted, ref, computed } from 'vue';
 import { usePlyrStore } from '@/stores/plyrStore';
-import { open } from '@tauri-apps/plugin-shell';
 import { storeToRefs } from 'pinia';
-import { useApp } from '@/stores/appStore';
 import 'plyr/dist/plyr.css';
+import { openExternalLink } from '@/utils/helpers';
 
 const store = usePlyrStore();
-const appStore = useApp();
-const { isTauri } = storeToRefs(appStore);
 const { currentTrack, playbackState } = storeToRefs(store);
 let isExpanded = ref(false); //是否显示播放器
 
@@ -97,11 +94,7 @@ const toggleExpanded = () => {
 // 谱面信息官网跳转
 const openBeatmapPage = async () => {
   if (currentTrack.value.info) {
-    if (isTauri.value) {
-      await open(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`);
-    } else {
-      window.open(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`, '_blank');
-    }
+    openExternalLink(`http://osu.ppy.sh/b/${currentTrack.value.info.id}`);
   }
 };
 

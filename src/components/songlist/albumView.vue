@@ -38,7 +38,7 @@
             class="avatar"
             :size="24"
             :src="albumList.creator?.avatar_url"
-            @click="jumpPage(albumList.creator)"
+            @click="jumpPage(albumList.creator.id)"
           ></a-avatar>
           {{ albumList.creator?.username }}
           {{ $t('songlist.create') }}
@@ -81,21 +81,19 @@
     </a-list>
   </div>
 </template>
-<script setup name="AlbumView">
+<script setup>
 import {
   faMagnifyingGlassPlus as faMagnifyingGlassPlusSolid,
   faPlus as faPlusSolid,
   faCirclePlay as faCirclePlaySolid,
 } from '@fortawesome/free-solid-svg-icons';
 import { onMounted } from 'vue';
-import { open } from '@tauri-apps/plugin-shell';
 import { beatmapApi, userApi } from '@/api';
 import { usePlyrStore } from '@/stores/plyrStore';
-import { useApp } from '@/stores/appStore';
 import { storeToRefs } from 'pinia';
+import { openExternalLink } from '@/utils/helpers';
 const usePlyr = usePlyrStore();
 const { info, songlist } = storeToRefs(usePlyr); //播放器实例
-const { isTauri } = storeToRefs(appStore);
 const props = defineProps({
   albumList: {
     type: Object,
@@ -176,15 +174,8 @@ async function initList() {
   }
 }
 // 跳转官网玩家信息页
-function jumpPage(info) {
-  if (info) {
-    let url = 'https://osu.ppy.sh/users/' + info.id;
-    if (isTauri.value) {
-      open(url);
-    } else {
-      window.open(url, '_blank');
-    }
-  }
+function jumpPage(id) {
+    openExternalLink(`https://osu.ppy.sh/users/${id}`);
 }
 onMounted(() => {
   initList();

@@ -85,9 +85,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 import { userApi } from '@/api';
-import { open } from '@tauri-apps/plugin-shell';
-import { storeToRefs } from 'pinia';
-import { useApp } from '@/stores/appStore';
+import { openExternalLink } from '@/utils/helpers';
 import { useTimeBasedGreeting } from '@/utils/useTimeBasedGreeting';
 import Countdown from '@/components/home/CountDown.vue';
 import Cover from '@/components/home/BannerGallery.vue';
@@ -118,8 +116,6 @@ const INFO_URL_PREFIX = 'https://osu.ppy.sh/users/';
 const CURRENT_DATE = dayjs().format('YYYY-MM-DD');
 
 // State
-const appStore = useApp();
-const { isTauri } = storeToRefs(appStore);
 const user = window.user as User; // 用户配置
 const banner = window.banner as Banner;
 const userInfo = ref(); // 用户api信息
@@ -138,11 +134,7 @@ const { dailyWords } = useTimeBasedGreeting(user.dailyWords);
 // Methods
 const openUrl = () => {
   if (userInfo.value) {
-    if (isTauri.value) {
-      open(`${INFO_URL_PREFIX}${user.uid}`);
-    } else {
-      window.open(`${INFO_URL_PREFIX}${user.uid}`, '_blank');
-    }
+    openExternalLink(`${INFO_URL_PREFIX}${user.uid}`);
   }
 };
 

@@ -102,7 +102,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { userApi } from '@/api';
 import { Empty } from 'ant-design-vue';
-import { openExternalLink } from '@/utils/helpers';
+import { openExternalLink, copyToClipboard } from '@/utils/helpers';
 import type { TournamentData, Player, ProcessedTeam } from '@/types/tournament';
 
 const props = defineProps<{
@@ -154,40 +154,11 @@ const getStatusText = (status: string) => {
 
 const handleBack = () => emit('showDetail');
 
-const copyToClipboard = async (text: string, prefix = ''): Promise<boolean> => {
-  const finalText = prefix ? `${prefix} ${text}`.trim() : text;
-
-  if (navigator.clipboard && window.isSecureContext) {
-    try {
-      await navigator.clipboard.writeText(finalText);
-      return true;
-    } catch (err) {
-      console.warn('Clipboard API failed:', err);
-    }
-  }
-
-  try {
-    const textArea = document.createElement('textarea');
-    textArea.value = finalText;
-    textArea.setAttribute('readonly', '');
-    textArea.style.cssText = 'position:fixed;pointer-events:none;z-index:-9999;opacity:0;';
-
-    document.body.appendChild(textArea);
-    textArea.select();
-    textArea.setSelectionRange(0, textArea.value.length);
-
-    const success = document.execCommand('copy');
-    document.body.removeChild(textArea);
-    return success;
-  } catch (err) {
-    console.error('Legacy clipboard copy failed:', err);
-    return false;
-  }
-};
-
 const handleInvitePlayer = async (player: Player) => {
   const username = player.username || `#${player.uid}`;
-  const success = await copyToClipboard(username, '!mp invite');
+  const prefix = '!mp invite';
+  const finalText = prefix ? `${prefix} ${username}`.trim() : username;
+  const success = await copyToClipboard(finalText);
 
   if (success) {
     player.showCopied = true;

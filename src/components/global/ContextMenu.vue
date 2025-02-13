@@ -18,7 +18,7 @@
 </template>
 
 <script setup lang="ts">
-import { Dropdown, message } from 'ant-design-vue';
+import { Dropdown } from 'ant-design-vue';
 import {
   faPenToSquare as faPenToSquareSolid,
   faDeleteLeft as faDeleteLeftSolid,
@@ -27,6 +27,7 @@ import {
   faRotateRight as faRotateRightSolid,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { copyToClipboard } from '@/utils/helpers';
 
 const menuItems = [
   {
@@ -45,15 +46,7 @@ const menuItems = [
     key: 'copy',
     label: '复制',
     icon: faCopySolid,
-    onClick: async () => {
-      try {
-        await navigator.clipboard.writeText(window.getSelection()?.toString() || '');
-        message.success('Text copied to clipboard');
-        console.log('Text copied to clipboard');
-      } catch (err) {
-        console.error('Failed to copy text: ', err);
-      }
-    },
+    onClick: () => copyToClipboard(window.getSelection()?.toString() || ''),
   },
   {
     key: 'delete',

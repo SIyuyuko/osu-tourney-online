@@ -28,8 +28,8 @@ osu!tourney web 是一个 osu! 比赛信息管理项目，通过个性化配置�
 
    ```bash
    # 使用 nvm
-   nvm install 20.12.1
-   nvm use 20.12.1
+   nvm install 22.13.1
+   nvm use 22.13.1
    ```
 
    或直接从 [Node.js 官网](https://nodejs.org/) 下载安装包
@@ -125,7 +125,7 @@ cargo tauri build
 
 #### 🔧 技术栈
 
-- 前端：Vue 3 + TypeScript + Vite ⚡
+- 前端：Vue 3 + TypeScript + Tailwind + Vite ⚡
 - 桌面应用：Tauri (Rust) 🦀
 - UI 框架：Ant Design Vue 🐜
 - 状态管理：Pinia 🍍
@@ -170,8 +170,8 @@ I hope that you will use this program and that it will help you in your work! uw
 
    ```bash
    # Use nvm
-   nvm install 20.12.1
-   nvm use 20.12.1
+   nvm install 22.13.1
+   nvm use 22.13.1
    ```
 
    Or download the installation package directly from the [Node.js official website](https://nodejs.org/)
@@ -269,7 +269,7 @@ The command page provides quick tournament command copying, and referee sheet co
 
 #### 🔧 Technology Stack
 
-- Frontend: Vue 3 + TypeScript + Vite ⚡
+- Frontend: Vue 3 + TypeScript + Tailwind + Vite ⚡
 - Desktop Application: Tauri (Rust) 🦀
 - UI Framework: Ant Design Vue 🐜
 - State Management: Pinia 🍍
@@ -297,8 +297,7 @@ If you find a bug or have a new feature suggestion, please submit an issue.
 ### TODO
 
 - [ ] 重构ing
-  - [ ] 转至新后端接口
-  - [ ] 统一Clipboard工具
+  - [ ] 完全转至新后端接口
   - [ ] 修复CommandList收起
   - [ ] TourView
     - [ ] public中默认头像获取需18秒，不清楚原因

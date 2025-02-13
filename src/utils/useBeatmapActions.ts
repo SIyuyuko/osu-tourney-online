@@ -1,20 +1,9 @@
 import type { BeatmapInfo } from '@/types/beatmap';
-import { openExternalLink } from '@/utils/helpers';
+import { openExternalLink, copyToClipboard } from '@/utils/helpers';
 
 export function useBeatmapActions(emit: any) {
   const openBeatmapWebsite = (bid: number) => {
     openExternalLink(`http://osu.ppy.sh/b/${bid}`);
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(() => {
-        console.log('Text copied to clipboard');
-      })
-      .catch((err) => {
-        console.error('Could not copy text: ', err);
-      });
   };
 
   const copyBeatmapId = (map: BeatmapInfo) => {

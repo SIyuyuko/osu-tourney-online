@@ -19,7 +19,7 @@
         <div class="flex items-center">
           <button
             class="operate-btn h-7 bg-[#13c2c2] hover:bg-[#11b3b3] px-2 flex items-center rounded-l-lg focus:outline-hidden"
-            @click="copyToClipboard(item.value || '', index)"
+            @click="copyCommand(item.value || '', index)"
           >
             <font-awesome-icon :icon="copiedIndex === index ? faCheckSolid : faCopyRegular" class="text-white" />
           </button>
@@ -41,6 +41,7 @@ import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { faCheck as faCheckSolid } from '@fortawesome/free-solid-svg-icons';
 import { faCopy as faCopyRegular } from '@fortawesome/free-regular-svg-icons';
 import { useI18n } from 'vue-i18n';
+import { copyToClipboard } from '@/utils/helpers';
 import { useCommandStore } from '@/stores/commandStore';
 import { useWindowSize } from '@vueuse/core';
 
@@ -58,14 +59,10 @@ const wikiUrl = computed(() => {
 });
 
 // 复制到剪贴板
-const copyToClipboard = async (text: string, index: number) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    copiedIndex.value = index;
-    setTimeout(() => (copiedIndex.value = null), 2000); // 2秒后重置复制状态
-  } catch (err) {
-    console.error('复制失败:', err);
-  }
+const copyCommand = async (text: string, index: number) => {
+  await copyToClipboard(text);
+  copiedIndex.value = index;
+  setTimeout(() => (copiedIndex.value = null), 2000); // 2秒后重置复制状态
 };
 
 // 计算输入框内容的宽度

@@ -7,58 +7,16 @@
  * @Description: 歌单页面组件
 -->
 <template>
-  <div class="page flex flex-col overflow-x-hidden overflow-y-auto h-full ml-[-1px] no-scroll gap-x-2.5">
-    <div class="nav">{{ $t('songlist.header') }}</div>
-    <div class="view">
-      <div>
-        <Player />
-      </div>
-      <div>
-        <Album />
-      </div>
+  <div class="flex flex-col overflow-x-hidden overflow-y-auto h-full ml-[-1px] no-scroll gap-x-2.5">
+    <div class="px-[10px]">{{ $t('songlist.header') }}</div>
+    <div class="overflow-hidden flex gap-x-2.5 p-2.5 h-full">
+      <PlayList />
+      <Album />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Player from '@/components/songlist/PlayList.vue';
+import PlayList from '@/components/songlist/PlayList.vue';
 import Album from '@/components/songlist/album.vue';
 </script>
-
-<style lang="scss" scoped>
-.page {
-  .nav {
-    padding: 0 10px;
-  }
-
-  .view {
-    overflow-x: hidden;
-    overflow-y: hidden;
-    padding: 10px;
-    display: flex;
-    column-gap: 10px;
-    height: 100%;
-
-    div {
-      width: 50%;
-      height: 100%;
-      overflow: hidden;
-    }
-  }
-}
-:deep(.ant-list) {
-  * {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  .ant-list-item.songlist {
-    height: 45px;
-
-    .ant-list-item-action {
-      width: 55px;
-    }
-  }
-}
-</style>

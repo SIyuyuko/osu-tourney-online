@@ -205,4 +205,20 @@ watch(
   -webkit-box-orient: vertical;
   cursor: pointer;
 }
+
+:deep(.ant-list) {
+  * {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .ant-list-item.songlist {
+    height: 45px;
+
+    .ant-list-item-action {
+      width: 55px;
+    }
+  }
+}
 </style>

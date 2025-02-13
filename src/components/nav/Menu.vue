@@ -41,10 +41,9 @@ import {
   faCompactDisc as faCompactDiscSolid,
   faTerminal as faTerminalSolid,
 } from '@fortawesome/free-solid-svg-icons';
-import { ref, watch, inject } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
-let collapsed = inject('collapsed');
 const router = useRouter();
 const route = useRoute();
 

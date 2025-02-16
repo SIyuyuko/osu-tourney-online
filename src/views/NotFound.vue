@@ -8,7 +8,7 @@
       <!-- 错误图标 -->
       <div class="relative mb-8">
         <div
-          class="text-[120px] md:text-[80px] font-bold leading-none bg-linear-to-r from-red-400 to-gray-600 bg-clip-text text-transparent font-arial"
+          class="text-[120px] md:text-[80px] font-bold leading-none bg-linear-to-r from-red-400 to-gray-600 bg-clip-text text-transparent font-[arial]"
         >
           404
         </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="page px-3 mt-[-1px] h-full no-scroll">
+  <div class="page px-3 mt-[-1px] h-full">
     <DragPanel :leftWidth="350" :rightMinWidth="500" :leftMinWidth="200" class="h-full w-full">
       <template #left>
         <CommandList />

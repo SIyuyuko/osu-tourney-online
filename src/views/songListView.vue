@@ -7,7 +7,7 @@
  * @Description: 歌单页面组件
 -->
 <template>
-  <div class="flex flex-col overflow-x-hidden overflow-y-auto h-full ml-[-1px] no-scroll gap-x-2.5">
+  <div class="flex flex-col overflow-x-hidden overflow-y-auto h-full ml-[-1px] gap-x-2.5">
     <div class="px-[10px]">{{ $t('songlist.header') }}</div>
     <div class="overflow-hidden flex gap-x-2.5 p-2.5 h-full">
       <PlayList />

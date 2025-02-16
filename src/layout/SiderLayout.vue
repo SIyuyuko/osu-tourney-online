@@ -8,7 +8,7 @@
 -->
 <template>
   <a-layout-sider
-    class="sider hidden lg:block bg-white dark:bg-[#141414]"
+    class="sider hidden lg:block bg-white dark:bg-[#141414] border-r dark:border-[#313131] border-[#f0f0f0]"
     v-model:collapsed="collapsed"
     :trigger="null"
     collapsible
@@ -30,8 +30,6 @@ let collapsed = inject('collapsed');
 
 <style lang="scss" scoped>
 .sider :deep(.ant-layout-sider-children) {
-  display: flex;
-  flex-direction: column;
-  background: transparent;
+  height: 100%;
 }
 </style>

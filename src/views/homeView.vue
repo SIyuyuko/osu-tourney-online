@@ -7,7 +7,7 @@
  * @Description: 主页页面组件
 -->
 <template>
-  <div class="page flex flex-col p-8 mx-0 my-auto max-w-[1200px] gap-8">
+  <div class="page flex flex-col p-4 mx-0 my-auto max-w-[1200px] gap-8">
     <div class="overview">
       <div class="welcome-panel grow flex flex-col gap-6">
         <div class="user-state flex items-center justify-between gap-8">

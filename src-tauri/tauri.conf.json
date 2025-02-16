@@ -17,6 +17,8 @@
         "title": "osu! Tourney",
         "width": 1080,
         "height": 720,
+        "minWidth": 800,
+        "minHeight": 600,
         "theme": "Dark",
         "resizable": true,
         "maximizable": true,

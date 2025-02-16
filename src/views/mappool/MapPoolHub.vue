@@ -7,7 +7,7 @@
  * @Description: 图池页面组件
 -->
 <template>
-  <div class="page no-scroll">
+  <div class="page">
     <div class="nav">
       <a-breadcrumb>
         <a-breadcrumb-item>

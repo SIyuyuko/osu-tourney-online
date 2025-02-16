@@ -1,11 +1,6 @@
 [data-theme='light'] {
-  .ant-layout-header,
   .ant-layout-content {
     background: #fff;
     filter: brightness(var(--theme-brightness-shift));
-  }
-
-  .logo {
-    border-inline-end: 1px solid rgba(5, 5, 5, 0.06);
   }
 }

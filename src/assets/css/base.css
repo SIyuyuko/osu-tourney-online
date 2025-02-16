@@ -5,9 +5,6 @@
 *::after,
 .ant-input,
 .ant-typography > * {
-  box-sizing: border-box;
-  margin: 0;
-  font-weight: 500;
   font-family:
     TorusSemiBold,
     Puhui,
@@ -33,7 +30,6 @@
 /* 需要主题过渡的通用属性 */
 body,
 .ant-layout,
-.ant-layout-header,
 .ant-layout-content,
 .ant-card,
 .ant-table,

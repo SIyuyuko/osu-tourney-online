@@ -1,6 +1,7 @@
 <template>
   <div class="command-list" :class="{ 'grid-mode': isGridMode }">
-    <div class="nav flex items-center sticky top-0 z-10 mb-2 bg-white dark:bg-[#141414]">
+    <!-- 指令列表标题 -->
+    <div class="flex items-center sticky top-0 z-10 mb-2 bg-white dark:bg-[#141414]">
       <span class="text-gray-700 dark:text-gray-200">{{ $t('command.list') }}</span>
       <a
         :href="wikiUrl"
@@ -12,7 +13,9 @@
       </a>
     </div>
 
+    <!-- 指令列表 -->
     <div class="commands-container">
+      <!-- 单个指令 -->
       <div class="command-item mb-2" v-for="(item, index) in commandStore.commandList" :key="index">
         <span class="text-gray-700 dark:text-gray-200 mr-2">{{ index + 1 }}.</span>
         <span class="text-gray-700 dark:text-gray-200 font-medium">{{ item.name }}</span>

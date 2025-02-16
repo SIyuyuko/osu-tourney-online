@@ -7,29 +7,31 @@
  * @Description: 目录菜单组件
 -->
 <template>
-  <a-menu
-    class="menu"
-    :selectable="true"
-    v-model:selectedKeys="selectedKeys"
-    theme="light"
-    mode="inline"
-    @click="router.push({ name: $event.key })"
-    :forceSubMenuRender="true"
-    triggerSubMenuAction="click"
-  >
-    <template v-for="item in menuItems" :key="item.key">
-      <a-menu-item>
-        <router-link :to="{ name: item.key }">
-          <span class="anticon">
-            <font-awesome-icon :icon="item.icon" />
-          </span>
-          <span class="menu-title">{{ $t(item.i18nKey) }}</span>
-        </router-link>
-      </a-menu-item>
-    </template>
-  </a-menu>
-  <div class="logo text-center mx-auto mt-0 pb-2">
-    <span>Tourney Web</span>
+  <div class="py-2 h-full flex flex-col justify-between">
+    <a-menu
+      class="menu"
+      :selectable="true"
+      v-model:selectedKeys="selectedKeys"
+      theme="light"
+      mode="inline"
+      @click="router.push({ name: $event.key })"
+      :forceSubMenuRender="true"
+      triggerSubMenuAction="click"
+    >
+      <template v-for="item in menuItems" :key="item.key">
+        <a-menu-item>
+          <router-link :to="{ name: item.key }">
+            <span class="anticon">
+              <font-awesome-icon :icon="item.icon" />
+            </span>
+            <span class="menu-title">{{ $t(item.i18nKey) }}</span>
+          </router-link>
+        </a-menu-item>
+      </template>
+    </a-menu>
+    <div class="logo text-center">
+      <span>Tourney Web</span>
+    </div>
   </div>
 </template>
 
@@ -96,13 +98,10 @@ watch(
 </script>
 
 <style lang="scss" scoped>
-
-.menu {
-  padding: 9px 0 0 0;
-  height: 100%;
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
-
+.ant-menu-light.ant-menu-root.ant-menu-inline,
+.ant-menu-root.ant-menu-vertical.menu {
+  padding-left: 2.5px;
+  padding-right: 2.5px;
   :deep(.ant-menu-title-content) {
     display: flex;
     align-items: center;
@@ -137,9 +136,6 @@ watch(
 }
 
 @media (max-width: 1024px) {
-  .menu {
-    translate: 0.4rem;
-  }
   .logo {
     display: none;
   }

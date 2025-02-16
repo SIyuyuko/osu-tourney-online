@@ -7,86 +7,63 @@
  * @Description: 页头导航栏
 -->
 <template>
-  <a-layout-header class="bg-white dark:bg-[#141414] flex flex-row items-center justify-between">
+  <div class="header bg-white dark:bg-[#141414] flex flex-row items-center justify-between px-5 py-5">
     <!-- 左侧样式设置组 -->
-    <div class="flex flex-row items-center">
+    <div class="flex flex-row items-center gap-5">
       <!-- 桌面端折叠按钮 -->
-      <a-button class="collapse-btn" type="link" @click="toggleSidebar">
-        <font-awesome-icon :icon="collapsed ? faIndentSolid : faOutdentSolid" />
-      </a-button>
+      <Button class="hidden lg:block" @click="toggleSidebar" :icon="collapsed ? faIndentSolid : faOutdentSolid" />
 
       <!-- 移动端折叠按钮 -->
       <a-dropdown v-model:open="mobileCollapsed" :trigger="['click']">
-        <a-button class="collapse-btn-mobile" type="link" @click="mobileCollapsed = !mobileCollapsed">
-          <font-awesome-icon :icon="faBarsSolid" :fade="mobileCollapsed" />
-        </a-button>
+        <Button
+          class="block lg:hidden"
+          @click="mobileCollapsed = !mobileCollapsed"
+          :icon="faBarsSolid"
+          :fade="mobileCollapsed"
+        />
         <template #overlay>
-          <div>
-            <Menu />
-          </div>
+          <Menu />
         </template>
       </a-dropdown>
 
       <!-- 主题切换按钮 -->
-      <a-button class="theme-btn" type="link" @click="toggleTheme()">
-        <font-awesome-icon :icon="theme === 'light' ? faMoonSolid : faSunSolid" />
-      </a-button>
+      <Button @click="toggleTheme()" :icon="theme === 'light' ? faMoonSolid : faSunSolid" />
 
       <!-- 多语言切换按钮 -->
-      <a-button class="lang-btn" type="link" v-if="$i18n.locale">
-        <a-dropdown placement="bottomLeft">
-          <div>
-            <font-awesome-icon :icon="faLanguageSolid" />
-          </div>
-          <template #overlay>
-            <a-menu class="operate-button-menu">
-              <a-menu-item
-                v-for="locale in availableLocales"
-                :key="locale.code"
-                :style="currentLocale === locale.code ? selectedLangStyle : {}"
-                @click="changeLocale(locale.code)"
-              >
-                {{ locale.label }}
-              </a-menu-item>
-            </a-menu>
-          </template>
-        </a-dropdown>
-      </a-button>
+
+      <a-dropdown placement="bottomLeft" :trigger="['click']">
+        <Button type="link" v-if="$i18n.locale" :icon="faLanguageSolid" />
+        <template #overlay>
+          <a-menu>
+            <a-menu-item
+              v-for="locale in availableLocales"
+              :key="locale.code"
+              :style="currentLocale === locale.code ? selectedLangStyle : {}"
+              @click="changeLocale(locale.code)"
+            >
+              {{ locale.label }}
+            </a-menu-item>
+          </a-menu>
+        </template>
+      </a-dropdown>
     </div>
 
     <!-- 右侧用户操作按钮组 -->
-    <div class="user-header flex flex-row items-center gap-3">
-      <div class="flex flex-row items-center">
-        <!-- 登录/登出按钮 -->
-        <a-button type="link" @click="handleAuth">
-          <font-awesome-icon :icon="isLoggedIn ? faRightFromBracketSolid : faRightToBracketSolid" />
-        </a-button>
-
-        <!-- GitHub链接 -->
-        <a-button type="link" @click="openExternalLink(REPO_URL)">
-          <font-awesome-icon :icon="faGithubBrands" />
-        </a-button>
-
-        <!-- 设置按钮 -->
-        <a-button class="setting-button" type="link" @click="showSetting = true">
-          <font-awesome-icon :icon="faGearSolid" />
-        </a-button>
+    <div class="user-header flex flex-row items-center gap-8">
+      <div class="flex flex-row items-center gap-6">
+        <Button @click="handleAuth" :icon="isLoggedIn ? faRightFromBracketSolid : faRightToBracketSolid" />
+        <Button @click="openExternalLink(REPO_URL)" :icon="faGithubBrands" />
+        <Button @click="showSetting = true" :icon="faGearSolid" />
       </div>
 
       <!-- Tauri窗口控制按钮 -->
-      <div class="window-controls flex flex-row items-center" v-if="isTauri">
-        <a-button type="link" @click="minimizeWindow">
-          <font-awesome-icon class="window-controls-icon" :icon="faMinusSolid" />
-        </a-button>
-        <a-button type="link" @click="toggleMaximizeWindow">
-          <font-awesome-icon :icon="maximizeIcon" />
-        </a-button>
-        <a-button type="link" class="close-btn" @click="closeWindow">
-          <font-awesome-icon class="window-controls-icon" :icon="faXmarkSolid" />
-        </a-button>
+      <div class="window-controls flex flex-row items-center gap-2" v-if="isTauri">
+        <Button class="w-10 h-7" @click="minimizeWindow" :icon="faMinusSolid" />
+        <Button class="w-10 h-7" @click="toggleMaximizeWindow" :icon="maximizeIcon" />
+        <Button class="w-10 h-7 rounded-[10px] hover:bg-[#ff4d4f] hover:text-white" @click="closeWindow" :icon="faXmarkSolid" />
       </div>
     </div>
-  </a-layout-header>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -114,6 +91,7 @@ import { globalState } from '@/utils/initApp';
 import { openExternalLink } from '@/utils/helpers';
 import { authApi } from '@/api';
 import Menu from '@/components/nav/Menu.vue';
+import Button from '@/components/ui/HeaderButton.vue';
 
 const themeStore = useThemeStore();
 const { toggleTheme } = themeStore;
@@ -191,38 +169,3 @@ onBeforeMount(() => {
   }
 });
 </script>
-
-<style lang="scss" scoped>
-.ant-layout-header {
-  padding-inline: 0.8rem;
-
-  .user-header {
-    .window-controls {
-      .close-btn:hover {
-        background-color: #ff4d4f;
-        color: white;
-      }
-
-      .window-controls-icon {
-        height: 1.2rem;
-        width: 1.2rem;
-        margin-bottom: -0.1rem;
-      }
-    }
-  }
-}
-
-.collapse-btn-mobile {
-  display: none;
-}
-
-@media (max-width: 1024px) {
-  .collapse-btn {
-    display: none;
-  }
-
-  .collapse-btn-mobile {
-    display: block;
-  }
-}
-</style>

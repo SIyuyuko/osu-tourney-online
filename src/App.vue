@@ -19,13 +19,8 @@ onBeforeMount(() => {
 
 <style lang="scss">
 #app {
-  user-select: none;
-  shape-outside: margin-box;
-}
-
-body {
+  width: 100%;
+  height: 100%;
   overflow: hidden;
-  user-select: none;
-  cursor: default;
 }
 </style>

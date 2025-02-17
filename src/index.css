@@ -2,6 +2,28 @@
 
 @custom-variant dark (&:is(.dark *));
 
+* {
+  scrollbar-color: rgb(188, 188, 188) transparent;
+}
+
+.dark * {
+  scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+html,body {
+  height: 100%;
+  overflow: auto;
+  user-select: none;
+  cursor: default;
+}
+
+body {
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still

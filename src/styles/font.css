@@ -1,0 +1,69 @@
+*,
+*::before,
+*::after,
+.ant-input,
+.ant-typography > * {
+  font-family:
+    TorusSemiBold,
+    Puhui,
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
+    sans-serif;
+}
+
+@font-face {
+  font-family: 'TorusThin';
+  src: url('@/assets/font/TorusPro-Thin.ttf');
+  font-display: swap;
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: 'TorusLight';
+  src: url('@/assets/font/TorusPro-Light.ttf');
+  font-display: swap;
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Torus';
+  src: url('@/assets/font/TorusPro-Regular.ttf');
+  font-display: swap;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'TorusSemiBold';
+  src: url('@/assets/font/TorusPro-SemiBold.ttf');
+  font-display: swap;
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'TorusBold';
+  src: url('@/assets/font/TorusPro-Bold.ttf');
+  font-display: swap;
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: 'TorusHeavy';
+  src: url('@/assets/font/TorusPro-Heavy.ttf');
+  font-display: swap;
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: 'Puhui';
+  src: url('@/assets/font/AlibabaPuHuiTi-3-55-Regular.ttf');
+  font-display: swap;
+}

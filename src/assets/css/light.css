@@ -1,6 +1,0 @@
-[data-theme='light'] {
-  .ant-layout-content {
-    background: #fff;
-    filter: brightness(var(--theme-brightness-shift));
-  }
-}

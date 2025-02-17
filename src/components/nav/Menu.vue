@@ -21,7 +21,7 @@
         </a-menu-item>
       </template>
     </a-menu>
-    <div class="logo text-center hidden lg:block">
+    <div class="logo text-center text-black dark:text-gray-200 hidden lg:block">
       <span>Tourney Web</span>
     </div>
   </div>

@@ -1,11 +1,3 @@
-<!--
- * @Author: SIyuyuko
- * @Date: 2024-05-06 15:55:48
- * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-05-07 11:11:08
- * @FilePath: /tourney-site/src/components/nav/sider.vue
- * @Description: 侧边导航栏
--->
 <template>
   <a-layout-sider
     class="sider hidden lg:block bg-white dark:bg-[#141414] border-r dark:border-[#313131] border-[#f0f0f0]"
@@ -14,8 +6,8 @@
     collapsible
     breakpoint="xl"
     theme="light"
-    :width="150"
-    :collapsedWidth="80"
+    :width="148"
+    :collapsedWidth="84"
   >
     <Menu />
   </a-layout-sider>

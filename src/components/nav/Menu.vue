@@ -1,13 +1,5 @@
-<!--
- * @Author: SIyuyuko
- * @Date: 2024-05-07 11:07:54
- * @LastEditors: SIyuyuko
- * @LastEditTime: 2024-09-30 10:06:31
- * @FilePath: /osu-tourney-online/src/components/nav/menu.vue
- * @Description: 目录菜单组件
--->
 <template>
-  <div class="py-2 h-full flex flex-col justify-between">
+  <div class="py-2 h-full flex flex-col justify-between px-[2px]">
     <a-menu
       class="menu"
       :selectable="true"
@@ -29,7 +21,7 @@
         </a-menu-item>
       </template>
     </a-menu>
-    <div class="logo text-center">
+    <div class="logo text-center hidden lg:block">
       <span>Tourney Web</span>
     </div>
   </div>
@@ -100,44 +92,6 @@ watch(
 <style lang="scss" scoped>
 .ant-menu-light.ant-menu-root.ant-menu-inline,
 .ant-menu-root.ant-menu-vertical.menu {
-  padding-left: 2.5px;
-  padding-right: 2.5px;
-  :deep(.ant-menu-title-content) {
-    display: flex;
-    align-items: center;
-    height: 100%;
-
-    a {
-      display: flex;
-      align-items: center;
-      height: 1.5rem;
-    }
-  }
-}
-
-// 处理折叠状态
-:deep(.ant-menu-inline-collapsed) {
-  .ant-menu-title-content {
-    display: flex;
-    align-items: center;
-    height: 100%;
-
-    a {
-      display: flex;
-      align-items: center;
-      height: 1.5rem;
-    }
-  }
-
-  .ant-menu-title-content {
-    margin-left: auto;
-    margin-right: auto;
-  }
-}
-
-@media (max-width: 1024px) {
-  .logo {
-    display: none;
-  }
+  border-inline-end: none;
 }
 </style>

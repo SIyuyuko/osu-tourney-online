@@ -92,50 +92,27 @@ import Cover from '@/components/home/BannerGallery.vue';
 import TournamentInfo from '@/components/home/TournamentInfo.vue';
 // import PoolSelector from '@/components/map/poolSelector.vue';
 
-// Types
-interface User {
-  uid: number;
-  name: string;
-  character?: string;
-  avatar: string;
-  activeDate: string;
-  dailyWords: {
-    morning: string;
-    afternoon: string;
-    evening: string;
-    night: string;
-  };
-}
-
-interface Banner {
-  bannerType: 'event' | 'cover';
-}
-
 // Constants
 const INFO_URL_PREFIX = 'https://osu.ppy.sh/users/';
 const CURRENT_DATE = dayjs().format('YYYY-MM-DD');
 
-// State
-const user = window.user as User; // 用户配置
-const banner = window.banner as Banner;
+const user = window.user; // 用户配置
+const banner = window.banner; // 横幅配置
 const userInfo = ref(); // 用户api信息
 
-// Computed
-const duringTime = computed(() => dayjs(CURRENT_DATE).diff(user.activeDate, 'day')); // 活跃时长/时间间隔
+// 活跃时长/时间间隔
+const duringTime = computed(() => dayjs(CURRENT_DATE).diff(user.activeDate, 'day'));
+// 每日问候语
+const { dailyWords } = useTimeBasedGreeting(user.dailyWords);
 
 const bannerComponents = {
   event: Countdown,
   cover: Cover,
 };
 
-// Composables
-const { dailyWords } = useTimeBasedGreeting(user.dailyWords);
-
 // Methods
 const openUrl = () => {
-  if (userInfo.value) {
-    openExternalLink(`${INFO_URL_PREFIX}${user.uid}`);
-  }
+  openExternalLink(`${INFO_URL_PREFIX}${user.uid}`);
 };
 
 // LifeCycle
@@ -146,8 +123,8 @@ onMounted(async () => {
       const response = await userApi.getUserById(user.uid);
 
       // 类型断言确保响应格式正确
-      if (response && typeof response === 'string') {
-        userInfo.value = JSON.parse(response).data;
+      if (response) {
+        userInfo.value = response.data;
       } else {
         console.warn('Unexpected response format');
       }

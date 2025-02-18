@@ -4,7 +4,6 @@
       class="menu"
       :selectable="true"
       v-model:selectedKeys="selectedKeys"
-      theme="light"
       mode="inline"
       @click="router.push({ name: $event.key })"
       :forceSubMenuRender="true"
@@ -93,5 +92,6 @@ watch(
 .ant-menu-light.ant-menu-root.ant-menu-inline,
 .ant-menu-root.ant-menu-vertical.menu {
   border-inline-end: none;
+  background-color: transparent;
 }
 </style>

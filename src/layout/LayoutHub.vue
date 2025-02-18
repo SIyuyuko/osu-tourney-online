@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex">
+  <div class="h-full flex bg-[#f5f5f5] dark:bg-black dark:text-white">
     <SiderLayout />
     <div class="flex flex-col h-full w-full relative transform-3d">
       <HeaderLayout class="fixed top-0 w-full" data-tauri-drag-region />

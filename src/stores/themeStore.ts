@@ -14,7 +14,7 @@ export const useThemeStore = defineStore('theme', () => {
   };
 
   // 设置主题的公共逻辑
-  const setTheme = (newTheme: Theme) => {
+  const executeSetTheme = (newTheme: Theme) => {
     theme.value = newTheme;
     localStorage.setItem('theme', newTheme);
     document.documentElement.setAttribute('data-theme', newTheme);
@@ -23,6 +23,15 @@ export const useThemeStore = defineStore('theme', () => {
     } else {
       document.documentElement.classList.remove('dark');
     }
+  };
+
+  const setTheme = (newTheme: Theme) => {
+    if (!document.startViewTransition) {
+      executeSetTheme(newTheme);
+      return;
+    }
+
+    document.startViewTransition(() => executeSetTheme(newTheme));
   };
 
   const toggleTheme = () => {

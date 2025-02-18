@@ -5,20 +5,6 @@
   --theme-black: #141414;
   --player-light: #13c2c2;
   --player-dark: #33bcb7;
-
-  /* theme */
-  --theme-transition-duration: 0.5s;
-  --theme-transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
-  --theme-brightness-shift: 1;
-  /* 控制明暗变化强度，1 为正常，可以调整 */
-
-  /* 亮色主题的渐变色 */
-  --gradient-start-light: #f6f8fc;
-  --gradient-end-light: #f0f4f8;
-
-  /* 暗色主题的渐变色 */
-  --gradient-start-dark: #1f2d3d;
-  --gradient-end-dark: #1a2533;
 }
 
 .tag {

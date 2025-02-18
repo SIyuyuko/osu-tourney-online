@@ -8,14 +8,20 @@
 -->
 <template>
   <div class="page flex flex-col p-4 mx-0 my-auto max-w-[1200px] gap-8">
-    <div class="overview">
-      <div class="welcome-panel grow flex flex-col gap-6">
-        <div class="user-state flex items-center justify-between gap-8">
-          <div class="state-words grow">
-            <h1 class="welcome-text">
-              Welcome,
-              <span class="username">{{ userInfo ? userInfo.username : user.name }}</span>
-              !
+    <div class="shadow-md rounded-2xl p-8 relative flex md:flex-row flex-col gradient h-fit gap-6 mb-6">
+      <div class="grow flex flex-col gap-6 h-fit">
+        <div
+          class="flex md:flex-row flex-col-reverse text-center gap-4 items-center justify-between md:gap-8"
+        >
+          <!-- 欢迎语 -->
+          <div class="grow">
+            <h1 class="text-[#2c3e50] dark:text-[#e0e0e0] font-[600] text-[2rem] md:flex md:flex-col md:items-start space-x-2">
+              <span>Welcome,</span>
+              <span
+                class="username relative text-[#3498db] dark:text-[#5dade2] after:bg-[#3498db] dark:after:bg-[#5dade2] after:content-[''] after:absolute md:after:bottom-[4px] after:bottom-[-2px] after:left-[0] after:w-[100%] after:h-[2px]"
+              >
+                {{ userInfo ? userInfo.username : user.name }}!
+              </span>
             </h1>
             <p v-if="user.character">
               {{ $t('home.rulePrefix') }} {{ user.character }} {{ $t('home.ruleMid') }} {{ duringTime }}
@@ -23,12 +29,13 @@
             </p>
           </div>
 
-          <div class="avatar">
+          <!-- 头像 -->
+          <div>
             <a-tooltip placement="bottom">
               <template #title v-if="userInfo">
                 <span>{{ $t('home.viewProfile') }}</span>
               </template>
-              <div class="avatar-wrapper" @click="openUrl">
+              <div class="avatar-wrapper relative cursor-pointer" @click="openUrl">
                 <a-avatar
                   class="avatar-img"
                   shape="square"
@@ -44,14 +51,17 @@
             </a-tooltip>
           </div>
         </div>
-        <p class="time-words flex items-center gap-2">
-          <font-awesome-icon :icon="faClockSolid" class="time-icon" />
+        <p
+          class="flex items-center gap-2 text-[1.1rem] dark:text-[#e0e0e0] text-[#34495e] dark:bg-[#28302c] bg-[#ffffffcc] rounded-lg shadow-md py-3 px-4"
+        >
+          <font-awesome-icon :icon="faClockSolid" class="text-[1.5rem] text-[#3498db]" />
           {{ dailyWords }}
         </p>
       </div>
 
-      <a-divider class="divider" type="vertical" />
-      <a-divider class="divider-mobile" />
+      <div
+        class="divider border border-[#d4e1f5] dark:border-[#40526a] md:h-[11rem] md:w-[1px] md:mx-2 md:my-1 h-[1px] w-full mx-0 my-2"
+      />
 
       <component
         :is="bannerComponents[banner.bannerType]"
@@ -60,15 +70,17 @@
       />
     </div>
 
-    <a-divider class="section-divider" />
+    <a-divider class="my-8 border border-[#e2eaf5] dark:border-[#2c3e50]" />
 
     <!-- Tournament Section -->
-    <div class="tour-view">
-      <h2 class="section-title">
-        <font-awesome-icon :icon="faTrophySolid" class="title-icon" />
+    <div class="space-y-4">
+      <h2 class="text-[#2c3e50] dark:text-[#e0e0e0] font-[600] text-[1.75rem] flex items-center gap-3">
+        <font-awesome-icon :icon="faTrophySolid" class="text-[#f1c40f] dark:text-[#f4d03f]" />
         {{ $t('home.tourTitle') }}
       </h2>
-      <div class="tournament-panel">
+      <div
+        class="bg-white dark:bg-[#1a1f24] shadow-md rounded-2xl gap-6 p-6 flex justify-center flex-col md:flex-row"
+      >
         <TournamentInfo />
         <!-- <PoolSelector /> -->
       </div>
@@ -136,331 +148,48 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.page {
-  .overview {
-    position: relative;
-    display: flex;
-    gap: 1.5rem;
-    min-height: 12rem;
-    border-radius: 1rem;
-    padding: 2rem;
-    box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.1);
-    transition: box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: inherit;
-      background: linear-gradient(135deg, var(--gradient-start-light) 0%, var(--gradient-end-light) 100%);
-      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
-      z-index: 0;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: inherit;
-      background: linear-gradient(135deg, var(--gradient-start-dark) 0%, var(--gradient-end-dark) 100%);
-      opacity: 0;
-      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
-      z-index: 0;
-    }
-
-    > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .welcome-panel {
-      .user-state {
-        .state-words {
-          .welcome-text {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #2c3e50;
-            transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-
-            .username {
-              color: #3498db;
-              position: relative;
-              transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-
-              &::after {
-                content: '';
-                position: absolute;
-                bottom: -2px;
-                left: 0;
-                width: 100%;
-                height: 2px;
-                background: #3498db;
-                transform: scaleX(0);
-                transition: transform 0.3s ease;
-              }
-
-              &:hover::after {
-                transform: scaleX(1);
-              }
-            }
-          }
-
-          .character-info {
-            font-size: 1.1rem;
-            color: #5c6c7c;
-            transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-
-            .highlight {
-              color: #e74c3c;
-              font-weight: 500;
-            }
-          }
-        }
-
-        .avatar {
-          .avatar-wrapper {
-            position: relative;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-
-            &:hover {
-              transform: translateY(-3px);
-
-              .avatar-overlay {
-                opacity: 1;
-              }
-            }
-
-            .avatar-img {
-              border: 3px solid white;
-              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-              transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
-            }
-
-            .avatar-overlay {
-              background: rgba(0, 0, 0, 0.5);
-              transition: opacity 0.3s ease;
-            }
-          }
-        }
-      }
-
-      .time-words {
-        font-size: 1.1rem;
-        color: #34495e;
-        padding: 0.75rem 1rem;
-        background: rgba(255, 255, 255, 0.8);
-        border-radius: 0.5rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        margin-bottom: 0;
-        transition:
-          background var(--theme-transition-duration) var(--theme-transition-timing),
-          color var(--theme-transition-duration) var(--theme-transition-timing),
-          box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
-
-        .time-icon {
-          color: #3498db;
-          font-size: 1.5rem;
-          transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-        }
-        // .time-icon {
-        //   color: #7f8c8d;
-        // }
-      }
-    }
-
-    .divider {
-      height: 100%;
-      border-color: #79a4e4;
-      transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
-    }
-
-    .divider-mobile {
-      display: none;
-    }
+.username {
+  &::after {
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
   }
 
-  .section-divider {
-    margin: 2rem 0;
-    border-color: #e2eaf5;
-    transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
-  }
-
-  .tour-view {
-    .section-title {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-size: 1.75rem;
-      font-weight: 600;
-      color: #2c3e50;
-      margin-bottom: 1.5rem;
-      transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-
-      .title-icon {
-        color: #f1c40f;
-        transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-      }
-    }
-
-    .tournament-panel {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      background: #ffffff;
-      padding: 1.5rem;
-      border-radius: 1rem;
-      box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.2);
-      transition:
-        background var(--theme-transition-duration) var(--theme-transition-timing),
-        box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
-    }
+  // tailwind 失效
+  &:hover::after {
+    transform: scaleX(1);
   }
 }
 
-// Dark mode styles
+// Avatar 相关样式使用 Tailwind 被 antd 覆盖
+.avatar-wrapper {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+
+    .avatar-overlay {
+      opacity: 1;
+    }
+  }
+
+  .avatar-img {
+    border: 3px solid white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .avatar-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s ease;
+  }
+}
+
 [data-theme='dark'] {
-  .page {
-    .overview {
-      box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.3);
-
-      &::before {
-        opacity: 0;
-      }
-      &::after {
-        opacity: 1;
-      }
-
-      .welcome-panel {
-        .user-state {
-          .state-words {
-            .welcome-text {
-              color: #e0e0e0;
-
-              .username {
-                color: #5dade2;
-
-                &::after {
-                  background: #5dade2;
-                }
-              }
-            }
-
-            .character-info {
-              color: #a0a0a0;
-
-              .highlight {
-                color: #e57373;
-              }
-            }
-          }
-
-          .avatar {
-            .avatar-wrapper {
-              .avatar-img {
-                border-color: #2c3e50;
-              }
-
-              .avatar-overlay {
-                background: rgba(0, 0, 0, 0.7);
-              }
-            }
-          }
-        }
-
-        .time-words {
-          color: #e0e0e0;
-          background: rgba(40, 44, 52, 0.8);
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-
-          .time-icon {
-            color: #5dade2;
-          }
-        }
-      }
-
-      .divider {
-        border-color: #3d5a80;
-      }
-    }
-
-    .section-divider {
-      border-color: #2c3e50;
-    }
-
-    .tour-view {
-      .section-title {
-        color: #e0e0e0;
-
-        .title-icon {
-          color: #f4d03f;
-        }
-      }
-
-      .tournament-panel {
-        background: #1a1f24;
-        box-shadow: 0 0 6px -1px rgba(0, 0, 0, 0.4);
-      }
-    }
+  .avatar-img {
+    border-color: #2c3e50;
   }
 
-  // Cover panel specific dark mode styles
-  .cover-panel {
-    .empty-state {
-      background: #1f1f1f;
-    }
-
-    .custom-slick-arrow {
-      background: rgba(255, 255, 255, 0.2);
-
-      &:hover {
-        background: rgba(255, 255, 255, 0.3);
-      }
-    }
-  }
-}
-
-@media (max-width: 48rem) {
-  .page {
-    padding: 1rem;
-
-    .overview {
-      flex-direction: column;
-      gap: 1.5rem;
-
-      .welcome-panel {
-        width: 100%;
-
-        .user-state {
-          flex-direction: column-reverse;
-          text-align: center;
-          gap: 1rem;
-
-          .state-words {
-            width: 100%;
-          }
-        }
-      }
-
-      .divider {
-        display: none;
-      }
-
-      .divider-mobile {
-        display: flex;
-      }
-    }
-
-    .tour-view .tournament-panel {
-      flex-direction: column;
-    }
+  .avatar-overlay {
+    background: rgba(0, 0, 0, 0.7);
   }
 }
 </style>

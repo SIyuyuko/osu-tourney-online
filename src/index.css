@@ -10,7 +10,8 @@
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
-html,body {
+html,
+body {
   height: 100%;
   overflow: auto;
   user-select: none;
@@ -22,6 +23,13 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+/* 自定义class */
+@layer components {
+  .gradient {
+    @apply bg-gradient-to-br from-[#f6f8fc] to-[#f0f4f8] dark:from-[#1f2d3d] dark:to-[#1a2533];
+  }
 }
 
 /*

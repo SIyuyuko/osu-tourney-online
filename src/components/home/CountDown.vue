@@ -7,7 +7,7 @@
  * @Description: 倒计时组件
 -->
 <template>
-  <div class="event-timer">
+  <div class="event-timer h-[11.2rem]">
     <div class="timer-content">
       <a-statistic-countdown
         v-if="hasEvent"
@@ -120,7 +120,6 @@ onMounted(() => {
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  transition: box-shadow var(--theme-transition-duration) var(--theme-transition-timing);
 
   &::before {
     content: '';
@@ -131,7 +130,6 @@ onMounted(() => {
     bottom: 0;
     border-radius: inherit;
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
     z-index: 0;
   }
 
@@ -145,7 +143,6 @@ onMounted(() => {
     border-radius: inherit;
     background: linear-gradient(135deg, #2d3436 0%, #1a1a1a 100%);
     opacity: 0;
-    transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
     z-index: 0;
   }
 
@@ -167,7 +164,6 @@ onMounted(() => {
         gap: 0.5rem;
         font-size: 1.5rem;
         color: #2c3e50;
-        transition: color var(--theme-transition-duration) var(--theme-transition-timing);
 
         .timer-icon {
           color: #e74c3c;
@@ -205,7 +201,6 @@ onMounted(() => {
       padding: 2rem;
       background: rgba(255, 255, 255, 0.5);
       border-radius: 8px;
-      transition: color var(--theme-transition-duration) var(--theme-transition-timing);
     }
   }
 }

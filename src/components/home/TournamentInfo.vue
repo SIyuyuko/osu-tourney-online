@@ -8,7 +8,7 @@
 -->
 <template>
   <div v-if="activeTournament" class="tournament-card">
-    <a-card>
+    <a-card class="gradient w-full lg:w-[48rem]">
       <!-- Tournament Cover -->
       <template #cover>
         <img :src="activeTournament.poster" :alt="activeTournament.title" class="tournament-poster" />
@@ -20,7 +20,7 @@
           <a-descriptions :column="descriptionColumns" layout="vertical">
             <!-- Title -->
             <template #title>
-              <span class="tournament-title">
+              <span class="font-[500] text-[#2c3e50] dark:text-[#e0e0e0]">
                 {{ activeTournament.fullTitle || activeTournament.title }}
               </span>
             </template>
@@ -50,7 +50,7 @@
     v-else
     :description="$t('tournament.emptyActive')"
     :image="Empty.PRESENTED_IMAGE_SIMPLE"
-    class="empty-state"
+    class="w-full dark:bg-[#1f1f1f]"
   />
 </template>
 
@@ -129,43 +129,6 @@ onMounted(() => {
 <style lang="scss" scoped>
 .tournament-card {
   .ant-card {
-    width: 500px;
-    position: relative;
-
-    // 使用伪元素来实现渐变过渡
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--gradient-start-light) 0%, var(--gradient-end-light) 100%);
-      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
-      z-index: 0;
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--gradient-start-dark) 0%, var(--gradient-end-dark) 100%);
-      opacity: 0;
-      transition: opacity var(--theme-transition-duration) var(--theme-transition-timing);
-      z-index: 0;
-    }
-
-    // 确保内容在渐变层之上
-    > * {
-      position: relative;
-      z-index: 1;
-    }
-
     :deep(.ant-card-cover > *) {
       height: 200px;
       object-fit: cover;
@@ -175,40 +138,19 @@ onMounted(() => {
       .ant-descriptions-header {
         padding-bottom: 1.2rem;
         border-bottom: 1px solid #d9d9d9;
-        transition: border-color var(--theme-transition-duration) var(--theme-transition-timing);
       }
     }
 
     :deep(.ant-card-actions) {
       border: 1px solid #d9d9d9;
-      transition:
-        background-color var(--theme-transition-duration) var(--theme-transition-timing),
-        border-color var(--theme-transition-duration) var(--theme-transition-timing);
     }
   }
-
-  .tournament-title {
-    font-weight: 500;
-    color: #2c3e50;
-    transition: color var(--theme-transition-duration) var(--theme-transition-timing);
-  }
-}
-
-.empty-state {
-  width: 100%;
 }
 
 // Dark mode
 [data-theme='dark'] {
   .tournament-card {
     .ant-card {
-      &::before {
-        opacity: 0;
-      }
-      &::after {
-        opacity: 1;
-      }
-
       :deep(.ant-card-body) {
         .ant-descriptions-header {
           border-bottom: 1px solid #2c3e50;
@@ -219,17 +161,12 @@ onMounted(() => {
         border: 1px solid #2c3e50;
       }
     }
-    .tournament-title {
-      color: #e0e0e0;
-    }
   }
 }
 
 @media (max-width: 1024px) {
   .tournament-card {
     .ant-card {
-      width: 100%;
-
       :deep(.ant-card-cover > *) {
         height: 160px;
       }

@@ -97,8 +97,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import dayjs from 'dayjs';
 import { userApi } from '@/api';
-import { openExternalLink } from '@/utils/helpers';
-import { useTimeBasedGreeting } from '@/utils/useTimeBasedGreeting';
+import { openExternalLink, useTimeBasedGreeting } from '@/utils/helpers';
 import Countdown from '@/components/home/CountDown.vue';
 import Cover from '@/components/home/BannerGallery.vue';
 import TournamentInfo from '@/components/home/TournamentInfo.vue';

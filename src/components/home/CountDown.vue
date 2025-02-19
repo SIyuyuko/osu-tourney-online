@@ -8,7 +8,7 @@
 -->
 <template>
   <div class="event-timer h-[11.2rem]">
-    <div class="timer-content">
+    <div class="timer-content overflow-hidden">
       <a-statistic-countdown
         v-if="hasEvent"
         :value="deadline"
@@ -18,7 +18,7 @@
       >
         <!-- 事件标题 -->
         <template #title>
-          <span class="event-label">Next Event:</span>
+          <span class="event-label truncate">Next Event:</span>
           <a-tooltip placement="bottomLeft">
             <template #title>
               <span class="tooltip-time">
@@ -27,7 +27,7 @@
               </span>
             </template>
 
-            <span class="event-title" :title="banner.event">
+            <span class="event-title line-clamp-3" :title="banner.event">
               <font-awesome-icon class="calendar-icon" :icon="faCalendarDaysSolid" />
               <span>{{ banner.event }}</span>
             </span>

@@ -8,10 +8,10 @@
 -->
 <template>
   <div class="page flex flex-col p-4 mx-0 my-auto max-w-[1200px] gap-8">
-    <div class="shadow-md rounded-2xl p-8 relative flex md:flex-row flex-col gradient h-fit gap-6 mb-6">
-      <div class="grow flex flex-col gap-6 h-fit">
+    <div class="shadow-md rounded-2xl w-full p-8 relative flex md:flex-row md:items-center flex-col gradient h-fit gap-6 mb-6 overflow-hidden">
+      <div class="grow flex flex-col gap-6 h-fit md:min-w-[16rem] overflow-hidden">
         <div
-          class="flex md:flex-row flex-col-reverse text-center gap-4 items-center justify-between md:gap-8"
+          class="flex md:flex-row flex-col-reverse text-center gap-4 items-center justify-between md:gap-4 truncate"
         >
           <!-- 欢迎语 -->
           <div class="grow">
@@ -51,12 +51,12 @@
             </a-tooltip>
           </div>
         </div>
-        <p
-          class="flex items-center gap-2 text-[1.1rem] dark:text-[#e0e0e0] text-[#34495e] dark:bg-[#28302c] bg-[#ffffffcc] rounded-lg shadow-md py-3 px-4"
+        <div
+          class="flex items-center gap-2 overflow-hidden text-[1.1rem] dark:text-[#e0e0e0] text-[#34495e] dark:bg-[#28302c] bg-[#ffffffcc] rounded-lg shadow-md py-3 px-4"
         >
           <font-awesome-icon :icon="faClockSolid" class="text-[1.5rem] text-[#3498db]" />
-          {{ dailyWords }}
-        </p>
+          <div class="truncate">{{ dailyWords }}</div>
+        </div>
       </div>
 
       <div

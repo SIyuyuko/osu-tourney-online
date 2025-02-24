@@ -123,7 +123,7 @@ import {
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useCommandStore } from '@/stores/commandStore';
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 
 const { t } = useI18n();
 const store = useCommandStore();

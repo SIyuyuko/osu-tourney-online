@@ -2,7 +2,7 @@ import { faRepeat as faRepeatSolid, faShuffle as faShuffleSolid } from '@fortawe
 import { defineStore } from 'pinia';
 import { ref, shallowRef } from 'vue';
 import { beatmapApi } from '@/api';
-import { shuffle } from 'lodash';
+import { shuffle } from 'lodash-es';
 import Plyr from 'plyr';
 
 // 曲目类型

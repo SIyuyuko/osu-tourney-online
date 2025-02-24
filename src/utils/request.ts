@@ -38,7 +38,7 @@ class Request {
     this.instance.interceptors.request.use(
       (config: InternalAxiosRequestConfig) => {
         // 确保 headers 存在
-        const headers: AxiosHeaders = new axios.AxiosHeaders(config.headers);
+        const headers = new AxiosHeaders(config.headers);
 
         // 处理 token
         const userKey = localStorage.getItem('userKey');

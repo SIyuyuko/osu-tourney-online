@@ -22,48 +22,48 @@
 
 @font-face {
   font-family: 'TorusThin';
-  src: url('@/assets/font/TorusPro-Thin.ttf');
+  src: url('../assets/font/TorusPro-Thin.woff2') format('woff2');
   font-display: swap;
   font-weight: 200;
 }
 
 @font-face {
   font-family: 'TorusLight';
-  src: url('@/assets/font/TorusPro-Light.ttf');
+  src: url('../assets/font/TorusPro-Light.woff2') format('woff2');
   font-display: swap;
   font-weight: 300;
 }
 
 @font-face {
   font-family: 'Torus';
-  src: url('@/assets/font/TorusPro-Regular.ttf');
+  src: url('../assets/font/TorusPro-Regular.woff2') format('woff2');
   font-display: swap;
   font-weight: 500;
 }
 
 @font-face {
   font-family: 'TorusSemiBold';
-  src: url('@/assets/font/TorusPro-SemiBold.ttf');
+  src: url('../assets/font/TorusPro-SemiBold.woff2') format('woff2');
   font-display: swap;
   font-weight: 700;
 }
 
 @font-face {
   font-family: 'TorusBold';
-  src: url('@/assets/font/TorusPro-Bold.ttf');
+  src: url('../assets/font/TorusPro-Bold.woff2') format('woff2');
   font-display: swap;
   font-weight: 800;
 }
 
 @font-face {
   font-family: 'TorusHeavy';
-  src: url('@/assets/font/TorusPro-Heavy.ttf');
+  src: url('../assets/font/TorusPro-Heavy.woff2') format('woff2');
   font-display: swap;
   font-weight: 900;
 }
 
 @font-face {
   font-family: 'Puhui';
-  src: url('@/assets/font/AlibabaPuHuiTi-3-55-Regular.ttf');
+  src: url('../assets/font/AlibabaPuHuiTi-3-55-Regular.woff2') format('woff2');
   font-display: swap;
 }

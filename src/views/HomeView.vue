@@ -76,7 +76,7 @@
     <div class="space-y-4">
       <h2 class="text-[#2c3e50] dark:text-[#e0e0e0] font-[600] text-[1.75rem] flex items-center gap-3">
         <font-awesome-icon :icon="faTrophySolid" class="text-[#f1c40f] dark:text-[#f4d03f]" />
-        {{ $t('home.tourTitle') }}
+        <span class="truncate">{{ $t('home.tourTitle') }}</span>
       </h2>
       <div
         class="bg-white dark:bg-[#1a1f24] shadow-md rounded-2xl gap-6 p-6 flex justify-center flex-col md:flex-row"

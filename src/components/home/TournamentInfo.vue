@@ -8,7 +8,7 @@
 -->
 <template>
   <div v-if="activeTournament" class="tournament-card">
-    <a-card class="gradient w-full lg:w-[48rem]">
+    <a-card class="gradient w-full lg:w-[42rem] overflow-hidden">
       <!-- Tournament Cover -->
       <template #cover>
         <img :src="activeTournament.poster" :alt="activeTournament.title" class="tournament-poster" />
@@ -17,7 +17,7 @@
       <!-- Tournament Information -->
       <a-card-meta>
         <template #description>
-          <a-descriptions :column="descriptionColumns" layout="vertical">
+          <a-descriptions :column="descriptionColumns" layout="vertical"  class="truncate">
             <!-- Title -->
             <template #title>
               <span class="font-[500] text-[#2c3e50] dark:text-[#e0e0e0]">
@@ -37,11 +37,7 @@
 
       <!-- 自定义操作 -->
       <template #actions>
-        <font-awesome-icon
-          :icon="faTableSolid"
-          :title="t('tournament.mainSheet')"
-          @click="handleMainSheetClick()"
-        />
+        <font-awesome-icon :icon="faTableSolid" :title="t('tournament.mainSheet')" @click="handleMainSheetClick()" />
       </template>
     </a-card>
   </div>

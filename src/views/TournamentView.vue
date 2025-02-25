@@ -19,15 +19,23 @@
       <span>{{ $t('tournament.list') }}</span>
     </template>
     <template #renderItem="{ item }">
-      <a-list-item key="item.title" v-if="visible && listData.length > 0">
+      <a-list-item key="item.title" v-if="visible && listData.length > 0" class="w-full lg:w-[42rem]">
+        <a-list-item-meta class="truncate" ref="tourRef" :description="item.mode + ' | ' + item.type">
+          <template #title>
+            <a class="truncate text-[20px]" @click="showTourView(item)">{{ item.title }}</a>
+          </template>
+        </a-list-item-meta>
+        <a :href="item.mainSheetUrl" target="_blank" :style="item.mainSheetUrl === '' ? disableStyle : ''">
+          {{ $t('tournament.website') }}
+        </a>
         <template #actions>
-          <div class="status-bar" v-if="element?.width > 260">
+          <div class="truncate flex flex-row overflow-hidden gap-4 cursor-pointer" v-if="element?.width > 260">
             <span v-for="{ icon, value } in item?.statusList" :key="icon">
               <font-awesome-icon :icon="icon" />
               {{ value === '' ? '--' : ['active', 'concluded'].includes(value) ? $t(`tournament.${value}`) : value }}
             </span>
           </div>
-          <div class="status-bar" v-else>
+          <div class="truncate flex flex-row overflow-hidden gap-3 cursor-pointer" v-else>
             <a-tooltip v-for="{ icon, value } in item?.statusList" :key="icon" placement="bottom">
               <template #title>
                 <span v-if="icon === faUsersSolid">
@@ -54,18 +62,6 @@
             style="object-fit: cover; border-radius: 10px"
           />
         </template>
-        <a-list-item-meta
-          ref="tourRef"
-          :description="item.mode + ' | ' + item.type"
-          style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis"
-        >
-          <template #title>
-            <a class="tour-title" @click="showTourView(item)">{{ item.title }}</a>
-          </template>
-        </a-list-item-meta>
-        <a :href="item.mainSheetUrl" target="_blank" :style="item.mainSheetUrl === '' ? disableStyle : ''">
-          {{ $t('tournament.website') }}
-        </a>
       </a-list-item>
       <a-empty v-else :description="$t('tournament.empty')" :image="Empty.PRESENTED_IMAGE_SIMPLE" style="width: 100%" />
     </template>
@@ -148,55 +144,3 @@ onMounted(() => {
   initStatusList();
 });
 </script>
-<style lang="scss" scoped>
-.status-bar {
-  // display: flex;
-  // justify-content: flex-start;
-  // column-gap: 10px;
-  text-overflow: ellipsis;
-  text-wrap: nowrap;
-  white-space: nowrap;
-  position: relative;
-  overflow: hidden;
-
-  span:not(:last-child) {
-    margin: 0 10px 0 0;
-  }
-
-  span:hover {
-    cursor: pointer;
-  }
-}
-
-:deep(.ant-list-header) {
-  padding: 0 10px;
-}
-
-:deep(.ant-list-items) {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-
-  .ant-list-item-main {
-    overflow: hidden;
-  }
-
-  .ant-list-item {
-    padding: 10px;
-    width: 50%;
-
-    .tour-title {
-      font-size: 20px;
-    }
-  }
-}
-
-@media (max-width: 1024px) {
-  :deep(.ant-list-items) {
-    .ant-list-item {
-      padding: 10px;
-      width: 100%;
-    }
-  }
-}
-</style>

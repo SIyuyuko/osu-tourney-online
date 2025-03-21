@@ -1,18 +1,27 @@
-import type { App } from 'vue';
-import { ref } from 'vue';
 import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
+import { useI18n } from 'vue-i18n';
+import { useSettingsStore } from '@/stores/settingStore';
 
-// 全局状态
-export const globalState = {
-  siderCollapsed: ref(false),
-};
+export function initApp() {
+  // 获取全局设置
+  const settingsStore = useSettingsStore();
+  settingsStore.loadSettings();
+  const savedLanguage = settingsStore.settings.language;
 
-// 插件安装函数
-export const install = (app: App) => {
-  app.provide('collapsed', globalState.siderCollapsed); // 提供全局状态
-  dayjs.locale('zh-cn'); // 初始化日期本地化
-};
+  const { locale } = useI18n();
 
-// 导出默认对象
-export default { install };
+  // 初始化语言
+  if (savedLanguage === 'zh') {
+    dayjs.locale('zh-cn');
+    locale.value = 'zh';
+  } else if (savedLanguage === 'en') {
+    dayjs.locale('en');
+    locale.value = 'en';
+  }
+
+  // 返回清理函数
+  return () => {
+    // 清理操作
+  };
+}

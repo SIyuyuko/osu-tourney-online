@@ -7,7 +7,6 @@ import Antd from 'ant-design-vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useApp } from '@/stores/appStore';
 import { router } from '@/router';
-import initApp from '@/utils/initApp';
 import { i18nConfig } from '@/i18n';
 import App from '@/App.vue';
 import { useBeatmapStore } from '@/stores/beatmapStore';
@@ -22,7 +21,6 @@ app
   .use(Antd)
   .use(i18n)
   .use(router)
-  .use(initApp)
   .component('font-awesome-icon', FontAwesomeIcon)
   .mount('#app');
 

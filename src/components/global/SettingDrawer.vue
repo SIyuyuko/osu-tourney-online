@@ -1,6 +1,6 @@
 <template>
   <a-drawer
-    v-model:open="showSetting"
+    v-model:open="settings.showSettingDrawer"
     :title="$t('setting.title')"
     :width="drawerWidth"
     :data-theme="theme"
@@ -54,12 +54,12 @@ import { useFileSystemAccess } from '@vueuse/core';
 import { storeToRefs } from 'pinia';
 import dayjs from 'dayjs';
 import { useThemeStore } from '@/stores/themeStore';
-import { useSettingStore } from '@/stores/settingStore';
+import { useSettingsStore } from '@/stores/settingStore';
 import { message } from 'ant-design-vue';
 
-const settingStore = useSettingStore();
+const settingStore = useSettingsStore();
 const themeStore = useThemeStore();
-const { showSetting } = storeToRefs(settingStore);
+const { settings } = storeToRefs(settingStore);
 const { theme } = themeStore;
 
 const windowWidth = ref(window.innerWidth);

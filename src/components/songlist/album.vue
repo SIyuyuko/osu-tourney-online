@@ -50,7 +50,7 @@
 import { ref, nextTick, watch, onMounted, computed } from 'vue';
 import AlbumView from './albumView.vue';
 import { useResizeObserver } from '@vueuse/core';
-import { useI18n } from "vue-i18n";
+import { useI18n } from 'vue-i18n';
 const { t } = useI18n();
 let paneRef = ref(null);
 let viewHeight = ref(0);

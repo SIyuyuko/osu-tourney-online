@@ -11,7 +11,7 @@
     <!-- 左侧样式设置组 -->
     <div class="flex flex-row items-center gap-5">
       <!-- 桌面端折叠按钮 -->
-      <Button class="hidden lg:block" @click="toggleSidebar" :icon="collapsed ? faIndentSolid : faOutdentSolid" />
+      <Button class="hidden lg:block" @click="toggleSidebar" :icon="settings.sidebarCollapsed ? faIndentSolid : faOutdentSolid" />
 
       <!-- 移动端折叠按钮 -->
       <a-dropdown v-model:open="mobileCollapsed" :trigger="['click']">
@@ -53,7 +53,7 @@
       <div class="flex flex-row items-center gap-6">
         <Button @click="handleAuth" :icon="isLoggedIn ? faRightFromBracketSolid : faRightToBracketSolid" />
         <Button @click="openExternalLink(REPO_URL)" :icon="faGithubBrands" />
-        <Button @click="showSetting = true" :icon="faGearSolid" />
+        <Button @click="settings.showSettingDrawer = true" :icon="faGearSolid" />
       </div>
 
       <!-- Tauri窗口控制按钮 -->
@@ -90,8 +90,7 @@ import { useI18n } from 'vue-i18n';
 import { storeToRefs } from 'pinia';
 import { useApp } from '@/stores/appStore';
 import { useThemeStore } from '@/stores/themeStore';
-import { useSettingStore } from '@/stores/settingStore';
-import { globalState } from '@/utils/initApp';
+import { useSettingsStore } from '@/stores/settingStore';
 import { openExternalLink } from '@/utils/helpers';
 import { authApi } from '@/api';
 import Menu from '@/components/nav/Menu.vue';
@@ -102,11 +101,11 @@ const { toggleTheme } = themeStore;
 const { theme } = storeToRefs(themeStore);
 
 const appStore = useApp();
+const settingsStore = useSettingsStore();
 const { isTauriApp: isTauri, currentMaximizeIcon: maximizeIcon } = storeToRefs(appStore);
 const { minimizeWindow, toggleMaximizeWindow, closeWindow } = appStore;
 const { locale } = useI18n();
-const { showSetting } = storeToRefs(useSettingStore());
-const { siderCollapsed: collapsed } = globalState;
+const { settings } = storeToRefs(settingsStore);
 let mobileCollapsed = ref(false);
 const isLoggedIn = ref(!!localStorage.getItem('userKey'));
 const REPO_URL = 'https://github.com/SIyuyuko/osu-tourney-online';
@@ -125,12 +124,13 @@ const selectedLangStyle = computed(() => ({
 }));
 
 const toggleSidebar = () => {
-  collapsed.value = !collapsed.value;
+  settings.value.sidebarCollapsed = !settings.value.sidebarCollapsed;
+  settingsStore.saveSettings();
 };
 
 const changeLocale = (newLocale: string) => {
   locale.value = newLocale;
-  localStorage.setItem('locale', newLocale);
+  settingsStore.setLocale(newLocale);
 };
 
 // 登录/登出

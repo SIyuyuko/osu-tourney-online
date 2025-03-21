@@ -1,7 +1,7 @@
 <template>
   <a-layout-sider
     class="sider hidden lg:block bg-white dark:bg-[#141414] border-r dark:border-[#313131] border-[#f0f0f0]"
-    v-model:collapsed="collapsed"
+    v-model:collapsed="settings.sidebarCollapsed"
     :trigger="null"
     collapsible
     breakpoint="xl"
@@ -14,10 +14,10 @@
 </template>
 
 <script setup lang="ts">
-import { inject } from 'vue';
 import Menu from '@/components/nav/Menu.vue';
+import { useSettingsStore } from '@/stores/settingStore';
 
-let collapsed = inject('collapsed');
+const { settings } = useSettingsStore();
 </script>
 
 <style lang="scss" scoped>

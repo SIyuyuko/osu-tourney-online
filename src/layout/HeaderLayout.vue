@@ -11,7 +11,11 @@
     <!-- 左侧样式设置组 -->
     <div class="flex flex-row items-center gap-5">
       <!-- 桌面端折叠按钮 -->
-      <Button class="hidden lg:block" @click="toggleSidebar" :icon="settings.sidebarCollapsed ? faIndentSolid : faOutdentSolid" />
+      <Button
+        class="hidden lg:block"
+        @click="toggleSidebar"
+        :icon="settings.sidebarCollapsed ? faIndentSolid : faOutdentSolid"
+      />
 
       <!-- 移动端折叠按钮 -->
       <a-dropdown v-model:open="mobileCollapsed" :trigger="['click']">
@@ -27,7 +31,7 @@
       </a-dropdown>
 
       <!-- 主题切换按钮 -->
-      <Button @click="toggleTheme()" :icon="theme === 'light' ? faMoonSolid : faSunSolid" />
+      <Button @click="setTheme(!isDarkMode)" :icon="isDarkMode ? faMoonSolid : faSunSolid" />
 
       <!-- 多语言切换按钮 -->
 
@@ -97,8 +101,8 @@ import Menu from '@/components/nav/Menu.vue';
 import Button from '@/components/ui/HeaderButton.vue';
 
 const themeStore = useThemeStore();
-const { toggleTheme } = themeStore;
-const { theme } = storeToRefs(themeStore);
+const { setTheme } = themeStore;
+const { isDarkMode } = storeToRefs(themeStore);
 
 const appStore = useApp();
 const settingsStore = useSettingsStore();
@@ -120,7 +124,7 @@ const availableLocales = [
 
 const selectedLangStyle = computed(() => ({
   'text-decoration': 'underline',
-  'background-color': theme.value === 'light' ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)',
+  'background-color': isDarkMode.value ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.1)',
 }));
 
 const toggleSidebar = () => {

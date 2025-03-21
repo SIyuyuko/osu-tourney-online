@@ -16,13 +16,7 @@ const app = createApp(App);
 const pinia = createPinia();
 const i18n = createI18n(i18nConfig);
 
-app
-  .use(pinia)
-  .use(Antd)
-  .use(i18n)
-  .use(router)
-  .component('font-awesome-icon', FontAwesomeIcon)
-  .mount('#app');
+app.use(pinia).use(Antd).use(i18n).use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app');
 
 const appStore = useApp();
 const beatmapStore = useBeatmapStore();

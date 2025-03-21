@@ -2,8 +2,11 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import { useI18n } from 'vue-i18n';
 import { useSettingsStore } from '@/stores/settingStore';
+import { useThemeStore } from '@/stores/themeStore';
 
 export function initApp() {
+  const themeStore = useThemeStore();
+  themeStore.initTheme();
   // 获取全局设置
   const settingsStore = useSettingsStore();
   settingsStore.loadSettings();

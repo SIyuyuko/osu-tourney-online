@@ -5,7 +5,6 @@ export const useSettingsStore = defineStore('setting', () => {
   const settings = ref({
     sidebarCollapsed: false,
     showSettingDrawer: false,
-    theme: 'dark',
     language: 'zh',
   });
 

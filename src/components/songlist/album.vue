@@ -50,7 +50,8 @@
 import { ref, nextTick, watch, onMounted, computed } from 'vue';
 import AlbumView from './albumView.vue';
 import { useResizeObserver } from '@vueuse/core';
-import i18n from '@/i18n';
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 let paneRef = ref(null);
 let viewHeight = ref(0);
 useResizeObserver(paneRef, (entries) => {
@@ -77,7 +78,7 @@ let listData = ref([
 ]);
 let panes = ref([
   {
-    title: computed(() => i18n.global.t('songlist.albumList')),
+    title: computed(() => t('songlist.albumList')),
     content: listData.value,
     key: 'home',
     closable: false,

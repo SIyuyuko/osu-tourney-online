@@ -8,14 +8,16 @@
 -->
 <template>
   <div class="page flex flex-col p-4 mx-0 my-auto max-w-[1200px] gap-8">
-    <div class="shadow-md rounded-2xl w-full p-8 relative flex md:flex-row md:items-center flex-col gradient h-fit gap-6 mb-6 overflow-hidden">
+    <div
+      class="shadow-md rounded-2xl w-full p-8 relative flex md:flex-row md:items-center flex-col gradient h-fit gap-6 mb-6 overflow-hidden"
+    >
       <div class="grow flex flex-col gap-6 h-fit md:min-w-[16rem] overflow-hidden">
-        <div
-          class="flex md:flex-row flex-col-reverse text-center gap-4 items-center justify-between md:gap-4 truncate"
-        >
+        <div class="flex md:flex-row flex-col-reverse text-center gap-4 items-center justify-between md:gap-4 truncate">
           <!-- 欢迎语 -->
           <div class="grow">
-            <h1 class="text-[#2c3e50] dark:text-[#e0e0e0] font-[600] text-[2rem] md:flex md:flex-col md:items-start space-x-2">
+            <h1
+              class="text-[#2c3e50] dark:text-[#e0e0e0] font-[600] text-[2rem] md:flex md:flex-col md:items-start space-x-2"
+            >
               <span>Welcome,</span>
               <span
                 class="username relative text-[#3498db] dark:text-[#5dade2] after:bg-[#3498db] dark:after:bg-[#5dade2] after:content-[''] after:absolute md:after:bottom-[4px] after:bottom-[-2px] after:left-[0] after:w-[100%] after:h-[2px]"
@@ -78,9 +80,7 @@
         <font-awesome-icon :icon="faTrophySolid" class="text-[#f1c40f] dark:text-[#f4d03f]" />
         <span class="truncate">{{ $t('home.tourTitle') }}</span>
       </h2>
-      <div
-        class="bg-white dark:bg-[#1a1f24] shadow-md rounded-2xl gap-6 p-6 flex justify-center flex-col md:flex-row"
-      >
+      <div class="bg-white dark:bg-[#1a1f24] shadow-md rounded-2xl gap-6 p-6 flex justify-center flex-col md:flex-row">
         <TournamentInfo />
         <!-- <PoolSelector /> -->
       </div>

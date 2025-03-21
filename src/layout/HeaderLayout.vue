@@ -60,7 +60,11 @@
       <div class="window-controls flex flex-row items-center gap-2" v-if="isTauri">
         <Button class="w-10 h-7" @click="minimizeWindow" :icon="faMinusSolid" />
         <Button class="w-10 h-7" @click="toggleMaximizeWindow" :icon="maximizeIcon" />
-        <Button class="w-10 h-7 rounded-[10px] hover:bg-[#ff4d4f] hover:text-white" @click="closeWindow" :icon="faXmarkSolid" />
+        <Button
+          class="w-10 h-7 rounded-[10px] hover:bg-[#ff4d4f] hover:text-white"
+          @click="closeWindow"
+          :icon="faXmarkSolid"
+        />
       </div>
     </div>
   </div>
@@ -162,10 +166,6 @@ const handleAuth = async () => {
 onBeforeMount(() => {
   if (localStorage.getItem('userKey')) {
     isLoggedIn.value = true;
-  }
-
-  if (localStorage.getItem('locale')) {
-    locale.value = localStorage.getItem('locale') as string;
   }
 });
 </script>

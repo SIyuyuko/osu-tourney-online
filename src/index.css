@@ -25,6 +25,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#app {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 /* 自定义class */
 @layer components {
   .gradient {

@@ -15,11 +15,11 @@ name = "osu_tourney_online_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2", features = [] }
+tauri-build = { version = "2.1.0", features = [] }
 
 [dependencies]
-tauri = { version = "2.2.5", features = [] }
+tauri = { version = "2.4.0", features = [] }
 tauri-plugin-shell = "2.2.0"
-serde = { version = "1.0.218", features = ["derive"] }
-serde_json = "1.0.139"
+serde = { version = "1.0.219", features = ["derive"] }
+serde_json = "1.0.140"
 

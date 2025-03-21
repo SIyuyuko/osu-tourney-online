@@ -1,5 +1,3 @@
-import type { WritableComputedRef } from 'vue';
-
 // Command
 export interface Command {
   name: string;
@@ -94,7 +92,6 @@ export interface User {
   activeDate: string;
   character: string;
   dailyWords: DailyWords;
-  language: WritableComputedRef<'zh' | 'en', 'zh' | 'en'>;
   theme: 'light' | 'dark';
 }
 

@@ -1,11 +1,10 @@
-import { createI18n } from 'vue-i18n';
 import { zh, en } from './locales';
 
-const i18n = createI18n({
+const savedLanguage = localStorage.getItem('local') ?? 'zh'; // 从用户信息中获取语言
+
+export const i18nConfig = {
   legacy: false,
-  locale: 'zh', // 默认显示语言
+  locale: savedLanguage,
   fallbackLocale: 'zh',
   messages: { zh, en },
-});
-
-export default i18n;
+};

@@ -2,18 +2,20 @@ import '@/styles/main.css';
 import '@/index.css';
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
+import { createI18n } from 'vue-i18n';
 import Antd from 'ant-design-vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import { useApp } from '@/stores/appStore';
 import { router } from '@/router';
 import initApp from '@/utils/initApp';
-import i18n from '@/i18n';
+import { i18nConfig } from '@/i18n';
 import App from '@/App.vue';
 import { useBeatmapStore } from '@/stores/beatmapStore';
 import { initializeTauri } from '@/utils/tauriManager';
 
 const app = createApp(App);
 const pinia = createPinia();
+const i18n = createI18n(i18nConfig);
 
 app
   .use(pinia)

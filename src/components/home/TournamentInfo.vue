@@ -17,7 +17,7 @@
       <!-- Tournament Information -->
       <a-card-meta>
         <template #description>
-          <a-descriptions :column="descriptionColumns" layout="vertical"  class="truncate">
+          <a-descriptions :column="descriptionColumns" layout="vertical" class="truncate">
             <!-- Title -->
             <template #title>
               <span class="font-[500] text-[#2c3e50] dark:text-[#e0e0e0]">

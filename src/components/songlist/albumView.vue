@@ -175,7 +175,7 @@ async function initList() {
 }
 // 跳转官网玩家信息页
 function jumpPage(id) {
-    openExternalLink(`https://osu.ppy.sh/users/${id}`);
+  openExternalLink(`https://osu.ppy.sh/users/${id}`);
 }
 onMounted(() => {
   initList();

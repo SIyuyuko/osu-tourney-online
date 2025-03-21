@@ -84,4 +84,3 @@ export function useTimeBasedGreeting(greetings: DailyWords) {
     currentTime,
   };
 }
-
